@@ -1,0 +1,6 @@
+authors = ["Qi Zhang <singularitti@outlook.com>"]
+name = "EoS"
+uuid = "dad20aae-dd90-11e8-1386-c770c039e526"
+version = "0.1.0"
+
+[deps]
