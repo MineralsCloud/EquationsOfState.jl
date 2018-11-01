@@ -1,6 +1,7 @@
 module EOS
 
 using StaticArrays
+using CurveFit
 
 export EquationOfState,
     Birch
