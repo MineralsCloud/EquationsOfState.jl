@@ -15,22 +15,14 @@ struct Birch <: EquationOfState
     parameters::SVector{3, Float64}
 end
 
-function iterative_fitting(model::Function, xdata::Vector{Float64}, ydata::Vector{Float64}, parameters::Vector{Float64}, maxiter::Int)
-    for i in 1:maxiter
-        fit = curve_fit(model, xdata, ydata, parameters)
-        fit.converged || (parameters = fit.param)
-    end
-    return fit
-end
-
-function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; maxiter::Int) where {T <: EquationOfState}
+function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_energy(T(p))(x, p[end])
-    iterative_fitting(model, xdata, ydata, initial_parameters, 1)
+    curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
 end
 
-function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; maxiter::Int) where {T <: EquationOfState}
+function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_pressure(T(p))(x)
-    iterative_fitting(model, xdata, ydata, initial_parameters, 1)
+    curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
 end
 
 function eval_energy(eos::Birch)::Function
