@@ -1,4 +1,4 @@
-module EoS
+module EOS
 
 export EquationOfState
 
