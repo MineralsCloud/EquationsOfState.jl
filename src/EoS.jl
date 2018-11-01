@@ -1,5 +1,9 @@
 module EoS
 
-greet() = print("Hello World!")
+export EquationOfState
+
+struct EquationOfState
+
+end
 
 end # module
