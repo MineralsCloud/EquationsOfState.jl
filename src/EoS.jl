@@ -4,7 +4,9 @@ using StaticArrays
 using CurveFit
 using LsqFit: @., curve_fit
 
-export EquationOfState,
+export fit_energy,
+    fit_pressure,
+    EquationOfState,
     Birch
 
 abstract type EquationOfState end
