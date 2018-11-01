@@ -2,6 +2,7 @@ module EOS
 
 using StaticArrays
 using CurveFit
+using LsqFit
 
 export EquationOfState,
     Birch
