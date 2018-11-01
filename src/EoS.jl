@@ -14,16 +14,16 @@ struct Birch <: EquationOfState
 end
 
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}) where {T <: EquationOfState}
-    @. model(x, p) = free_energy(T(p))(x, p[end])
+    @. model(x, p) = eval_energy(T(p))(x, p[end])
     curve_fit(model, xdata, ydata, initial_parameters)
 end
 
 function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}) where {T <: EquationOfState}
-    @. model(x, p) = pressure(T(p))(x)
+    @. model(x, p) = eval_pressure(T(p))(x)
     curve_fit(model, xdata, ydata, initial_parameters)
 end
 
-function free_energy(eos::Birch)::Function
+function eval_energy(eos::Birch)::Function
     v0, b0, bp0 = eos.parameters
 
     function (v::Float64, f0::Float64=0)::Float64
@@ -33,7 +33,7 @@ function free_energy(eos::Birch)::Function
     end
 end
 
-function pressure(eos::Birch)::Function
+function eval_pressure(eos::Birch)::Function
     v0, b0, bp0 = eos.parameters
 
     function (v::Float64)::Float64
