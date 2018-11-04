@@ -7,7 +7,7 @@ using LsqFit: @., curve_fit
 export fit_energy,
     fit_pressure,
     eval_energy,
-    eval_pressure
+    eval_pressure,
     EquationOfState,
     Birch,
     Murnaghan,
