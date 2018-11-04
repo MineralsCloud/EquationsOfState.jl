@@ -2,7 +2,7 @@ module EOS
 
 using StaticArrays
 using CurveFit
-using LsqFit: @., curve_fit
+using LsqFit
 
 export fit_energy,
     fit_pressure,
@@ -41,7 +41,7 @@ struct Vinet <: EquationOfState
 end
 
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
-    @. model(x, p) = eval_energy(T(p))(x, p[end])
+    model(x, p) = eval_energy(T(p))(x, p[end])
     curve_fit(model, xdata, ydata, [eos.parameters; minimum(ydata)]; kwargs...)
 end
 
