@@ -47,6 +47,14 @@ struct Vinet <: EquationOfState
     parameters::SVector{3, Float64}
 end
 
+struct PoirierTarantola2nd <: EquationOfState
+    parameters::SVector{2, Float64}
+end
+
+struct PoirierTarantola3rd <: EquationOfState
+    parameters::SVector{3, Float64}
+end
+
 function eval_energy(eos::Birch)::Function
     v0, b0, bp0 = eos.parameters
 
@@ -159,6 +167,23 @@ function eval_pressure(eos::Vinet)::Function
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
         return 3 * b0 / x^2 * (1 - x) * exp(xi * (1 - x))
+    end
+end
+
+function eval_energy(eos::PoirierTarantola2nd)::Function
+    v0, b0 = eos.parameters
+
+    function (v::Float64, f0::Float64=0)
+        return f0 + 1 / 2 * b0 * v0 * log(v / v0)^(2 / 3)
+    end
+end
+
+function eval_pressure(eos::PoirierTarantola2nd)::Function
+    v0, b0 = eos.parameters
+
+    function (v::Float64)
+        x = (v / v0)^(1 / 3)
+        return -b0 / x * log(x)
     end
 end
 
