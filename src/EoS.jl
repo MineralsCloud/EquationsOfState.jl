@@ -27,6 +27,10 @@ struct BirchMurnaghan3rd <: EquationOfState
     parameters::SVector{3, Float64}
 end
 
+struct BirchMurnaghan4th <: EquationOfState
+    parameters::SVector{4, Float64}
+end
+
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_energy(T(p))(x, p[end])
     curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
@@ -109,6 +113,26 @@ function eval_pressure(eos::BirchMurnaghan3rd)::Function
     function (v::Float64)::Float64
         eta = (v0 / v)^(1 / 3)
         return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
+    end
+end
+
+function eval_energy(eos::BirchMurnaghan4th)::Function
+    v0, b0, bp0, bpp0 = eos.parameters
+
+    function (v::Float64, f0::Float64=0)::Float64
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        h = b0 * bpp0 + bp0^2
+        return f0 + 3 / 8 * v0 * b0 * f^2 * ((9 * h - 63 * bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+    end
+end
+
+function eval_pressure(eos::BirchMurnaghan4th)::Function
+    v0, b0, bp0, bpp0 = eos.parameters
+
+    function (v::Float64)::Float64
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        h = b0 * bpp0 + bp0^2
+        return 1 / 2 * b0 * (2 * f + 1)^(5 / 2) * ((9 * h - 63 * bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
     end
 end
 
