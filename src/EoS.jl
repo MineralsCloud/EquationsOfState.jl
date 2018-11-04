@@ -42,7 +42,7 @@ end
 
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_energy(T(p))(x, p[end])
-    curve_fit(model, xdata, ydata, eos.parameters; kwargs...)
+    curve_fit(model, xdata, ydata, [eos.parameters; minimum(ydata)]; kwargs...)
 end
 
 function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
