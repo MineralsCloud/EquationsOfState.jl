@@ -55,6 +55,10 @@ struct PoirierTarantola3rd <: EquationOfState
     parameters::SVector{3, Float64}
 end
 
+struct PoirierTarantola4th <: EquationOfState
+    parameters::SVector{4, Float64}
+end
+
 function eval_energy(eos::Birch)::Function
     v0, b0, bp0 = eos.parameters
 
@@ -204,6 +208,28 @@ function eval_pressure(eos::PoirierTarantola3rd)::Function
         x = (v / v0)^(1 / 3)
         xi = log(x)
         return -b0 * xi / (2 * x) * ((bp0 + 2) * xi + 2)
+    end
+end
+
+function eval_energy(eos::PoirierTarantola4th)::Function
+    v0, b0, bp0, bpp0 = eos.parameters
+
+    function (v::Float64, f0::Float64=0)
+        x = (v / v0)^(1 / 3)
+        xi = log(x)
+        h = b0 * bpp0 + bp0^2
+        return f0 + 1 / 24 * b0 * v0 * xi^2 * ((h + 3 * bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
+    end
+end
+
+function eval_pressure(eos::PoirierTarantola4th)::Function
+    v0, b0, bp0, bpp0 = eos.parameters
+
+    function (v::Float64)
+        x = (v / v0)^(1 / 3)
+        xi = log(x)
+        h = b0 * bpp0 + bp0^2
+        return -b0 * xi / 6 / x * ((h + 3 * bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
     end
 end
 
