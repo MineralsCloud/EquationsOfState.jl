@@ -1,7 +1,6 @@
 module EOS
 
 using StaticArrays
-using CurveFit
 using LsqFit
 
 export fit_energy,
