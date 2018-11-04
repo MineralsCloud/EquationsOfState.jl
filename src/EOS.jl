@@ -2,8 +2,8 @@ module EOS
 
 using Reexport
 
-include("CollectionsOfEOS.jl")
-@reexport using .CollectionsOfEOS
+include("Collections.jl")
+@reexport using .Collections
 
 include("Fitting.jl")
 @reexport using .Fitting

@@ -1,5 +1,5 @@
 """
-# module CollectionsOfEOS
+# module Collections
 
 
 
@@ -9,7 +9,7 @@
 julia>
 ```
 """
-module CollectionsOfEOS
+module Collections
 
 using StaticArrays
 
