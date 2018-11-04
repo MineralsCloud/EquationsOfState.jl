@@ -150,7 +150,7 @@ function eval_energy(eos::Vinet)::Function
     function (v::Float64, f0::Float64=0)
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
-        return f0 + 9 * b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * np.exp(xi * (1 - x)))
+        return f0 + 9 * b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
     end
 end
 
@@ -160,7 +160,7 @@ function eval_pressure(eos::Vinet)::Function
     function (v::Float64)
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
-        return 3 * b0 / x^2 * (1 - x) * np.exp(xi * (1 - x))
+        return 3 * b0 / x^2 * (1 - x) * exp(xi * (1 - x))
     end
 end
 
