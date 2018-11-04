@@ -1,1 +1,1 @@
-# EoS.jl
+# EOS.jl
