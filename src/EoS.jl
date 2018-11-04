@@ -19,6 +19,10 @@ struct Murnaghan <: EquationOfState
     parameters::SVector{3, Float64}
 end
 
+struct BirchMurnaghan2nd <: EquationOfState
+    parameters::SVector{2, Float64}
+end
+
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_energy(T(p))(x, p[end])
     curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
@@ -66,5 +70,24 @@ function eval_pressure(eos::Murnaghan)::Function
         return b0 / bp0 * ((v0 / v) ** bp0 - 1)
     end
 end
+
+function eval_energy(eos::BirchMurnaghan2nd)::Function
+    v0, b0 = eos.parameters
+
+    function (v::Float64, f0::Float64=0)::Float64
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        return f0 + 9 / 2 * b0 * v0 * f^2
+    end
+end
+
+function eval_pressure(eos::BirchMurnaghan2nd)::Function
+    v0, b0 = eos.parameters
+
+    function (v::Float64)::Float64
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        return 3 * b0 * f * (1 + 2 * f)^(5 / 2)
+    end
+end
+
 
 end # module
