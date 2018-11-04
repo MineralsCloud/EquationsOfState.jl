@@ -6,8 +6,13 @@ using LsqFit: @., curve_fit
 
 export fit_energy,
     fit_pressure,
+    eval_energy,
+    eval_pressure
     EquationOfState,
-    Birch
+    Birch,
+    Murnaghan,
+    BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
+    Vinet
 
 abstract type EquationOfState end
 
