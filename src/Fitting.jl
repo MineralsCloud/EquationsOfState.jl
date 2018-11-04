@@ -25,7 +25,7 @@ end
 
 function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     model(x, p) = eval_pressure(T(p)).(x)
-    curve_fit(model, xdata, ydata, eos.parameters; kwargs...)
+    curve_fit(model, xdata, ydata, collect(eos.parameters); kwargs...)
 end
 
 end
