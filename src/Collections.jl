@@ -187,4 +187,24 @@ function eval_pressure(eos::PoirierTarantola2nd)::Function
     end
 end
 
+function eval_energy(eos::PoirierTarantola3rd)::Function
+    v0, b0, bp0 = eos.parameters
+
+    function (v::Float64, f0::Float64=0)
+        x = (v / v0)^(1 / 3)
+        xi = log(x)
+        return f0 + 1 / 6 * b0 * v0 * xi^2 * ((bp0 + 2) * xi + 3)
+    end
+end
+
+function eval_pressure(eos::PoirierTarantola3rd)::Function
+    v0, b0, bp0 = eos.parameters
+
+    function (v::Float64)
+        x = (v / v0)^(1 / 3)
+        xi = log(x)
+        return -b0 * xi / (2 * x) * ((bp0 + 2) * xi + 2)
+    end
+end
+
 end
