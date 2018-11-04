@@ -70,7 +70,7 @@ function eval_energy(eos::Murnaghan)::Function
 
     function (v::Float64, f0::Float64=0)::Float64
         x = bp0 - 1
-        y = (v0 / v) ** bp0
+        y = (v0 / v)^bp0
         return f0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
     end
 end
@@ -79,7 +79,7 @@ function eval_pressure(eos::Murnaghan)::Function
     v0, b0, bp0 = eos.parameters
 
     function (v::Float64)::Float64
-        return b0 / bp0 * ((v0 / v) ** bp0 - 1)
+        return b0 / bp0 * ((v0 / v)^bp0 - 1)
     end
 end
 
