@@ -155,7 +155,7 @@ end
 function eval_pressure(eos::Vinet)::Function
     v0, b0, bp0 = eos.parameters
 
-    function (v)
+    function (v::Float64)
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
         return 3 * b0 / x^2 * (1 - x) * exp(xi * (1 - x))
