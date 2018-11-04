@@ -31,6 +31,10 @@ struct BirchMurnaghan4th <: EquationOfState
     parameters::SVector{4, Float64}
 end
 
+struct Vinet <: EquationOfState
+    parameters::SVector{3, Float64}
+end
+
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_energy(T(p))(x, p[end])
     curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
@@ -135,5 +139,26 @@ function eval_pressure(eos::BirchMurnaghan4th)::Function
         return 1 / 2 * b0 * (2 * f + 1)^(5 / 2) * ((9 * h - 63 * bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
     end
 end
+
+function eval_energy(eos::Vinet)::Function
+    v0, b0, bp0 = eos.parameters
+
+    function (v::Float64, f0::Float64=0)::Float64
+        x = (v / v0)^(1 / 3)
+        xi = 3 / 2 * (bp0 - 1)
+        return f0 + 9 * b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * np.exp(xi * (1 - x)))
+    end
+end
+
+function eval_pressure(eos::Vinet)::Function
+    v0, b0, bp0 = eos.parameters
+
+    function (v::Float64)::Float64
+        x = (v / v0)^(1 / 3)
+        xi = 3 / 2 * (bp0 - 1)
+        return 3 * b0 / x^2 * (1 - x) * np.exp(xi * (1 - x))
+    end
+end
+
 
 end # module
