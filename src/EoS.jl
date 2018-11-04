@@ -40,14 +40,14 @@ struct Vinet <: EquationOfState
     parameters::SVector{3, Float64}
 end
 
-function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
+function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_energy(T(p))(x, p[end])
-    curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
+    curve_fit(model, xdata, ydata, eos.parameters; kwargs...)
 end
 
-function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}, initial_parameters::Vector{Float64}; kwargs...) where {T <: EquationOfState}
+function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     @. model(x, p) = eval_pressure(T(p))(x)
-    curve_fit(model, xdata, ydata, initial_parameters; kwargs...)
+    curve_fit(model, xdata, ydata, eos.parameters; kwargs...)
 end
 
 function eval_energy(eos::Birch)::Function
