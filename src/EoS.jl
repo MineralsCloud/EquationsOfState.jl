@@ -1,9 +1,9 @@
-module EOS
+module EoS
 
 using Reexport
 
-include("CollectionsOfEOS.jl")
-@reexport using .CollectionsOfEOS
+include("CollectionsOfEoS.jl")
+@reexport using .CollectionsOfEoS
 
 include("Fitting.jl")
 @reexport using .Fitting

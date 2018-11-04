@@ -13,7 +13,7 @@ module Fitting
 
 using LsqFit
 
-using EOS.CollectionsOfEOS
+using EoS.CollectionsOfEoS
 
 export fit_energy,
     fit_pressure
