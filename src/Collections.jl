@@ -62,7 +62,7 @@ struct PoirierTarantola4th <: EquationOfState
 end
 
 struct Holzapfel <: EquationOfState
-    parameters::SVector{5, Float64}
+    parameters::SVector{4, Float64}
 end
 
 function eval_energy(eos::Birch)::Function
@@ -239,8 +239,8 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
     end
 end
 
-function eval_pressure(eos::Holzapfel)::Function
-    v0, b0, bp0, p0, z = eos.parameters
+function eval_pressure(eos::Holzapfel, z::Int)::Function
+    v0, b0, bp0, p0 = eos.parameters
 
     function (v::Float64)
         η = (v / v0)^(1 / 3)
