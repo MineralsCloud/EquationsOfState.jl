@@ -20,7 +20,8 @@ export eval_energy,
     Murnaghan,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
     Vinet,
-    PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th
+    PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
+    Holzapfel
 
 abstract type EquationOfState end
 
