@@ -98,10 +98,10 @@ end
 function eval_energy(eos::Birch)::Function
     v0, b0, bp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         x = (v0 / v)^(2 / 3) - 1
         xi = 9 / 16 * b0 * v0 * x^2
-        return f0 + 2 * xi + (bp0 - 4) * xi * x
+        return e0 + 2 * xi + (bp0 - 4) * xi * x
     end
 end
 
@@ -118,10 +118,10 @@ end
 function eval_energy(eos::Murnaghan)::Function
     v0, b0, bp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         x = bp0 - 1
         y = (v0 / v)^bp0
-        return f0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
+        return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
     end
 end
 
@@ -136,9 +136,9 @@ end
 function eval_energy(eos::BirchMurnaghan2nd)::Function
     v0, b0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         f = ((v0 / v)^(2 / 3) - 1) / 2
-        return f0 + 9 / 2 * b0 * v0 * f^2
+        return e0 + 9 / 2 * b0 * v0 * f^2
     end
 end
 
@@ -154,10 +154,10 @@ end
 function eval_energy(eos::BirchMurnaghan3rd)::Function
     v0, b0, bp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         eta = (v0 / v)^(1 / 3)
         xi = eta^2 - 1
-        return f0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
+        return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
     end
 end
 
@@ -173,10 +173,10 @@ end
 function eval_energy(eos::BirchMurnaghan4th)::Function
     v0, b0, bp0, bpp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         f = ((v0 / v)^(2 / 3) - 1) / 2
         h = b0 * bpp0 + bp0^2
-        return f0 + 3 / 8 * v0 * b0 * f^2 * ((9 * h - 63 * bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+        return e0 + 3 / 8 * v0 * b0 * f^2 * ((9 * h - 63 * bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
     end
 end
 
@@ -193,10 +193,10 @@ end
 function eval_energy(eos::Vinet)::Function
     v0, b0, bp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
-        return f0 + 9 * b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
+        return e0 + 9 * b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
     end
 end
 
@@ -213,8 +213,8 @@ end
 function eval_energy(eos::PoirierTarantola2nd)::Function
     v0, b0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
-        return f0 + 1 / 2 * b0 * v0 * log(v / v0)^(2 / 3)
+    function (v::Float64, e0::Float64=0)
+        return e0 + 1 / 2 * b0 * v0 * log(v / v0)^(2 / 3)
     end
 end
 
@@ -230,10 +230,10 @@ end
 function eval_energy(eos::PoirierTarantola3rd)::Function
     v0, b0, bp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         x = (v / v0)^(1 / 3)
         xi = log(x)
-        return f0 + 1 / 6 * b0 * v0 * xi^2 * ((bp0 + 2) * xi + 3)
+        return e0 + 1 / 6 * b0 * v0 * xi^2 * ((bp0 + 2) * xi + 3)
     end
 end
 
@@ -250,11 +250,11 @@ end
 function eval_energy(eos::PoirierTarantola4th)::Function
     v0, b0, bp0, bpp0 = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         x = (v / v0)^(1 / 3)
         xi = log(x)
         h = b0 * bpp0 + bp0^2
-        return f0 + 1 / 24 * b0 * v0 * xi^2 * ((h + 3 * bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
+        return e0 + 1 / 24 * b0 * v0 * xi^2 * ((h + 3 * bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
     end
 end
 
@@ -272,7 +272,7 @@ end
 function eval_energy(eos::Holzapfel)::Function
     v0, b0, bp0, z = collect_parameters(eos)
 
-    function (v::Float64, f0::Float64=0)
+    function (v::Float64, e0::Float64=0)
         η = (v / v0)^(1 / 3)
         pfg0 = 3.8283120002509214 * (z / v0)^(5 / 3)
         c0 = -log(3 * b0 / pfg0)
@@ -281,7 +281,7 @@ function eval_energy(eos::Holzapfel)::Function
         term2 = (sf_gamma_inc(-1, c0 * η) - sf_gamma_inc(-1, c0)) * c0 * (c2 - 1) * exp(c0)
         term3 = (sf_gamma_inc(0, c0 * η) - sf_gamma_inc(0, c0)) * 2 * c2 * exp(c0)
         term4 = c2 / c0 * (exp(c0 * (1 - η)) - 1)
-        return f0 + 9 * b0 * v0 * (term1 + term2 - term3 + term4)
+        return e0 + 9 * b0 * v0 * (term1 + term2 - term3 + term4)
     end
 end
 
