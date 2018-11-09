@@ -18,7 +18,7 @@ export eval_energy,
     eval_pressure,
     EquationOfState,
     NonFittingParameter,
-    collect_fitting_parameters,
+    collect_parameters,
     Birch,
     Murnaghan,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
@@ -91,12 +91,12 @@ struct Holzapfel <: EquationOfState{4, Float64}
     z::NonFittingParameter
 end
 
-function collect_fitting_parameters(eos::T) where {T <: EquationOfState}
-    filter(x -> !isa(x, NonFittingParameter), map(f -> getfield(eos, f), fieldnames(T)))
+function collect_parameters(eos::T) where {T <: EquationOfState}
+    map(f -> getfield(eos, f), fieldnames(T))
 end
 
 function eval_energy(eos::Birch)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         x = (v0 / v)^(2 / 3) - 1
@@ -106,7 +106,7 @@ function eval_energy(eos::Birch)::Function
 end
 
 function eval_pressure(eos::Birch)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64)
         x = v0 / v
@@ -116,7 +116,7 @@ function eval_pressure(eos::Birch)::Function
 end
 
 function eval_energy(eos::Murnaghan)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         x = bp0 - 1
@@ -126,7 +126,7 @@ function eval_energy(eos::Murnaghan)::Function
 end
 
 function eval_pressure(eos::Murnaghan)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64)
         return b0 / bp0 * ((v0 / v)^bp0 - 1)
@@ -134,7 +134,7 @@ function eval_pressure(eos::Murnaghan)::Function
 end
 
 function eval_energy(eos::BirchMurnaghan2nd)::Function
-    v0, b0 = collect_fitting_parameters(eos)
+    v0, b0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -143,7 +143,7 @@ function eval_energy(eos::BirchMurnaghan2nd)::Function
 end
 
 function eval_pressure(eos::BirchMurnaghan2nd)::Function
-    v0, b0 = collect_fitting_parameters(eos)
+    v0, b0 = collect_parameters(eos)
 
     function (v::Float64)
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -152,7 +152,7 @@ function eval_pressure(eos::BirchMurnaghan2nd)::Function
 end
 
 function eval_energy(eos::BirchMurnaghan3rd)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         eta = (v0 / v)^(1 / 3)
@@ -162,7 +162,7 @@ function eval_energy(eos::BirchMurnaghan3rd)::Function
 end
 
 function eval_pressure(eos::BirchMurnaghan3rd)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64)
         eta = (v0 / v)^(1 / 3)
@@ -171,7 +171,7 @@ function eval_pressure(eos::BirchMurnaghan3rd)::Function
 end
 
 function eval_energy(eos::BirchMurnaghan4th)::Function
-    v0, b0, bp0, bpp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0, bpp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -181,7 +181,7 @@ function eval_energy(eos::BirchMurnaghan4th)::Function
 end
 
 function eval_pressure(eos::BirchMurnaghan4th)::Function
-    v0, b0, bp0, bpp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0, bpp0 = collect_parameters(eos)
 
     function (v::Float64)
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -191,7 +191,7 @@ function eval_pressure(eos::BirchMurnaghan4th)::Function
 end
 
 function eval_energy(eos::Vinet)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         x = (v / v0)^(1 / 3)
@@ -201,7 +201,7 @@ function eval_energy(eos::Vinet)::Function
 end
 
 function eval_pressure(eos::Vinet)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64)
         x = (v / v0)^(1 / 3)
@@ -211,7 +211,7 @@ function eval_pressure(eos::Vinet)::Function
 end
 
 function eval_energy(eos::PoirierTarantola2nd)::Function
-    v0, b0 = collect_fitting_parameters(eos)
+    v0, b0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         return f0 + 1 / 2 * b0 * v0 * log(v / v0)^(2 / 3)
@@ -219,7 +219,7 @@ function eval_energy(eos::PoirierTarantola2nd)::Function
 end
 
 function eval_pressure(eos::PoirierTarantola2nd)::Function
-    v0, b0 = collect_fitting_parameters(eos)
+    v0, b0 = collect_parameters(eos)
 
     function (v::Float64)
         x = (v / v0)^(1 / 3)
@@ -228,7 +228,7 @@ function eval_pressure(eos::PoirierTarantola2nd)::Function
 end
 
 function eval_energy(eos::PoirierTarantola3rd)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         x = (v / v0)^(1 / 3)
@@ -238,7 +238,7 @@ function eval_energy(eos::PoirierTarantola3rd)::Function
 end
 
 function eval_pressure(eos::PoirierTarantola3rd)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0 = collect_parameters(eos)
 
     function (v::Float64)
         x = (v / v0)^(1 / 3)
@@ -248,7 +248,7 @@ function eval_pressure(eos::PoirierTarantola3rd)::Function
 end
 
 function eval_energy(eos::PoirierTarantola4th)::Function
-    v0, b0, bp0, bpp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0, bpp0 = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         x = (v / v0)^(1 / 3)
@@ -259,7 +259,7 @@ function eval_energy(eos::PoirierTarantola4th)::Function
 end
 
 function eval_pressure(eos::PoirierTarantola4th)::Function
-    v0, b0, bp0, bpp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0, bpp0 = collect_parameters(eos)
 
     function (v::Float64)
         x = (v / v0)^(1 / 3)
@@ -270,11 +270,11 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
 end
 
 function eval_energy(eos::Holzapfel)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0, z = collect_parameters(eos)
 
     function (v::Float64, f0::Float64=0)
         η = (v / v0)^(1 / 3)
-        pfg0 = 3.8283120002509214 * (eos.z / v0)^(5 / 3)
+        pfg0 = 3.8283120002509214 * (z / v0)^(5 / 3)
         c0 = -log(3 * b0 / pfg0)
         c2 = 3 / 2 * (bp0 - 3) - c0
         term1 = (sf_gamma_inc(-2, c0 * η) - sf_gamma_inc(-2, c0)) * c0^2 * exp(c0)
@@ -286,11 +286,11 @@ function eval_energy(eos::Holzapfel)::Function
 end
 
 function eval_pressure(eos::Holzapfel)::Function
-    v0, b0, bp0 = collect_fitting_parameters(eos)
+    v0, b0, bp0, z = collect_parameters(eos)
 
     function (v::Float64)
         η = (v / v0)^(1 / 3)
-        pfg0 = 3.8283120002509214 * (eos.z / v0)^(5 / 3)
+        pfg0 = 3.8283120002509214 * (z / v0)^(5 / 3)
         c0 = -log(3 * b0 / pfg0)
         c2 = 3 / 2 * (bp0 - 3) - c0
         return p0 + 3 * b0 * (1 - η) / η^5 * exp(c0 * (1 - η)) * (1 + c2 * η * (1 - η))

@@ -16,7 +16,12 @@ using LsqFit
 using EOS.Collections
 
 export fit_energy,
-    fit_pressure
+    fit_pressure,
+    collect_fitting_parameters
+
+function collect_fitting_parameters(eos::T) where {T <: EquationOfState}
+    filter(x -> !isa(x, NonFittingParameter), collect_parameters(eos))
+end
 
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     model(x, p) = eval_energy(T(p[1:(end - 1)])).(x, p[end])
