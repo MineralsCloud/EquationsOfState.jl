@@ -28,13 +28,11 @@ function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwar
     curve_fit(model, xdata, ydata, [collect_fitting_parameters(eos); minimum(ydata)]; kwargs...)
 end
 
-function fit_pressure(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
-    model(x, p) = eval_pressure(T(p)).(x)
-    curve_fit(model, xdata, ydata, collect_fitting_parameters(eos); kwargs...)
-end
+create_model(eos::EquationOfState) = (x, p) -> eval_pressure(T(p)).(x)
+create_model(eos::Holzapfel) = (x, p) -> eval_pressure(T(p..., eos.z)).(x)
 
-function fit_pressure(eos::Holzapfel, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
-    model(x, p) = eval_pressure(T(p, eos.z)).(x)
+function fit_pressure(eos::EquationOfState, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...)
+    model = create_model(eos)
     curve_fit(model, xdata, ydata, collect_fitting_parameters(eos); kwargs...)
 end
 
