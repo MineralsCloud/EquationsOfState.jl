@@ -91,6 +91,12 @@ struct Holzapfel <: EquationOfState{4, Float64}
     z::NonFittingParameter
 end
 
+struct AntonSchmidt <: EquationOfState{4, Float64}
+    v0::Float64
+    beta::Float64
+    n::Float64
+end
+
 function collect_parameters(eos::T) where {T <: EquationOfState}
     map(f -> getfield(eos, f), fieldnames(T))
 end
@@ -294,6 +300,25 @@ function eval_pressure(eos::Holzapfel)::Function
         c0 = -log(3 * b0 / pfg0)
         c2 = 3 / 2 * (bp0 - 3) - c0
         return p0 + 3 * b0 * (1 - η) / η^5 * exp(c0 * (1 - η)) * (1 + c2 * η * (1 - η))
+    end
+end
+
+function eval_energy(eos::AntonSchmidt)::Function
+    v0, beta, n = collect_parameters(eos)
+
+    function (v::Float64, e∞::Float64=0)
+        x = v / v0
+        η = n + 1
+        return e∞ + beta * v0 / η * x^η * (log(x) - 1 / η)
+    end
+end
+
+function eval_pressure(eos::AntonSchmidt)::Function
+    v0, beta, n = collect_parameters(eos)
+
+    function (v::Float64)
+        x = v / v0
+        return -beta * x^n * log(x)
     end
 end
 
