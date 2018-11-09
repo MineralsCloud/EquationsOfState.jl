@@ -29,7 +29,7 @@ function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwar
 end
 
 create_model(eos::EquationOfState) = (x, p) -> eval_pressure(T(p)).(x)
-create_model(eos::Holzapfel) = (x, p) -> eval_pressure(T(p..., eos.z)).(x)
+create_model(eos::Holzapfel) = (x, p) -> eval_pressure(T([p; eos.z])).(x)
 
 function fit_pressure(eos::EquationOfState, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...)
     model = create_model(eos)
