@@ -93,7 +93,7 @@ end
 
 struct AntonSchmidt <: EquationOfState{3, Float64}
     v0::Float64
-    beta::Float64
+    β::Float64
     n::Float64
 end
 
@@ -304,21 +304,21 @@ function eval_pressure(eos::Holzapfel)::Function
 end
 
 function eval_energy(eos::AntonSchmidt)::Function
-    v0, beta, n = collect_parameters(eos)
+    v0, β, n = collect_parameters(eos)
 
     function (v::Float64, e∞::Float64=0)
         x = v / v0
         η = n + 1
-        return e∞ + beta * v0 / η * x^η * (log(x) - 1 / η)
+        return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
     end
 end
 
 function eval_pressure(eos::AntonSchmidt)::Function
-    v0, beta, n = collect_parameters(eos)
+    v0, β, n = collect_parameters(eos)
 
     function (v::Float64)
         x = v / v0
-        return -beta * x^n * log(x)
+        return -β * x^n * log(x)
     end
 end
 
