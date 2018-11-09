@@ -19,7 +19,7 @@ export fit_energy,
     fit_pressure,
     collect_fitting_parameters
 
-function collect_fitting_parameters(eos::T) where {T <: EquationOfState}
+function collect_fitting_parameters(eos::EquationOfState)
     filter(x -> !isa(x, NonFittingParameter), collect_parameters(eos))
 end
 
