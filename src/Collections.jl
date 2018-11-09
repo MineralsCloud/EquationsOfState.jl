@@ -91,7 +91,7 @@ struct Holzapfel <: EquationOfState{4, Float64}
     z::NonFittingParameter
 end
 
-struct AntonSchmidt <: EquationOfState{4, Float64}
+struct AntonSchmidt <: EquationOfState{3, Float64}
     v0::Float64
     beta::Float64
     n::Float64
