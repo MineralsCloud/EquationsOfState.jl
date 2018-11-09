@@ -24,7 +24,8 @@ export eval_energy,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
     Vinet,
     PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
-    Holzapfel
+    Holzapfel,
+    AntonSchmidt
 
 abstract type EquationOfState{N, T} <: FieldVector{N, T} end
 
