@@ -11,6 +11,7 @@ julia>
 """
 module Collections
 
+using GSL: sf_gamma_inc
 using StaticArrays
 
 export eval_energy,
@@ -265,6 +266,22 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
         xi = log(x)
         h = b0 * bpp0 + bp0^2
         return -b0 * xi / 6 / x * ((h + 3 * bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
+    end
+end
+
+function eval_energy(eos::Holzapfel)::Function
+    v0, b0, bp0 = collect_fitting_parameters(eos)
+
+    function (v::Float64, f0::Float64=0)
+        η = (v / v0)^(1 / 3)
+        pfg0 = 3.8283120002509214 * (eos.z / v0)^(5 / 3)
+        c0 = -log(3 * b0 / pfg0)
+        c2 = 3 / 2 * (bp0 - 3) - c0
+        term1 = (sf_gamma_inc(-2, c0 * η) - sf_gamma_inc(-2, c0)) * c0^2 * exp(c0)
+        term2 = (sf_gamma_inc(-1, c0 * η) - sf_gamma_inc(-1, c0)) * c0 * (c2 - 1) * exp(c0)
+        term3 = (sf_gamma_inc(0, c0 * η) - sf_gamma_inc(0, c0)) * 2 * c2 * exp(c0)
+        term4 = c2 / c0 * (exp(c0 * (1 - η)) - 1)
+        return f0 + 9 * b0 * v0 * (term1 + term2 - term3 + term4)
     end
 end
 
