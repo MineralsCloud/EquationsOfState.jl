@@ -100,6 +100,12 @@ struct AntonSchmidt <: EquationOfState{3, Float64}
     n::Float64
 end
 
+struct BreenanStacey <: EquationOfState{3, Float64}
+    v0::Float64
+    b0::Float64
+    γ0::Float64
+end
+
 function collect_parameters(eos::T) where {T <: EquationOfState}
     map(f -> getfield(eos, f), fieldnames(T))
 end
@@ -322,6 +328,15 @@ function eval_pressure(eos::AntonSchmidt)::Function
     function (v::Float64)
         x = v / v0
         return -β * x^n * log(x)
+    end
+end
+
+function eval_pressure(eos::BreenanStacey)::Function
+    v0, b0, γ0 = collect_parameters(eos)
+
+    function (v::Float64)
+        x = v0 / v
+        return b0 / 2 / γ0 * x^(4 / 3) * (exp(2 * γ0 * (1 - x)) - 1)
     end
 end
 
