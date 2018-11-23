@@ -17,6 +17,7 @@ using StaticArrays
 export eval_energy,
     eval_pressure,
     EquationOfState,
+    FiniteStrainEquationOfState,
     NonFittingParameter,
     collect_parameters,
     Birch,
@@ -28,10 +29,11 @@ export eval_energy,
     AntonSchmidt
 
 abstract type EquationOfState{N, T} <: FieldVector{N, T} end
+abstract type FiniteStrainEquationOfState{N, T} <: EquationOfState{N, T} end
 
 primitive type NonFittingParameter <: AbstractFloat 64 end
 
-struct Birch <: EquationOfState{3, Float64}
+struct Birch <: FiniteStrainEquationOfState{3, Float64}
     v0::Float64
     b0::Float64
     bp0::Float64
@@ -43,18 +45,18 @@ struct Murnaghan <: EquationOfState{3, Float64}
     bp0::Float64
 end
 
-struct BirchMurnaghan2nd <: EquationOfState{2, Float64}
+struct BirchMurnaghan2nd <: FiniteStrainEquationOfState{2, Float64}
     v0::Float64
     b0::Float64
 end
 
-struct BirchMurnaghan3rd <: EquationOfState{3, Float64}
+struct BirchMurnaghan3rd <: FiniteStrainEquationOfState{3, Float64}
     v0::Float64
     b0::Float64
     bp0::Float64
 end
 
-struct BirchMurnaghan4th <: EquationOfState{4, Float64}
+struct BirchMurnaghan4th <: FiniteStrainEquationOfState{4, Float64}
     v0::Float64
     b0::Float64
     bp0::Float64
@@ -67,18 +69,18 @@ struct Vinet <: EquationOfState{3, Float64}
     bp0::Float64
 end
 
-struct PoirierTarantola2nd <: EquationOfState{2, Float64}
+struct PoirierTarantola2nd <: FiniteStrainEquationOfState{2, Float64}
     v0::Float64
     b0::Float64
 end
 
-struct PoirierTarantola3rd <: EquationOfState{3, Float64}
+struct PoirierTarantola3rd <: FiniteStrainEquationOfState{3, Float64}
     v0::Float64
     b0::Float64
     bp0::Float64
 end
 
-struct PoirierTarantola4th <: EquationOfState{4, Float64}
+struct PoirierTarantola4th <: FiniteStrainEquationOfState{4, Float64}
     v0::Float64
     b0::Float64
     bp0::Float64
