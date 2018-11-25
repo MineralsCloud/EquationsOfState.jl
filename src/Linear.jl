@@ -11,11 +11,62 @@ julia>
 """
 module Linear
 
-export finite_strain_at
+using LinearAlgebra: dot
+using Polynomials: polyder, polyfit, degree, coeffs, Poly
 
-function finite_strain_at(m::Int, v0::Float64, v::Float64)
-    m == 1 && return -1 / 3 / v * (v0 / v)^(2 / 3)
-    -(3 * m + 2) / (3 * v) * finite_strain_at(m - 1, v0, v)
+export FiniteStrain,
+    EulerianStrain,
+    LagrangianStrian,
+    compute_strain,
+    energy_strain_expansion,
+    energy_strain_derivative,
+    strain_derivative,
+    energy_volume_expansion,
+    energy_volume_derivatives,
+    energy_volume_derivative_at_order
+
+struct FiniteStrain{T}
+    v0::Float64
+end
+
+const EulerianStrain = FiniteStrain{:Eulerian}
+const LagrangianStrian = FiniteStrain{:Lagrangian}
+
+compute_strain(f::EulerianStrain, v::Float64)::Float64 = 1 / 2 * ((f.v0 / v)^(2 / 3) - 1)
+compute_strain(f::LagrangianStrian, v::Float64)::Float64 = 1 / 2 * ((v / f.v0)^(2 / 3) - 1)
+
+energy_strain_expansion(f::Vector{Float64}, e::Vector{Float64}, n::Int)::Poly = polyfit(f, e, n)
+
+energy_strain_derivative(p::Poly, m::Int)::Poly = polyder(p, m)
+
+function strain_derivative(f::EulerianStrain, v::Float64, m::Int)::Float64
+    m == 1 && return -1 / 3 / v * (f.v0 / v)^(2 / 3)
+    -(3 * m + 2) / (3 * v) * strain_derivative(f.v0, v, m - 1)
+end
+
+function energy_volume_expansion(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int=degree(p))
+    # The zeroth order value plus values from the first to the ``highest_order`.
+    p(v) + dot(energy_volume_derivative_at_order(p, highest_order), compute_strain(f, v).^collect(1:highest_order))
+end
+
+function energy_volume_derivatives(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int)
+    0 ≤ highest_order ≤ degree(p) ? (x = 1:highest_order) : throw(DomainError)
+    strain_derivatives::Vector{Float64} = map(m -> strain_derivative(f, v, m), x)
+    energy_derivatives::Vector{Float64} = map(m -> energy_strain_derivative(p, m), x) |> f -> f(v)
+    map(m -> energy_volume_derivative_at_order{m}(strain_derivatives, energy_derivatives), x)
+end
+
+energy_volume_derivative_at_order{N}(f, e) where {N} = error("Expansion is not defined at order = $(N)!")
+energy_volume_derivative_at_order{1}(f::Vector{Float64}, e::Vector{Float64})::Float64 = e[1] * f[1]
+function energy_volume_derivative_at_order{2}(f::Vector{Float64}, e::Vector{Float64})::Float64
+    e[2] * f[1]^2 + e[1] * f[1]
+end
+function energy_volume_derivative_at_order{3}(f::Vector{Float64}, e::Vector{Float64})::Float64
+    e[3] * f[1]^3 + 3 * f[1] * f[2] * e[2] + e[1] * f[3]
+end
+function energy_volume_derivative_at_order{4}(f::Vector{Float64}, e::Vector{Float64})::Float64
+    e[4] * f[1]^4 + 6 * f[1]^2 * f[2] * e[3] +
+    (4 * f[1] * f[3] + 3 * f[3]^2) * e[2] + e[1] * f[3]
 end
 
 end
