@@ -1,5 +1,5 @@
 """
-# module Fitting
+# module NonlinearFitting
 
 
 
@@ -9,7 +9,7 @@
 julia>
 ```
 """
-module Fitting
+module NonlinearFitting
 
 using LsqFit
 
