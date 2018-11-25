@@ -23,7 +23,7 @@ export FiniteStrain,
     compute_strain,
     energy_strain_expansion,
     energy_strain_derivative,
-    strain_derivative,
+    strain_volume_derivative,
     energy_volume_expansion,
     energy_volume_derivatives,
     energy_volume_derivative_at_order
