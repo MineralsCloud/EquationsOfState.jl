@@ -53,7 +53,7 @@ end
 function energy_volume_derivatives(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int)
     0 ≤ highest_order ≤ degree(p) ? (x = 1:highest_order) : throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
     strain_derivatives::Vector{Float64} = map(m -> strain_derivative(f, v, m), x)
-    energy_derivatives::Vector{Float64} = map(m -> energy_strain_derivative(p, m), x) |> f -> f(v)
+    energy_derivatives::Vector{Float64} = map(f -> f(v), map(m -> energy_strain_derivative(p, m), x))
     map(m -> energy_volume_derivative_at_order(m)(strain_derivatives, energy_derivatives), x)
 end
 
