@@ -1,5 +1,5 @@
 """
-# module Linear
+# module LinearFitting
 
 
 
@@ -9,7 +9,7 @@
 julia>
 ```
 """
-module Linear
+module LinearFitting
 
 using LinearAlgebra: dot
 using Polynomials: polyder, polyfit, degree, coeffs, Poly
