@@ -18,6 +18,8 @@ using Rematch
 export FiniteStrain,
     EulerianStrain,
     LagrangianStrian,
+    NaturalStrain,
+    InfinitesimalStrain,
     compute_strain,
     energy_strain_expansion,
     energy_strain_derivative,
@@ -32,9 +34,13 @@ end
 
 const EulerianStrain = FiniteStrain{:Eulerian}
 const LagrangianStrian = FiniteStrain{:Lagrangian}
+const NaturalStrain = FiniteStrain{:Natural}
+const InfinitesimalStrain = FiniteStrain{:Infinitesimal}
 
-compute_strain(f::EulerianStrain, v::Float64)::Float64 = 1 / 2 * ((f.v0 / v)^(2 / 3) - 1)
-compute_strain(f::LagrangianStrian, v::Float64)::Float64 = 1 / 2 * ((v / f.v0)^(2 / 3) - 1)
+compute_strain(f::EulerianStrain, v::Float64)::Float64 = ((f.v0 / v)^(2 / 3) - 1) / 2
+compute_strain(f::LagrangianStrian, v::Float64)::Float64 = ((v / f.v0)^(2 / 3) - 1) / 2
+compute_strain(f::NaturalStrain, v::Float64)::Float64 = log(v / f.v0) / 3
+compute_strain(f::InfinitesimalStrain, v::Float64)::Float64 = 1 - (f.v0 / v)^(1 / 3)
 
 energy_strain_expansion(f::Vector{Float64}, e::Vector{Float64}, n::Int)::Poly = polyfit(f, e, n)
 
@@ -43,6 +49,18 @@ energy_strain_derivative(p::Poly, m::Int)::Poly = polyder(p, m)
 function strain_derivative(f::EulerianStrain, v::Float64, m::Int)::Float64
     m == 1 && return -1 / 3 / v * (f.v0 / v)^(2 / 3)
     -(3 * m + 2) / (3 * v) * strain_derivative(f, v, m - 1)
+end
+function strain_derivative(f::LagrangianStrian, v::Float64, m::Int)::Float64
+    m == 1 && return -1 / 3 / v * (v / f.v0)^(2 / 3)
+    -(3 * m - 2) / (3 * v) * strain_derivative(f, v, m - 1)
+end
+function strain_derivative(f::NaturalStrain, v::Float64, m::Int)::Float64
+    m == 1 && return 1 / 3 / v
+    -m / v * strain_derivative(f, v, m - 1)
+end
+function strain_derivative(f::InfinitesimalStrain, v::Float64, m::Int)::Float64
+    m == 1 && return (1 - compute_strain(f, v))^4 / 3 / f.v0
+    -(3 * m + 1) / 3 / v * strain_derivative(f, v, m - 1)
 end
 
 function energy_volume_expansion(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int=degree(p))
