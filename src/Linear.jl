@@ -46,21 +46,21 @@ energy_strain_expansion(f::Vector{Float64}, e::Vector{Float64}, n::Int)::Poly = 
 
 energy_strain_derivative(p::Poly, m::Int)::Poly = polyder(p, m)
 
-function strain_derivative(f::EulerianStrain, v::Float64, m::Int)::Float64
+function strain_volume_derivative(f::EulerianStrain, v::Float64, m::Int)::Float64
     m == 1 && return -1 / 3 / v * (f.v0 / v)^(2 / 3)
-    -(3 * m + 2) / (3 * v) * strain_derivative(f, v, m - 1)
+    -(3 * m + 2) / (3 * v) * strain_volume_derivative(f, v, m - 1)
 end
-function strain_derivative(f::LagrangianStrian, v::Float64, m::Int)::Float64
+function strain_volume_derivative(f::LagrangianStrian, v::Float64, m::Int)::Float64
     m == 1 && return -1 / 3 / v * (v / f.v0)^(2 / 3)
-    -(3 * m - 2) / (3 * v) * strain_derivative(f, v, m - 1)
+    -(3 * m - 2) / (3 * v) * strain_volume_derivative(f, v, m - 1)
 end
-function strain_derivative(f::NaturalStrain, v::Float64, m::Int)::Float64
+function strain_volume_derivative(f::NaturalStrain, v::Float64, m::Int)::Float64
     m == 1 && return 1 / 3 / v
-    -m / v * strain_derivative(f, v, m - 1)
+    -m / v * strain_volume_derivative(f, v, m - 1)
 end
-function strain_derivative(f::InfinitesimalStrain, v::Float64, m::Int)::Float64
+function strain_volume_derivative(f::InfinitesimalStrain, v::Float64, m::Int)::Float64
     m == 1 && return (1 - compute_strain(f, v))^4 / 3 / f.v0
-    -(3 * m + 1) / 3 / v * strain_derivative(f, v, m - 1)
+    -(3 * m + 1) / 3 / v * strain_volume_derivative(f, v, m - 1)
 end
 
 function energy_volume_expansion(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int=degree(p))
@@ -70,7 +70,7 @@ end
 
 function energy_volume_derivatives(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int)
     0 ≤ highest_order ≤ degree(p) ? (x = 1:highest_order) : throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
-    strain_derivatives::Vector{Float64} = map(m -> strain_derivative(f, v, m), x)
+    strain_derivatives::Vector{Float64} = map(m -> strain_volume_derivative(f, v, m), x)
     energy_derivatives::Vector{Float64} = map(f -> f(v), map(m -> energy_strain_derivative(p, m), x))
     map(m -> energy_volume_derivative_at_order(m)(strain_derivatives, energy_derivatives), x)
 end
