@@ -5,7 +5,10 @@ using Reexport
 include("Collections.jl")
 @reexport using .Collections
 
-include("Fitting.jl")
-@reexport using .Fitting
+include("NonlinearFitting.jl")
+@reexport using .NonlinearFitting
+
+include("LinearFitting.jl")
+@reexport using .LinearFitting
 
 end # module
