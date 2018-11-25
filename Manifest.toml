@@ -114,6 +114,12 @@ git-tree-sha1 = "5c1b5ab85e120c6d1734e7f5670aac22fe69270c"
 uuid = "2fda8390-95c7-5789-9bda-21331edee243"
 version = "0.6.0"
 
+[[MacroTools]]
+deps = ["Compat"]
+git-tree-sha1 = "c443e1c8d58a4e9f61b708ad0a88286c7042145b"
+uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
+version = "0.4.4"
+
 [[Markdown]]
 deps = ["Base64"]
 uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
@@ -190,6 +196,14 @@ deps = ["Pkg"]
 git-tree-sha1 = "7b1d07f411bc8ddb7977ec7f377b97b158514fe0"
 uuid = "189a3867-3050-52da-a836-e630ba90ab69"
 version = "0.2.0"
+
+[[Rematch]]
+deps = ["MacroTools"]
+git-tree-sha1 = "d0ca9f9dafe83e0f318183d6c37f6f14560932b3"
+repo-rev = "376c3521c2f5cf3eb3894cff4988d8efd51160dc"
+repo-url = "https://github.com/RelationalAI-oss/Rematch.jl.git"
+uuid = "bfecab0d-fd4d-5014-a23f-56c5fae6447a"
+version = "0.1.2+"
 
 [[Rmath]]
 deps = ["BinaryProvider", "Libdl", "Random", "Statistics", "Test"]
