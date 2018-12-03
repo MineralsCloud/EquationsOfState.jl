@@ -107,7 +107,7 @@ struct BreenanStacey <: EquationOfState{3, Float64}
 end
 
 function collect_parameters(eos::T) where {T <: EquationOfState}
-    map(f -> getfield(eos, f), fieldnames(T))
+    map(f -> getfield(eos, f), fieldnames(T)) |> collect
 end
 
 function eval_energy(eos::Birch)::Function
