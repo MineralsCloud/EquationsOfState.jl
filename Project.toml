@@ -1,4 +1,4 @@
-name = "EOS"
+name = "EquationsOfState"
 uuid = "dad20aae-dd90-11e8-1386-c770c039e526"
 authors = ["Qi Zhang <singularitti@outlook.com>"]
 version = "0.1.2"

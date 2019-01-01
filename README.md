@@ -1,4 +1,4 @@
-# EOS.jl
+# EquationsOfState.jl
 
 This package implements some _equations of state_ (EOS) of solid which are useful in research. It includes:
 

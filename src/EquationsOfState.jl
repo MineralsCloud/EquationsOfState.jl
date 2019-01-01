@@ -1,4 +1,4 @@
-module EOS
+module EquationsOfState
 
 using Reexport
 
