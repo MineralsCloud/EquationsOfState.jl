@@ -13,7 +13,7 @@ module NonlinearFitting
 
 using LsqFit
 
-using EOS.Collections
+using EquationsOfState.Collections
 
 export fit_energy,
     fit_pressure,
