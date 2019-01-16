@@ -29,6 +29,7 @@ export eval_energy,
     AntonSchmidt
 
 abstract type EquationOfState{N, T} <: FieldVector{N, T} end
+
 abstract type FiniteStrainEquationOfState{N, T} <: EquationOfState{N, T} end
 
 primitive type NonFittingParameter <: AbstractFloat 64 end
