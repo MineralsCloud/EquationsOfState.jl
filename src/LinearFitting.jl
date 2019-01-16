@@ -17,7 +17,7 @@ using Rematch
 
 export FiniteStrain,
     EulerianStrain,
-    LagrangianStrian,
+    LagrangianStrain,
     NaturalStrain,
     InfinitesimalStrain,
     compute_strain,
@@ -33,12 +33,12 @@ struct FiniteStrain{T}
 end
 
 const EulerianStrain = FiniteStrain{:Eulerian}
-const LagrangianStrian = FiniteStrain{:Lagrangian}
+const LagrangianStrain = FiniteStrain{:Lagrangian}
 const NaturalStrain = FiniteStrain{:Natural}
 const InfinitesimalStrain = FiniteStrain{:Infinitesimal}
 
 compute_strain(f::EulerianStrain, v::Float64)::Float64 = ((f.v0 / v)^(2 / 3) - 1) / 2
-compute_strain(f::LagrangianStrian, v::Float64)::Float64 = ((v / f.v0)^(2 / 3) - 1) / 2
+compute_strain(f::LagrangianStrain, v::Float64)::Float64 = ((v / f.v0)^(2 / 3) - 1) / 2
 compute_strain(f::NaturalStrain, v::Float64)::Float64 = log(v / f.v0) / 3
 compute_strain(f::InfinitesimalStrain, v::Float64)::Float64 = 1 - (f.v0 / v)^(1 / 3)
 
@@ -50,7 +50,7 @@ function strain_volume_derivative(f::EulerianStrain, v::Float64, m::Int)::Float6
     m == 1 && return -1 / 3 / v * (f.v0 / v)^(2 / 3)
     -(3 * m + 2) / (3 * v) * strain_volume_derivative(f, v, m - 1)
 end
-function strain_volume_derivative(f::LagrangianStrian, v::Float64, m::Int)::Float64
+function strain_volume_derivative(f::LagrangianStrain, v::Float64, m::Int)::Float64
     m == 1 && return -1 / 3 / v * (v / f.v0)^(2 / 3)
     -(3 * m - 2) / (3 * v) * strain_volume_derivative(f, v, m - 1)
 end
