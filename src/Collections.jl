@@ -21,7 +21,7 @@ export eval_energy,
     EquationOfState,
     FiniteStrainEquationOfState,
     NonFittingParameter,
-    collect_parameters,
+    get_parameters,
     Birch,
     Murnaghan,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
@@ -131,12 +131,12 @@ end
 BreenanStacey(v0::T, b0::T, γ0::T) where {T} = BreenanStacey{T}(v0, b0, γ0)
 BreenanStacey(v0, b0, γ0) = BreenanStacey(promote(v0, b0, γ0))
 
-function collect_parameters(eos::T) where {T <: EquationOfState}
-    map(f -> getfield(eos, f), fieldnames(T)) |> collect
+function get_parameters(eos::T) where {T <: EquationOfState}
+    map(f -> getfield(eos, f), fieldnames(T))
 end
 
 function eval_energy(eos::Birch)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         x = (v0 / v)^(2 / 3) - 1
@@ -146,7 +146,7 @@ function eval_energy(eos::Birch)::Function
 end
 
 function eval_pressure(eos::Birch)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T) where {T}
         x = v0 / v
@@ -156,7 +156,7 @@ function eval_pressure(eos::Birch)::Function
 end
 
 function eval_energy(eos::Murnaghan)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         x = bp0 - 1
@@ -166,7 +166,7 @@ function eval_energy(eos::Murnaghan)::Function
 end
 
 function eval_pressure(eos::Murnaghan)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T) where {T}
         return b0 / bp0 * ((v0 / v)^bp0 - 1)
@@ -174,7 +174,7 @@ function eval_pressure(eos::Murnaghan)::Function
 end
 
 function eval_energy(eos::BirchMurnaghan2nd)::Function
-    v0, b0 = collect_parameters(eos)
+    v0, b0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -183,7 +183,7 @@ function eval_energy(eos::BirchMurnaghan2nd)::Function
 end
 
 function eval_pressure(eos::BirchMurnaghan2nd)::Function
-    v0, b0 = collect_parameters(eos)
+    v0, b0 = get_parameters(eos)
 
     function (v::T) where {T}
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -192,7 +192,7 @@ function eval_pressure(eos::BirchMurnaghan2nd)::Function
 end
 
 function eval_energy(eos::BirchMurnaghan3rd)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         eta = (v0 / v)^(1 / 3)
@@ -202,7 +202,7 @@ function eval_energy(eos::BirchMurnaghan3rd)::Function
 end
 
 function eval_pressure(eos::BirchMurnaghan3rd)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T) where {T}
         eta = (v0 / v)^(1 / 3)
@@ -211,7 +211,7 @@ function eval_pressure(eos::BirchMurnaghan3rd)::Function
 end
 
 function eval_energy(eos::BirchMurnaghan4th)::Function
-    v0, b0, bp0, bpp0 = collect_parameters(eos)
+    v0, b0, bp0, bpp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -221,7 +221,7 @@ function eval_energy(eos::BirchMurnaghan4th)::Function
 end
 
 function eval_pressure(eos::BirchMurnaghan4th)::Function
-    v0, b0, bp0, bpp0 = collect_parameters(eos)
+    v0, b0, bp0, bpp0 = get_parameters(eos)
 
     function (v::T) where {T}
         f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -231,7 +231,7 @@ function eval_pressure(eos::BirchMurnaghan4th)::Function
 end
 
 function eval_energy(eos::Vinet)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         x = (v / v0)^(1 / 3)
@@ -241,7 +241,7 @@ function eval_energy(eos::Vinet)::Function
 end
 
 function eval_pressure(eos::Vinet)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T) where {T}
         x = (v / v0)^(1 / 3)
@@ -251,7 +251,7 @@ function eval_pressure(eos::Vinet)::Function
 end
 
 function eval_energy(eos::PoirierTarantola2nd)::Function
-    v0, b0 = collect_parameters(eos)
+    v0, b0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         return e0 + 1 / 2 * b0 * v0 * log(v / v0)^(2 / 3)
@@ -259,7 +259,7 @@ function eval_energy(eos::PoirierTarantola2nd)::Function
 end
 
 function eval_pressure(eos::PoirierTarantola2nd)::Function
-    v0, b0 = collect_parameters(eos)
+    v0, b0 = get_parameters(eos)
 
     function (v::T) where {T}
         x = (v / v0)^(1 / 3)
@@ -268,7 +268,7 @@ function eval_pressure(eos::PoirierTarantola2nd)::Function
 end
 
 function eval_energy(eos::PoirierTarantola3rd)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         x = (v / v0)^(1 / 3)
@@ -278,7 +278,7 @@ function eval_energy(eos::PoirierTarantola3rd)::Function
 end
 
 function eval_pressure(eos::PoirierTarantola3rd)::Function
-    v0, b0, bp0 = collect_parameters(eos)
+    v0, b0, bp0 = get_parameters(eos)
 
     function (v::T) where {T}
         x = (v / v0)^(1 / 3)
@@ -288,7 +288,7 @@ function eval_pressure(eos::PoirierTarantola3rd)::Function
 end
 
 function eval_energy(eos::PoirierTarantola4th)::Function
-    v0, b0, bp0, bpp0 = collect_parameters(eos)
+    v0, b0, bp0, bpp0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         x = (v / v0)^(1 / 3)
@@ -299,7 +299,7 @@ function eval_energy(eos::PoirierTarantola4th)::Function
 end
 
 function eval_pressure(eos::PoirierTarantola4th)::Function
-    v0, b0, bp0, bpp0 = collect_parameters(eos)
+    v0, b0, bp0, bpp0 = get_parameters(eos)
 
     function (v::T) where {T}
         x = (v / v0)^(1 / 3)
@@ -310,7 +310,7 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
 end
 
 function eval_energy(eos::Holzapfel)::Function
-    v0, b0, bp0, z = collect_parameters(eos)
+    v0, b0, bp0, z = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T}
         η = (v / v0)^(1 / 3)
@@ -326,7 +326,7 @@ function eval_energy(eos::Holzapfel)::Function
 end
 
 function eval_pressure(eos::Holzapfel)::Function
-    v0, b0, bp0, z = collect_parameters(eos)
+    v0, b0, bp0, z = get_parameters(eos)
 
     function (v::T) where {T}
         η = (v / v0)^(1 / 3)
@@ -338,7 +338,7 @@ function eval_pressure(eos::Holzapfel)::Function
 end
 
 function eval_energy(eos::AntonSchmidt)::Function
-    v0, β, n = collect_parameters(eos)
+    v0, β, n = get_parameters(eos)
 
     function (v::T, e∞::T=0) where {T}
         x = v / v0
@@ -348,7 +348,7 @@ function eval_energy(eos::AntonSchmidt)::Function
 end
 
 function eval_pressure(eos::AntonSchmidt)::Function
-    v0, β, n = collect_parameters(eos)
+    v0, β, n = get_parameters(eos)
 
     function (v::T) where {T}
         x = v / v0
@@ -357,7 +357,7 @@ function eval_pressure(eos::AntonSchmidt)::Function
 end
 
 function eval_pressure(eos::BreenanStacey)::Function
-    v0, b0, γ0 = collect_parameters(eos)
+    v0, b0, γ0 = get_parameters(eos)
 
     function (v::T) where {T}
         x = v0 / v

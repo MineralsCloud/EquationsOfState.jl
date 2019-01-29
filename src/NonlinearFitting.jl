@@ -17,15 +17,15 @@ using EquationsOfState.Collections
 
 export fit_energy,
     fit_pressure,
-    collect_fitting_parameters
+    get_fitting_parameters
 
-function collect_fitting_parameters(eos::EquationOfState)
-    filter(x -> !isa(x, NonFittingParameter), collect_parameters(eos))
+function get_fitting_parameters(eos::EquationOfState)
+    filter(x -> !isa(x, NonFittingParameter), get_parameters(eos))
 end
 
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
     model(x, p) = eval_energy(T(p[1:(end - 1)])).(x, p[end])
-    curve_fit(model, xdata, ydata, [collect_fitting_parameters(eos); minimum(ydata)]; kwargs...)
+    curve_fit(model, xdata, ydata, [get_fitting_parameters(eos); minimum(ydata)]; kwargs...)
 end
 
 create_model(eos::EquationOfState) = (x::Vector, p::Vector) -> eval_pressure(T(p)).(x)
@@ -33,7 +33,7 @@ create_model(eos::Holzapfel) = (x::Vector, p::Vector) -> eval_pressure(T([p; eos
 
 function fit_pressure(eos::EquationOfState, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...)
     model = create_model(eos)
-    curve_fit(model, xdata, ydata, collect_fitting_parameters(eos); kwargs...)
+    curve_fit(model, xdata, ydata, get_fitting_parameters(eos); kwargs...)
 end
 
 end
