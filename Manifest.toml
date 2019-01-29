@@ -290,11 +290,3 @@ deps = ["LinearAlgebra", "Random", "Test"]
 git-tree-sha1 = "ba654182cad07cd6c1f3ae969475e556db3283ea"
 uuid = "1986cc42-f94f-5a68-af5c-568840ba703d"
 version = "0.14.0"
-
-[[UnitfulHartree]]
-deps = ["Unitful"]
-git-tree-sha1 = "cddfe4fc8e8027b5fd10c5a6c0bc008b8aefcc81"
-repo-rev = "master"
-repo-url = "https://github.com/mdavezac/UnitfulHartree.jl"
-uuid = "12211df9-7fe4-53d8-bad7-49e4db9b37d0"
-version = "0.0.0"

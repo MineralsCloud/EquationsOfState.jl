@@ -14,7 +14,6 @@ module Collections
 using GSL: sf_gamma_inc
 using StaticArrays
 using Unitful
-using UnitfulHartree
 
 export eval_energy,
     eval_pressure,
