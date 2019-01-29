@@ -15,32 +15,14 @@ using LinearAlgebra: dot
 using Polynomials: polyder, polyfit, degree, coeffs, Poly
 using Rematch
 
-export FiniteStrain,
-    EulerianStrain,
-    LagrangianStrain,
-    NaturalStrain,
-    InfinitesimalStrain,
-    compute_strain,
-    energy_strain_expansion,
+using EquationsOfState.FiniteStrains
+
+export energy_strain_expansion,
     energy_strain_derivative,
     strain_volume_derivative,
     energy_volume_expansion,
     energy_volume_derivatives,
     energy_volume_derivative_at_order
-
-struct FiniteStrain{T}
-    v0::Float64
-end
-
-const EulerianStrain = FiniteStrain{:Eulerian}
-const LagrangianStrain = FiniteStrain{:Lagrangian}
-const NaturalStrain = FiniteStrain{:Natural}
-const InfinitesimalStrain = FiniteStrain{:Infinitesimal}
-
-compute_strain(f::EulerianStrain, v::Float64)::Float64 = ((f.v0 / v)^(2 / 3) - 1) / 2
-compute_strain(f::LagrangianStrain, v::Float64)::Float64 = ((v / f.v0)^(2 / 3) - 1) / 2
-compute_strain(f::NaturalStrain, v::Float64)::Float64 = log(v / f.v0) / 3
-compute_strain(f::InfinitesimalStrain, v::Float64)::Float64 = 1 - (f.v0 / v)^(1 / 3)
 
 energy_strain_expansion(f::Vector{Float64}, e::Vector{Float64}, n::Int)::Poly = polyfit(f, e, n)
 
@@ -59,13 +41,13 @@ function strain_volume_derivative(f::NaturalStrain, v::Float64, m::Int)::Float64
     -m / v * strain_volume_derivative(f, v, m - 1)
 end
 function strain_volume_derivative(f::InfinitesimalStrain, v::Float64, m::Int)::Float64
-    m == 1 && return (1 - compute_strain(f, v))^4 / 3 / f.v0
+    m == 1 && return (1 - get_strain(f, v))^4 / 3 / f.v0
     -(3 * m + 1) / 3 / v * strain_volume_derivative(f, v, m - 1)
 end
 
 function energy_volume_expansion(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int=degree(p))
     # The zeroth order value plus values from the first to the ``highest_order`.
-    p(v) + dot(energy_volume_derivatives(f, v, p, highest_order), compute_strain(f, v).^collect(1:highest_order))
+    p(v) + dot(energy_volume_derivatives(f, v, p, highest_order), get_strain(f, v).^collect(1:highest_order))
 end
 
 function energy_volume_derivatives(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int)
