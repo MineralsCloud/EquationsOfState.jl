@@ -28,7 +28,8 @@ export eval_energy,
     Vinet,
     PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
     Holzapfel,
-    AntonSchmidt
+    AntonSchmidt,
+    BreenanStacey
 
 struct NonFittingParameter{T}
     data::T
