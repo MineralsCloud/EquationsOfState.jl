@@ -114,6 +114,8 @@ struct Holzapfel{T} <: EquationOfState{4, T}
     bp0::T
     z::NonFittingParameter
 end
+Holzapfel(v0::T, b0::T, bp0::T, z::NonFittingParameter) where {T} = Holzapfel{T}(v0, b0, bp0, z)
+Holzapfel(v0, b0, bp0, z) = Holzapfel(promote(v0, b0, bp0)..., z)
 
 struct AntonSchmidt{T} <: EquationOfState{3, T}
     v0::T
