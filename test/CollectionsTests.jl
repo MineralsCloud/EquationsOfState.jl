@@ -25,4 +25,19 @@ using EquationsOfState
     @test typeof(BreenanStacey(1, 2, 3.0)) == BreenanStacey{Float64}
 end
 
+@testset "Test getting parameters" begin
+    @test get_parameters(Birch(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+    @test get_parameters(Murnaghan(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+    @test get_parameters(BirchMurnaghan2nd(1, 2.0)) == (1.0, 2.0)
+    @test get_parameters(BirchMurnaghan3rd(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+    @test get_parameters(BirchMurnaghan4th(1, 2.0, 3, 4)) == (1.0, 2.0, 3.0, 4.0)
+    @test get_parameters(Vinet(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+    @test get_parameters(PoirierTarantola2nd(1, 2.0)) == (1.0, 2.0)
+    @test get_parameters(PoirierTarantola3rd(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+    @test get_parameters(PoirierTarantola4th(1, 2, 3, 4)) == (1, 2, 3, 4)
+    @test get_parameters(Holzapfel(1, 2, 3.0, 4.0)) == (1.0, 2.0, 3.0, NonFittingParameter(4.0))
+    @test get_parameters(AntonSchmidt(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+    @test get_parameters(BreenanStacey(1, 2, 3.0)) == (1.0, 2.0, 3.0)
+end
+
 end
