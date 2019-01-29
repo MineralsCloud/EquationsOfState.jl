@@ -30,11 +30,14 @@ export eval_energy,
     Holzapfel,
     AntonSchmidt
 
+struct NonFittingParameter{T}
+    data::T
+end
+NonFittingParameter(data::T) where {T} = NonFittingParameter{T}(data)
+
 abstract type EquationOfState{N, T} <: FieldVector{N, T} end
 
 abstract type FiniteStrainEquationOfState{N, T} <: EquationOfState{N, T} end
-
-primitive type NonFittingParameter <: AbstractFloat 64 end
 
 struct Birch{T} <: FiniteStrainEquationOfState{3, T}
     v0::T
@@ -115,7 +118,8 @@ struct Holzapfel{T} <: EquationOfState{4, T}
     z::NonFittingParameter
 end
 Holzapfel(v0::T, b0::T, bp0::T, z::NonFittingParameter) where {T} = Holzapfel{T}(v0, b0, bp0, z)
-Holzapfel(v0, b0, bp0, z) = Holzapfel(promote(v0, b0, bp0)..., z)
+Holzapfel(v0, b0, bp0, z::NonFittingParameter) = Holzapfel(promote(v0, b0, bp0)..., z)
+Holzapfel(v0, b0, bp0, z::Number) = Holzapfel(v0, b0, bp0, NonFittingParameter(z))
 
 struct AntonSchmidt{T} <: EquationOfState{3, T}
     v0::T
