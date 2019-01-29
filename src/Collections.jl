@@ -49,17 +49,23 @@ struct Murnaghan{T} <: EquationOfState{3, T}
     b0::T
     bp0::T
 end
+Murnaghan(v0::T, b0::T, bp0::T) where {T} = Murnaghan{T}(v0, b0, bp0)
+Murnaghan(v0, b0, bp0) = Murnaghan(promote(v0, b0, bp0))
 
 struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{2, T}
     v0::T
     b0::T
 end
+BirchMurnaghan2nd(v0::T, b0::T) where {T} = BirchMurnaghan2nd{T}(v0, b0)
+BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(promote(v0, b0))
 
 struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{3, T}
     v0::T
     b0::T
     bp0::T
 end
+BirchMurnaghan3rd(v0::T, b0::T, bp0::T) where {T} = BirchMurnaghan3rd{T}(v0, b0, bp0)
+BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(promote(v0, b0, bp0))
 
 struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{4, T}
     v0::T
@@ -67,23 +73,31 @@ struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{4, T}
     bp0::T
     bpp0::T
 end
+BirchMurnaghan4th(v0::T, b0::T, bp0::T, bpp0::T) where {T} = BirchMurnaghan4th{T}(v0, b0, bp0, bpp0)
+BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(promote(v0, b0, bp0, bpp0))
 
 struct Vinet{T} <: EquationOfState{3, T}
     v0::T
     b0::T
     bp0::T
 end
+Vinet(v0::T, b0::T, bp0::T) where {T} = Vinet{T}(v0, b0, bp0)
+Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
 
 struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{2, T}
     v0::T
     b0::T
 end
+PoirierTarantola2nd(v0::T, b0::T) where {T} = PoirierTarantola2nd{T}(v0, b0)
+PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(promote(v0, b0))
 
 struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{3, T}
     v0::T
     b0::T
     bp0::T
 end
+PoirierTarantola3rd(v0::T, b0::T, bp0::T) where {T} = PoirierTarantola3rd{T}(v0, b0, bp0)
+PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(promote(v0, b0, bp0))
 
 struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{4, T}
     v0::T
@@ -91,6 +105,8 @@ struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{4, T}
     bp0::T
     bpp0::T
 end
+PoirierTarantola4th(v0::T, b0::T, bp0::T, bpp0::T) where {T} = PoirierTarantola4th{T}(v0, b0, bp0, bpp0)
+PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(promote(v0, b0, bp0, bpp0))
 
 struct Holzapfel{T} <: EquationOfState{4, T}
     v0::T
@@ -101,18 +117,22 @@ end
 
 struct AntonSchmidt{T} <: EquationOfState{3, T}
     v0::T
-    β::Float64
-    n::Float64
+    β::T
+    n::T
 end
+AntonSchmidt(v0::T, β::T, n::T) where {T} = AntonSchmidt{T}(v0, β, n)
+AntonSchmidt(v0, β, n) = AntonSchmidt(promote(v0, β, n))
 
 struct BreenanStacey{T} <: EquationOfState{3, T}
     v0::T
     b0::T
-    γ0::Float64
+    γ0::T
 end
+BreenanStacey(v0::T, b0::T, γ0::T) where {T} = BreenanStacey{T}(v0, b0, γ0)
+BreenanStacey(v0, b0, γ0) = BreenanStacey(promote(v0, b0, γ0))
 
 function collect_parameters(eos::T) where {T <: EquationOfState}
-    parameters = map(f -> getfield(eos, f), fieldnames(T)) |> collect
+    map(f -> getfield(eos, f), fieldnames(T)) |> collect
 end
 
 function eval_energy(eos::Birch)::Function
