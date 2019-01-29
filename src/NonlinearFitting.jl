@@ -20,7 +20,7 @@ export fit_energy,
     get_fitting_parameters
 
 function get_fitting_parameters(eos::EquationOfState)
-    filter(x -> !isa(x, NonFittingParameter), get_parameters(eos))
+    Iterators.filter(x -> !(x isa NonFittingParameter), get_parameters(eos)) |> Tuple
 end
 
 function fit_energy(eos::T, xdata::Vector{Float64}, ydata::Vector{Float64}; kwargs...) where {T <: EquationOfState}
