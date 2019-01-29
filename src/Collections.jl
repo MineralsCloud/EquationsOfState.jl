@@ -30,11 +30,11 @@ export eval_energy,
     AntonSchmidt,
     BreenanStacey
 
-struct NonFittingParameter{T}
+struct NonFittingParameter{T <: Real}
     data::T
 end
 
-abstract type EquationOfState{N, T} <: FieldVector{N, T} end
+abstract type EquationOfState{N, T <: Real} <: FieldVector{N, T} end
 
 abstract type FiniteStrainEquationOfState{N, T} <: EquationOfState{N, T} end
 
