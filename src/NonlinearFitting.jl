@@ -11,8 +11,8 @@ julia>
 """
 module NonlinearFitting
 
-using LsqFit
-using Transducers
+using LsqFit: curve_fit
+using Transducers: collect, NotA, DropLast
 
 using EquationsOfState.Collections
 
@@ -20,17 +20,24 @@ export fit_energy,
     fit_pressure,
     get_fitting_parameters
 
-function get_fitting_parameters(eos::EquationOfState)
-    collect(NotA(NonFittingParameter), get_parameters(eos))
-end
+convert_eltype(T::Type, a) = map(x -> convert(T, x), a)
 
-function fit_energy(eos::EquationOfState, xdata::T, ydata::T; kwargs...) where {T <: AbstractVector}
-    model(x, p) = map((eval_energy ∘ typeof(eos) ∘ collect)(DropLast(1), p), (x, last(p)))
+get_fitting_parameters(eos::EquationOfState) = collect(NotA(NonFittingParameter), get_parameters(eos))
+
+function fit_energy(eos::EquationOfState{T}, xdata::AbstractVector{T}, ydata::AbstractVector{T}; kwargs...) where {T <: AbstractFloat}
+    function model(x, p)
+        f = collect(DropLast(1), p) |> typeof(eos) |> eval_energy
+        f.(x, last(p))
+    end
     curve_fit(model, xdata, ydata, push!(get_fitting_parameters(eos), minimum(ydata)); kwargs...)
 end
+function fit_energy(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...)
+    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
+    fit_energy(convert_eltype(T, eos), convert_eltype(T, xdata), convert_eltype(T, ydata); kwargs...)
+end
 
-create_model(eos::EquationOfState) = (x::AbstractVector, p::AbstractVector) -> map((eval_pressure ∘ typeof(eos))(p), x)
-create_model(eos::Holzapfel) = (x::AbstractVector, p::AbstractVector) -> map((eval_pressure ∘ typeof(eos))(push!(p, eos.z)), x)
+create_model(eos::EquationOfState) = (x::AbstractVector, p::AbstractVector) -> map(p |> typeof(eos) |> eval_pressure, x)
+create_model(eos::Holzapfel) = (x::AbstractVector, p::AbstractVector) -> map(push!(p, eos.z) |> typeof(eos) |> eval_pressure, x)
 
 function fit_pressure(eos::EquationOfState, xdata::T, ydata::T; kwargs...) where {T <: AbstractVector}
     model = create_model(eos)
