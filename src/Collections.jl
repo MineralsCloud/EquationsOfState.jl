@@ -125,7 +125,7 @@ end
 BreenanStacey(v0, b0, γ0) = BreenanStacey(promote(v0, b0, γ0))
 
 function get_parameters(eos::T) where {T <: EquationOfState}
-    map(f -> getfield(eos, f), fieldnames(T))
+    map(f -> getfield(eos, f), fieldnames(T)) |> collect
 end
 
 function eval_energy(eos::Birch)::Function
