@@ -34,38 +34,38 @@ struct NonFittingParameter{T <: Real}
     data::T
 end
 
-abstract type EquationOfState{N, T <: Real} <: FieldVector{N, T} end
+abstract type EquationOfState{T <: Real, N} <: FieldVector{N, T} end
 
-abstract type FiniteStrainEquationOfState{N, T} <: EquationOfState{N, T} end
+abstract type FiniteStrainEquationOfState{T, N} <: EquationOfState{T, N} end
 
-struct Birch{T} <: FiniteStrainEquationOfState{3, T}
+struct Birch{T} <: FiniteStrainEquationOfState{T, 3}
     v0::T
     b0::T
     bp0::T
 end
 Birch(v0, b0, bp0) = Birch(promote(v0, b0, bp0))
 
-struct Murnaghan{T} <: EquationOfState{3, T}
+struct Murnaghan{T} <: EquationOfState{T, 3}
     v0::T
     b0::T
     bp0::T
 end
 Murnaghan(v0, b0, bp0) = Murnaghan(promote(v0, b0, bp0))
 
-struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{2, T}
+struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T, 2}
     v0::T
     b0::T
 end
 BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(promote(v0, b0))
 
-struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{3, T}
+struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T, 3}
     v0::T
     b0::T
     bp0::T
 end
 BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(promote(v0, b0, bp0))
 
-struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{4, T}
+struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T, 4}
     v0::T
     b0::T
     bp0::T
@@ -73,27 +73,27 @@ struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{4, T}
 end
 BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(promote(v0, b0, bp0, bpp0))
 
-struct Vinet{T} <: EquationOfState{3, T}
+struct Vinet{T} <: EquationOfState{T, 3}
     v0::T
     b0::T
     bp0::T
 end
 Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
 
-struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{2, T}
+struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T, 2}
     v0::T
     b0::T
 end
 PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(promote(v0, b0))
 
-struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{3, T}
+struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T, 3}
     v0::T
     b0::T
     bp0::T
 end
 PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(promote(v0, b0, bp0))
 
-struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{4, T}
+struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T, 4}
     v0::T
     b0::T
     bp0::T
@@ -101,7 +101,7 @@ struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{4, T}
 end
 PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(promote(v0, b0, bp0, bpp0))
 
-struct Holzapfel{T} <: EquationOfState{4, T}
+struct Holzapfel{T} <: EquationOfState{T, 4}
     v0::T
     b0::T
     bp0::T
@@ -110,14 +110,14 @@ end
 Holzapfel(v0, b0, bp0, z::NonFittingParameter) = Holzapfel(promote(v0, b0, bp0)..., z)
 Holzapfel(v0, b0, bp0, z::Number) = Holzapfel(v0, b0, bp0, NonFittingParameter(z))
 
-struct AntonSchmidt{T} <: EquationOfState{3, T}
+struct AntonSchmidt{T} <: EquationOfState{T, 3}
     v0::T
     β::T
     n::T
 end
 AntonSchmidt(v0, β, n) = AntonSchmidt(promote(v0, β, n))
 
-struct BreenanStacey{T} <: EquationOfState{3, T}
+struct BreenanStacey{T} <: EquationOfState{T, 3}
     v0::T
     b0::T
     γ0::T
