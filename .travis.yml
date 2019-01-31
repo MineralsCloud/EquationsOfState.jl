@@ -16,6 +16,8 @@ matrix:
   allow_failures:
     - julia: nightly
   fast_finish: true
+after_success:
+  - julia --color=yes -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
 notifications:
   email:
     - singularitti@outlook.com
