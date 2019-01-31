@@ -39,9 +39,13 @@ end
 create_model(eos::EquationOfState) = (x::AbstractVector, p::AbstractVector) -> map(p |> typeof(eos) |> eval_pressure, x)
 create_model(eos::Holzapfel) = (x::AbstractVector, p::AbstractVector) -> map(push!(p, eos.z) |> typeof(eos) |> eval_pressure, x)
 
-function fit_pressure(eos::EquationOfState, xdata::T, ydata::T; kwargs...) where {T <: AbstractVector}
+function fit_pressure(eos::EquationOfState{T}, xdata::AbstractVector{T}, ydata::AbstractVector{T}; kwargs...) where {T <: AbstractFloat}
     model = create_model(eos)
     curve_fit(model, xdata, ydata, get_fitting_parameters(eos); kwargs...)
+end
+function fit_pressure(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...)
+    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
+    fit_pressure(convert_eltype(T, eos), convert_eltype(T, xdata), convert_eltype(T, ydata); kwargs...)
 end
 
 end
