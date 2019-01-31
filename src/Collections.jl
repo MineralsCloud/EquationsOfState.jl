@@ -362,11 +362,11 @@ function eval_pressure(eos::BreenanStacey)::Function
     end
 end
 
-function allsubtypes(t::Type, tree=Type[])::Vector{Type}
+function allsubtypes(t::Type, types=Type[])::Vector{Type}
     for s in subtypes(t)
-        tree = allsubtypes(s, push!(tree, s))
+        types = allsubtypes(s, push!(types, s))
     end
-    tree
+    types
 end
 
 allimplemented(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
