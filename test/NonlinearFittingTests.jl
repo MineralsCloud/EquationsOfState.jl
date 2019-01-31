@@ -32,4 +32,11 @@ end
     fit_energy(Birch(1, 2, 3), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7])
 end
 
+@testset "Test fitting pressure" begin
+    fit_pressure(Birch(1, 2, 3.0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7])
+    fit_pressure(Birch(1, 2, 3), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7])
+    fit_pressure(Birch(1, 2, 3.0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0])
+    fit_pressure(Birch(1, 2, 3), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7])
+end
+
 end
