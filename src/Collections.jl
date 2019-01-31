@@ -11,9 +11,12 @@ julia>
 """
 module Collections
 
+using InteractiveUtils
 using GSL: sf_gamma_inc
-using StaticArrays
+using StaticArrays: FieldVector, Size
 using Unitful
+
+import StaticArrays: similar_type
 
 export eval_energy,
     eval_pressure,
@@ -28,7 +31,8 @@ export eval_energy,
     PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
     Holzapfel,
     AntonSchmidt,
-    BreenanStacey
+    BreenanStacey,
+    similar_type
 
 struct NonFittingParameter{T <: Real}
     data::T
@@ -356,6 +360,21 @@ function eval_pressure(eos::BreenanStacey)::Function
         x = v0 / v
         return b0 / 2 / γ0 * x^(4 / 3) * (exp(2 * γ0 * (1 - x)) - 1)
     end
+end
+
+function allsubtypes(t::Type, tree=Type[])::Vector{Type}
+    for s in subtypes(t)
+        tree = allsubtypes(s, push!(tree, s))
+    end
+    tree
+end
+
+allimplemented(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
+
+for E in allimplemented(EquationOfState)
+    eval(quote
+        similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N, T, A <: $E} = $E{T}
+    end)
 end
 
 end
