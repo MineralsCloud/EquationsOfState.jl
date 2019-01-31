@@ -6,3 +6,4 @@ runtests: A file for running a tests in this package
 =#
 
 include("CollectionsTests.jl")
+include("NonlinearFittingTests.jl")
