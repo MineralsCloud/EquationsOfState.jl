@@ -20,6 +20,7 @@ import StaticArrays: similar_type
 
 export eval_energy,
     eval_pressure,
+    eval_bulk_modulus,
     EquationOfState,
     FiniteStrainEquationOfState,
     NonFittingParameter,
@@ -188,6 +189,15 @@ function eval_pressure(eos::BirchMurnaghan2nd)::Function
     end
 end
 
+function eval_bulk_modulus(eos::BirchMurnaghan2nd)::Function
+    v0, b0 = get_parameters(eos)
+
+    function (v::Real)
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        return b0 * (7f + 1) * (2f + 1)^(5 / 2)
+    end
+end
+
 function eval_energy(eos::BirchMurnaghan3rd)::Function
     v0, b0, bp0 = get_parameters(eos)
 
@@ -204,6 +214,15 @@ function eval_pressure(eos::BirchMurnaghan3rd)::Function
     function (v::Real)
         eta = (v0 / v)^(1 / 3)
         return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
+    end
+end
+
+function eval_bulk_modulus(eos::BirchMurnaghan3rd)::Function
+    v0, b0, bp0 = get_parameters(eos)
+
+    function (v::Real)
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        return b0 / 2 * (2f + 1)^(5 / 2) * ((27f^2 + 6f) * (bp0 - 4) - 4f + 2)
     end
 end
 
@@ -227,6 +246,16 @@ function eval_pressure(eos::BirchMurnaghan4th)::Function
     end
 end
 
+function eval_bulk_modulus(eos::BirchMurnaghan4th)::Function
+    v0, b0, bp0, bpp0 = get_parameters(eos)
+
+    function (v::Real)
+        f = ((v0 / v)^(2 / 3) - 1) / 2
+        h = b0 * bpp0 + bp0^2
+        return b0 / 6 * (2f + 1)^(5 / 2) * ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
+    end
+end
+
 function eval_energy(eos::Vinet)::Function
     v0, b0, bp0 = get_parameters(eos)
 
@@ -247,6 +276,16 @@ function eval_pressure(eos::Vinet)::Function
     end
 end
 
+function eval_bulk_modulus(eos::Vinet)::Function
+    v0, b0, bp0 = get_parameters(eos)
+
+    function (v::Real)
+        x = (v / v0)^(1 / 3)
+        xi = 3 / 2 * (bp0 - 1)
+        return -b0 / (2x^2) * (3x * (x - 1) * (bp0 - 1) + 2(x - 2)) * exp(-xi * (x - 1))
+    end
+end
+
 function eval_energy(eos::PoirierTarantola2nd)::Function
     v0, b0 = get_parameters(eos)
 
@@ -261,6 +300,15 @@ function eval_pressure(eos::PoirierTarantola2nd)::Function
     function (v::Real)
         x = (v / v0)^(1 / 3)
         return -b0 / x * log(x)
+    end
+end
+
+function eval_bulk_modulus(eos::PoirierTarantola2nd)::Function
+    v0, b0 = get_parameters(eos)
+
+    function (v::Real)
+        x = (v / v0)^(1 / 3)
+        return b0 / x * (1 - log(x))
     end
 end
 
@@ -284,6 +332,16 @@ function eval_pressure(eos::PoirierTarantola3rd)::Function
     end
 end
 
+function eval_bulk_modulus(eos::PoirierTarantola3rd)::Function
+    v0, b0, bp0 = get_parameters(eos)
+
+    function (v::Real)
+        x = (v / v0)^(1 / 3)
+        xi = log(x)
+        return -b0 / (2x) * ((bp0 + 2) * xi * (xi - 1) - 2)
+    end
+end
+
 function eval_energy(eos::PoirierTarantola4th)::Function
     v0, b0, bp0, bpp0 = get_parameters(eos)
 
@@ -303,6 +361,17 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
         xi = log(x)
         h = b0 * bpp0 + bp0^2
         return -b0 * xi / 6 / x * ((h + 3 * bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
+    end
+end
+
+function eval_bulk_modulus(eos::PoirierTarantola4th)::Function
+    v0, b0, bp0, bpp0 = get_parameters(eos)
+
+    function (v::Real)
+        x = (v / v0)^(1 / 3)
+        xi = log(x)
+        h = b0 * bpp0 + bp0^2
+        return -b0 / (6x) * ((h + 3bp0 + 3) * xi^3 - 3xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
     end
 end
 
@@ -350,6 +419,15 @@ function eval_pressure(eos::AntonSchmidt)::Function
     function (v::Real)
         x = v / v0
         return -β * x^n * log(x)
+    end
+end
+
+function eval_bulk_modulus(eos::AntonSchmidt)::Function
+    v0, β, n = get_parameters(eos)
+
+    function (v::Real)
+        x = v / v0
+        return β * x^n * (1 + n * log(x))
     end
 end
 
