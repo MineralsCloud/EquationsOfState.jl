@@ -1,5 +1,8 @@
 # EquationsOfState.jl
 
+[![master Build Status Travis](https://travis-ci.com/singularitti/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/singularitti/EquationsOfState.jl) [![develop Build Status Travis](https://travis-ci.com/singularitti/EquationsOfState.jl.svg?branch=develop)](https://travis-ci.com/singularitti/EquationsOfState.jl) [![master Build status Appveyor](https://ci.appveyor.com/api/projects/status/mqfsm1ssxergkmec/branch/master?svg=true)](https://ci.appveyor.com/project/singularitti/equationsofstate-jl/branch/master) [![Build status Appveyor](https://ci.appveyor.com/api/projects/status/mqfsm1ssxergkmec?svg=true)](https://ci.appveyor.com/project/singularitti/equationsofstate-jl) [![codecov](https://codecov.io/gh/singularitti/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/singularitti/EquationsOfState.jl)
+
+
 This package implements some _equations of state_ (EOS) of solid which are useful in research. It includes:
 
 1. `Birch` EOS

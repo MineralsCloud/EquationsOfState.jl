@@ -8,6 +8,9 @@ include("Collections.jl")
 include("NonlinearFitting.jl")
 @reexport using .NonlinearFitting
 
+include("FiniteStrains.jl")
+@reexport using .FiniteStrains
+
 include("LinearFitting.jl")
 @reexport using .LinearFitting
 
