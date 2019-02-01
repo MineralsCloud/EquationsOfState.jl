@@ -28,8 +28,8 @@ export eval_energy,
     Birch,
     Murnaghan,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
-    Vinet,
     PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
+    Vinet,
     Holzapfel,
     AntonSchmidt,
     BreenanStacey,
@@ -78,13 +78,6 @@ struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T, 4}
 end
 BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(promote(v0, b0, bp0, bpp0))
 
-struct Vinet{T} <: EquationOfState{T, 3}
-    v0::T
-    b0::T
-    bp0::T
-end
-Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
-
 struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T, 2}
     v0::T
     b0::T
@@ -105,6 +98,13 @@ struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T, 4}
     bpp0::T
 end
 PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(promote(v0, b0, bp0, bpp0))
+
+struct Vinet{T} <: EquationOfState{T, 3}
+    v0::T
+    b0::T
+    bp0::T
+end
+Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
 
 struct Holzapfel{T} <: EquationOfState{T, 4}
     v0::T
@@ -178,15 +178,6 @@ function eval_energy(eos::BirchMurnaghan4th)::Function
         return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12(bp0 - 4) * f + 12)
     end
 end
-function eval_energy(eos::Vinet)::Function
-    v0, b0, bp0 = get_parameters(eos)
-
-    function (v::T, e0 = zero(T)) where {T <: Real}
-        x = (v / v0)^(1 / 3)
-        xi = 3 / 2 * (bp0 - 1)
-        return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
-    end
-end
 function eval_energy(eos::PoirierTarantola2nd)::Function
     v0, b0 = get_parameters(eos)
 
@@ -211,6 +202,15 @@ function eval_energy(eos::PoirierTarantola4th)::Function
         xi = log(x)
         h = b0 * bpp0 + bp0^2
         return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4(bp0 + 2) * xi + 12)
+    end
+end
+function eval_energy(eos::Vinet)::Function
+    v0, b0, bp0 = get_parameters(eos)
+
+    function (v::T, e0 = zero(T)) where {T <: Real}
+        x = (v / v0)^(1 / 3)
+        xi = 3 / 2 * (bp0 - 1)
+        return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
     end
 end
 function eval_energy(eos::Holzapfel)::Function
@@ -282,15 +282,6 @@ function eval_pressure(eos::BirchMurnaghan4th)::Function
         return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9(bp0 - 4) * f + 6)
     end
 end
-function eval_pressure(eos::Vinet)::Function
-    v0, b0, bp0 = get_parameters(eos)
-
-    function (v::Real)
-        x = (v / v0)^(1 / 3)
-        xi = 3 / 2 * (bp0 - 1)
-        return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
-    end
-end
 function eval_pressure(eos::PoirierTarantola2nd)::Function
     v0, b0 = get_parameters(eos)
 
@@ -316,6 +307,15 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
         xi = log(x)
         h = b0 * bpp0 + bp0^2
         return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3(bp0 + 6) * xi + 6)
+    end
+end
+function eval_pressure(eos::Vinet)::Function
+    v0, b0, bp0 = get_parameters(eos)
+
+    function (v::Real)
+        x = (v / v0)^(1 / 3)
+        xi = 3 / 2 * (bp0 - 1)
+        return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
     end
 end
 function eval_pressure(eos::Holzapfel)::Function
@@ -374,15 +374,6 @@ function eval_bulk_modulus(eos::BirchMurnaghan4th)::Function
         return b0 / 6 * (2f + 1)^(5 / 2) * ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
     end
 end
-function eval_bulk_modulus(eos::Vinet)::Function
-    v0, b0, bp0 = get_parameters(eos)
-
-    function (v::Real)
-        x = (v / v0)^(1 / 3)
-        xi = 3 / 2 * (bp0 - 1)
-        return -b0 / (2x^2) * (3x * (x - 1) * (bp0 - 1) + 2(x - 2)) * exp(-xi * (x - 1))
-    end
-end
 function eval_bulk_modulus(eos::PoirierTarantola2nd)::Function
     v0, b0 = get_parameters(eos)
 
@@ -408,6 +399,15 @@ function eval_bulk_modulus(eos::PoirierTarantola4th)::Function
         xi = log(x)
         h = b0 * bpp0 + bp0^2
         return -b0 / (6x) * ((h + 3bp0 + 3) * xi^3 - 3xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
+    end
+end
+function eval_bulk_modulus(eos::Vinet)::Function
+    v0, b0, bp0 = get_parameters(eos)
+
+    function (v::Real)
+        x = (v / v0)^(1 / 3)
+        xi = 3 / 2 * (bp0 - 1)
+        return -b0 / (2x^2) * (3x * (x - 1) * (bp0 - 1) + 2(x - 2)) * exp(-xi * (x - 1))
     end
 end
 function eval_bulk_modulus(eos::AntonSchmidt)::Function
