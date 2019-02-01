@@ -149,7 +149,7 @@ function eval_pressure(eos::Birch)::Function
     function (v::Real)
         x = v0 / v
         xi = x^(2 / 3) - 1
-        return 3 / 8 * b0 * x^(5 / 3) * xi * (4 + 3 * (bp0 - 4) * xi)
+        return 3 / 8 * b0 * x^(5 / 3) * xi * (4 + 3(bp0 - 4) * xi)
     end
 end
 
@@ -185,7 +185,7 @@ function eval_pressure(eos::BirchMurnaghan2nd)::Function
 
     function (v::Real)
         f = ((v0 / v)^(2 / 3) - 1) / 2
-        return 3 * b0 * f * (1 + 2 * f)^(5 / 2)
+        return 3b0 * f * (1 + 2f)^(5 / 2)
     end
 end
 
@@ -204,7 +204,7 @@ function eval_energy(eos::BirchMurnaghan3rd)::Function
     function (v::T, e0 = zero(T)) where {T <: Real}
         eta = (v0 / v)^(1 / 3)
         xi = eta^2 - 1
-        return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
+        return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
     end
 end
 
@@ -232,7 +232,7 @@ function eval_energy(eos::BirchMurnaghan4th)::Function
     function (v::T, e0 = zero(T)) where {T <: Real}
         f = ((v0 / v)^(2 / 3) - 1) / 2
         h = b0 * bpp0 + bp0^2
-        return e0 + 3 / 8 * v0 * b0 * f^2 * ((9 * h - 63 * bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+        return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12(bp0 - 4) * f + 12)
     end
 end
 
@@ -242,7 +242,7 @@ function eval_pressure(eos::BirchMurnaghan4th)::Function
     function (v::Real)
         f = ((v0 / v)^(2 / 3) - 1) / 2
         h = b0 * bpp0 + bp0^2
-        return 1 / 2 * b0 * (2 * f + 1)^(5 / 2) * ((9 * h - 63 * bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
+        return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9(bp0 - 4) * f + 6)
     end
 end
 
@@ -262,7 +262,7 @@ function eval_energy(eos::Vinet)::Function
     function (v::T, e0 = zero(T)) where {T <: Real}
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
-        return e0 + 9 * b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
+        return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
     end
 end
 
@@ -272,7 +272,7 @@ function eval_pressure(eos::Vinet)::Function
     function (v::Real)
         x = (v / v0)^(1 / 3)
         xi = 3 / 2 * (bp0 - 1)
-        return 3 * b0 / x^2 * (1 - x) * exp(xi * (1 - x))
+        return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
     end
 end
 
@@ -290,7 +290,7 @@ function eval_energy(eos::PoirierTarantola2nd)::Function
     v0, b0 = get_parameters(eos)
 
     function (v::T, e0 = zero(T)) where {T <: Real}
-        return e0 + 1 / 2 * b0 * v0 * log(v / v0)^(2 / 3)
+        return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
     end
 end
 
@@ -318,7 +318,7 @@ function eval_energy(eos::PoirierTarantola3rd)::Function
     function (v::T, e0 = zero(T)) where {T <: Real}
         x = (v / v0)^(1 / 3)
         xi = log(x)
-        return e0 + 1 / 6 * b0 * v0 * xi^2 * ((bp0 + 2) * xi + 3)
+        return e0 + b0 / 6 * v0 * xi^2 * ((bp0 + 2) * xi + 3)
     end
 end
 
@@ -328,7 +328,7 @@ function eval_pressure(eos::PoirierTarantola3rd)::Function
     function (v::Real)
         x = (v / v0)^(1 / 3)
         xi = log(x)
-        return -b0 * xi / (2 * x) * ((bp0 + 2) * xi + 2)
+        return -b0 * xi / (2x) * ((bp0 + 2) * xi + 2)
     end
 end
 
@@ -349,7 +349,7 @@ function eval_energy(eos::PoirierTarantola4th)::Function
         x = (v / v0)^(1 / 3)
         xi = log(x)
         h = b0 * bpp0 + bp0^2
-        return e0 + 1 / 24 * b0 * v0 * xi^2 * ((h + 3 * bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
+        return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4(bp0 + 2) * xi + 12)
     end
 end
 
@@ -360,7 +360,7 @@ function eval_pressure(eos::PoirierTarantola4th)::Function
         x = (v / v0)^(1 / 3)
         xi = log(x)
         h = b0 * bpp0 + bp0^2
-        return -b0 * xi / 6 / x * ((h + 3 * bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
+        return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3(bp0 + 6) * xi + 6)
     end
 end
 
@@ -381,13 +381,13 @@ function eval_energy(eos::Holzapfel)::Function
     function (v::T, e0 = zero(T)) where {T <: Real}
         η = (v / v0)^(1 / 3)
         pfg0 = 3.8283120002509214 * (z / v0)^(5 / 3)
-        c0 = -log(3 * b0 / pfg0)
+        c0 = -log(3b0 / pfg0)
         c2 = 3 / 2 * (bp0 - 3) - c0
         term1 = (sf_gamma_inc(-2, c0 * η) - sf_gamma_inc(-2, c0)) * c0^2 * exp(c0)
         term2 = (sf_gamma_inc(-1, c0 * η) - sf_gamma_inc(-1, c0)) * c0 * (c2 - 1) * exp(c0)
         term3 = (sf_gamma_inc(0, c0 * η) - sf_gamma_inc(0, c0)) * 2 * c2 * exp(c0)
         term4 = c2 / c0 * (exp(c0 * (1 - η)) - 1)
-        return e0 + 9 * b0 * v0 * (term1 + term2 - term3 + term4)
+        return e0 + 9b0 * v0 * (term1 + term2 - term3 + term4)
     end
 end
 
@@ -397,9 +397,9 @@ function eval_pressure(eos::Holzapfel)::Function
     function (v::Real)
         η = (v / v0)^(1 / 3)
         pfg0 = 3.8283120002509214 * (z / v0)^(5 / 3)
-        c0 = -log(3 * b0 / pfg0)
+        c0 = -log(3b0 / pfg0)
         c2 = 3 / 2 * (bp0 - 3) - c0
-        return p0 + 3 * b0 * (1 - η) / η^5 * exp(c0 * (1 - η)) * (1 + c2 * η * (1 - η))
+        return p0 + 3b0 * (1 - η) / η^5 * exp(c0 * (1 - η)) * (1 + c2 * η * (1 - η))
     end
 end
 
@@ -436,7 +436,7 @@ function eval_pressure(eos::BreenanStacey)::Function
 
     function (v::Real)
         x = v0 / v
-        return b0 / 2 / γ0 * x^(4 / 3) * (exp(2 * γ0 * (1 - x)) - 1)
+        return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
     end
 end
 
