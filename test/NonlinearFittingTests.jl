@@ -39,4 +39,11 @@ end
     fit_pressure(Birch(1, 2, 3), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7])
 end
 
+@testset "Test fitting bulk modulus" begin
+    fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3.0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7])
+    fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7])
+    fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3.0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0])
+    fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7])
+end
+
 end
