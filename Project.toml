@@ -13,7 +13,6 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 Rematch = "bfecab0d-fd4d-5014-a23f-56c5fae6447a"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Transducers = "28d57a85-8fef-5791-bfe6-a80928e7c999"
-Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 julia = "1"
