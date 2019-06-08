@@ -14,7 +14,6 @@ module Collections
 using InteractiveUtils
 using GSL: sf_gamma_inc
 using StaticArrays: FieldVector, Size
-using Unitful
 
 import StaticArrays: similar_type
 
