@@ -35,6 +35,9 @@ export eval_energy,
     BreenanStacey,
     similar_type
 
+# ============================================================================ #
+#                                     Types                                    #
+# ============================================================================ #
 struct NonFittingParameter{T <: Real}
     data::T
 end
@@ -128,12 +131,16 @@ struct BreenanStacey{T} <: EquationOfState{T, 3}
     γ0::T
 end
 BreenanStacey(v0, b0, γ0) = BreenanStacey(promote(v0, b0, γ0))
+# =================================== Types ================================== #
 
 function get_parameters(eos::T) where {T <: EquationOfState}
     map(f -> getfield(eos, f), fieldnames(T)) |> collect
 end
 
-## ============================== Start of energy evaluation ==============================##
+
+# ============================================================================ #
+#                               Energy evaluation                              #
+# ============================================================================ #
 function eval_energy(eos::Birch)::Function
     v0, b0, bp0 = get_parameters(eos)
 
@@ -237,10 +244,12 @@ function eval_energy(eos::AntonSchmidt)::Function
         return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
     end
 end
-## ============================== End of energy evaluation ==============================##
+# ============================= Energy evaluation ============================ #
 
 
-## ============================== Start of pressure evaluation ==============================##
+# ============================================================================ #
+#                              Pressure evaluation                             #
+# ============================================================================ #
 function eval_pressure(eos::Birch)::Function
     v0, b0, bp0 = get_parameters(eos)
 
@@ -345,10 +354,12 @@ function eval_pressure(eos::BreenanStacey)::Function
         return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
     end
 end
-## ============================== End of pressure evaluation ==============================##
+# ============================ Pressure evaluation =========================== #
 
 
-## ============================== Start of bulk modulus evaluation ==============================##
+# ============================================================================ #
+#                            Bulk modulus evaluation                           #
+# ============================================================================ #
 function eval_bulk_modulus(eos::BirchMurnaghan2nd)::Function
     v0, b0 = get_parameters(eos)
 
@@ -418,10 +429,12 @@ function eval_bulk_modulus(eos::AntonSchmidt)::Function
         return β * x^n * (1 + n * log(x))
     end
 end
-## ============================== Start of bulk modulus evaluation ==============================##
+# ========================== Bulk modulus evaluation ========================= #
 
 
-## ============================== Start of miscellaneous ==============================##
+# ============================================================================ #
+#                                 Miscellaneous                                #
+# ============================================================================ #
 function allsubtypes(t::Type, types=Type[])::Vector{Type}
     for s in subtypes(t)
         types = allsubtypes(s, push!(types, s))
@@ -436,6 +449,6 @@ for E in allimplemented(EquationOfState)
         similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N, T, A <: $E} = $E{T}
     end)
 end
-## ============================== End of miscellaneous ==============================##
+# =============================== Miscellaneous ============================== #
 
 end
