@@ -30,6 +30,11 @@ This package also includes linear and nonlinear fitting methods, also referenced
 
 It is built for Julia v1.0+.
 
+## TODOs
+
+- [ ] Add a logger to store `LsqFit.LsqFitResult`
+- [ ] Let `fit_energy`, `fit_pressure` and `fit_bulk_modulus` return an `EquationOfState`
+
 ## References
 
 1. A. Otero-De-La-Roza, V. Luaña, *Comput. Phys. Commun.* **182**, 1708–1720 (2011).
