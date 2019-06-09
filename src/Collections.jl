@@ -23,7 +23,6 @@ export eval_energy,
     eval_pressure,
     eval_bulk_modulus,
     get_parameters,
-    NonFittingParameter,
     EquationOfState,
     FiniteStrainEquationOfState,
     Birch,
@@ -39,10 +38,6 @@ export eval_energy,
 # ============================================================================ #
 #                                     Types                                    #
 # ============================================================================ #
-struct NonFittingParameter{T <: Real}
-    data::T
-end
-
 abstract type EquationOfState{T <: Real} end
 
 abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
@@ -126,15 +121,13 @@ struct Vinet{T} <: EquationOfState{T}
 end
 Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
 
-struct Holzapfel{T} <: EquationOfState{T}
+struct Holzapfel{Z, T} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
-    z::NonFittingParameter
     e0::MaybeData{T}
 end
-Holzapfel(v0, b0, bp0, z::NonFittingParameter) = Holzapfel(promote(v0, b0, bp0)..., z)
-Holzapfel(v0, b0, bp0, z::Number) = Holzapfel(v0, b0, bp0, NonFittingParameter(z))
+Holzapfel{Z}(v0, b0, bp0) = Holzapfel{Z}(promote(v0, b0, bp0)...)
 
 struct AntonSchmidt{T} <: EquationOfState{T}
     v0::T
