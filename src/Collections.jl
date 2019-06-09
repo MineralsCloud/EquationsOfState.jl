@@ -63,14 +63,28 @@ struct Murnaghan{T} <: EquationOfState{T}
     bp0::T
     e0::MaybeData{T}
 end
-Murnaghan(v0, b0, bp0) = Murnaghan(promote(v0, b0, bp0))
+function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    Murnaghan{T}(v0, b0, bp0, e0)
+end
+function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0)
+    Murnaghan{T}(v0, b0, bp0, e0)
+end
 
 struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     e0::MaybeData{T}
 end
-BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(promote(v0, b0))
+function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, e0)
+    BirchMurnaghan2nd{T}(v0, b0, e0)
+end
+function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0)
+    BirchMurnaghan2nd{T}(v0, b0, e0)
+end
 
 struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -78,7 +92,14 @@ struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
     bp0::T
     e0::MaybeData{T}
 end
-BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(promote(v0, b0, bp0))
+function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    BirchMurnaghan3rd{T}(v0, b0, bp0, e0)
+end
+function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0)
+    BirchMurnaghan3rd{T}(v0, b0, bp0, e0)
+end
 
 struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -87,14 +108,28 @@ struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
     bpp0::T
     e0::MaybeData{T}
 end
-BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(promote(v0, b0, bp0, bpp0))
+function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
+    BirchMurnaghan4th{T}(v0, b0, bp0, bpp0, e0)
+end
+function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0, bpp0)
+    BirchMurnaghan4th{T}(v0, b0, bp0, bpp0, e0)
+end
 
 struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     e0::MaybeData{T}
 end
-PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(promote(v0, b0))
+function PoirierTarantola2nd(v0::Real, b0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, e0)
+    PoirierTarantola2nd{T}(v0, b0, e0)
+end
+function PoirierTarantola2nd(v0::Real, b0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0)
+    PoirierTarantola2nd{T}(v0, b0, e0)
+end
 
 struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -102,7 +137,14 @@ struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
     bp0::T
     e0::MaybeData{T}
 end
-PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(promote(v0, b0, bp0))
+function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    PoirierTarantola3rd{T}(v0, b0, bp0, e0)
+end
+function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0)
+    PoirierTarantola3rd{T}(v0, b0, bp0, e0)
+end
 
 struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -111,7 +153,14 @@ struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
     bpp0::T
     e0::MaybeData{T}
 end
-PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(promote(v0, b0, bp0, bpp0))
+function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
+    PoirierTarantola4th{T}(v0, b0, bp0, bpp0, e0)
+end
+function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0, bpp0)
+    PoirierTarantola4th{T}(v0, b0, bp0, bpp0, e0)
+end
 
 struct Vinet{T} <: EquationOfState{T}
     v0::T
@@ -119,15 +168,29 @@ struct Vinet{T} <: EquationOfState{T}
     bp0::T
     e0::MaybeData{T}
 end
-Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
+function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    Vinet{T}(v0, b0, bp0, e0)
+end
+function Vinet(v0::Real, b0::Real, bp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0)
+    Vinet{T}(v0, b0, bp0, e0)
+end
 
-struct Holzapfel{Z, T} <: EquationOfState{T}
+struct Holzapfel{Z,T} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
     e0::MaybeData{T}
 end
-Holzapfel{Z}(v0, b0, bp0) = Holzapfel{Z}(promote(v0, b0, bp0)...)
+function Holzapfel{Z}(v0::Real, b0::Real, bp0::Real, e0::Real) where {Z}
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    Holzapfel{Z,T}(v0, b0, bp0, e0)
+end
+function Holzapfel{Z}(v0::Real, b0::Real, bp0::Real, e0::Missing) where {Z}
+    T = Base.promote_typeof(v0, b0, bp0)
+    Holzapfel{Z,T}(v0, b0, bp0, e0)
+end
 
 struct AntonSchmidt{T} <: EquationOfState{T}
     v0::T
@@ -135,7 +198,14 @@ struct AntonSchmidt{T} <: EquationOfState{T}
     n::T
     e0::MaybeData{T}
 end
-AntonSchmidt(v0, β, n) = AntonSchmidt(promote(v0, β, n))
+function AntonSchmidt(v0::Real, β::Real, n::Real, e0::Real)
+    T = Base.promote_typeof(v0, β, n, e0)
+    AntonSchmidt{T}(v0, β, n, e0)
+end
+function AntonSchmidt(v0::Real, β::Real, n::Real, e0::Missing)
+    T = Base.promote_typeof(v0, β, n)
+    AntonSchmidt{T}(v0, β, n, e0)
+end
 
 struct BreenanStacey{T} <: EquationOfState{T}
     v0::T
@@ -143,11 +213,18 @@ struct BreenanStacey{T} <: EquationOfState{T}
     γ0::T
     e0::MaybeData{T}
 end
-BreenanStacey(v0, b0, γ0) = BreenanStacey(promote(v0, b0, γ0))
+function BreenanStacey(v0::Real, b0::Real, γ0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, γ0, e0)
+    BreenanStacey{T}(v0, b0, γ0, e0)
+end
+function BreenanStacey(v0::Real, b0::Real, γ0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, γ0)
+    BreenanStacey{T}(v0, b0, γ0, e0)
+end
 # =================================== Types ================================== #
 
 function get_parameters(eos::T) where {T <: EquationOfState}
-    map(f -> getfield(eos, f), fieldnames(T)) |> collect
+    map(f->getfield(eos, f), fieldnames(T)) |> collect
 end
 
 
@@ -251,7 +328,7 @@ end
 function eval_energy(eos::AntonSchmidt)::Function
     v0, β, n = get_parameters(eos)
 
-    function (v::T, e∞::T=0) where {T <: Real}
+    function (v::T, e∞::T = 0) where {T <: Real}
         x = v / v0
         η = n + 1
         return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
@@ -448,7 +525,7 @@ end
 # ============================================================================ #
 #                                 Miscellaneous                                #
 # ============================================================================ #
-function allsubtypes(t::Type, types=Type[])::Vector{Type}
+function allsubtypes(t::Type, types = Type[])::Vector{Type}
     for s in subtypes(t)
         types = allsubtypes(s, push!(types, s))
     end
@@ -459,7 +536,7 @@ allimplemented(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
 for E in allimplemented(EquationOfState)
     eval(quote
-        similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N, T, A <: $E} = $E{T}
+        similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
     end)
 end
 # =============================== Miscellaneous ============================== #
