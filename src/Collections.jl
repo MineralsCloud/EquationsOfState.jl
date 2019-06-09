@@ -22,7 +22,6 @@ import StaticArrays: similar_type
 export eval_energy,
     eval_pressure,
     eval_bulk_modulus,
-    get_parameters,
     EquationOfState,
     FiniteStrainEquationOfState,
     Birch,
@@ -38,11 +37,11 @@ export eval_energy,
 # ============================================================================ #
 #                                     Types                                    #
 # ============================================================================ #
-abstract type EquationOfState{T <: Real} end
+abstract type EquationOfState{T <: Real,N} <: FieldVector{N,T} end
 
-abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
+abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
 
-struct Birch{T} <: FiniteStrainEquationOfState{T}
+struct Birch{T} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -57,7 +56,7 @@ function Birch(v0::Real, b0::Real, bp0::Real, e0::Missing)
     Birch{T}(v0, b0, bp0, e0)
 end
 
-struct Murnaghan{T} <: EquationOfState{T}
+struct Murnaghan{T} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -72,7 +71,7 @@ function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Missing)
     Murnaghan{T}(v0, b0, bp0, e0)
 end
 
-struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
     e0::MaybeData{T}
@@ -86,7 +85,7 @@ function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Missing)
     BirchMurnaghan2nd{T}(v0, b0, e0)
 end
 
-struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -101,7 +100,7 @@ function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Missing)
     BirchMurnaghan3rd{T}(v0, b0, bp0, e0)
 end
 
-struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
     bp0::T
@@ -117,7 +116,7 @@ function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Missin
     BirchMurnaghan4th{T}(v0, b0, bp0, bpp0, e0)
 end
 
-struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
     e0::MaybeData{T}
@@ -131,7 +130,7 @@ function PoirierTarantola2nd(v0::Real, b0::Real, e0::Missing)
     PoirierTarantola2nd{T}(v0, b0, e0)
 end
 
-struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -146,7 +145,7 @@ function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Missing)
     PoirierTarantola3rd{T}(v0, b0, bp0, e0)
 end
 
-struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
     bp0::T
@@ -162,7 +161,7 @@ function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Miss
     PoirierTarantola4th{T}(v0, b0, bp0, bpp0, e0)
 end
 
-struct Vinet{T} <: EquationOfState{T}
+struct Vinet{T} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -177,7 +176,7 @@ function Vinet(v0::Real, b0::Real, bp0::Real, e0::Missing)
     Vinet{T}(v0, b0, bp0, e0)
 end
 
-struct Holzapfel{Z,T} <: EquationOfState{T}
+struct Holzapfel{Z,T} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -192,7 +191,7 @@ function Holzapfel{Z}(v0::Real, b0::Real, bp0::Real, e0::Missing) where {Z}
     Holzapfel{Z,T}(v0, b0, bp0, e0)
 end
 
-struct AntonSchmidt{T} <: EquationOfState{T}
+struct AntonSchmidt{T} <: EquationOfState{T,4}
     v0::T
     β::T
     n::T
@@ -207,7 +206,7 @@ function AntonSchmidt(v0::Real, β::Real, n::Real, e0::Missing)
     AntonSchmidt{T}(v0, β, n, e0)
 end
 
-struct BreenanStacey{T} <: EquationOfState{T}
+struct BreenanStacey{T} <: EquationOfState{T,4}
     v0::T
     b0::T
     γ0::T
@@ -222,10 +221,6 @@ function BreenanStacey(v0::Real, b0::Real, γ0::Real, e0::Missing)
     BreenanStacey{T}(v0, b0, γ0, e0)
 end
 # =================================== Types ================================== #
-
-function get_parameters(eos::T) where {T <: EquationOfState}
-    map(f->getfield(eos, f), fieldnames(T)) |> collect
-end
 
 
 # ============================================================================ #
