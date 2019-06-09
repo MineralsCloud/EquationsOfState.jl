@@ -15,6 +15,8 @@ using InteractiveUtils
 using GSL: sf_gamma_inc
 using StaticArrays: FieldVector, Size
 
+using EquationsOfState.Prelude
+
 import StaticArrays: similar_type
 
 export eval_energy,
@@ -41,93 +43,112 @@ struct NonFittingParameter{T <: Real}
     data::T
 end
 
-abstract type EquationOfState{T <: Real, N} <: FieldVector{N, T} end
+abstract type EquationOfState{T <: Real} end
 
-abstract type FiniteStrainEquationOfState{T, N} <: EquationOfState{T, N} end
+abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
-struct Birch{T} <: FiniteStrainEquationOfState{T, 3}
+struct Birch{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
+    e0::MaybeData{T}
 end
-Birch(v0, b0, bp0) = Birch(promote(v0, b0, bp0))
+function Birch(v0::Real, b0::Real, bp0::Real, e0::Real)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    Birch{T}(v0, b0, bp0, e0)
+end
+function Birch(v0::Real, b0::Real, bp0::Real, e0::Missing)
+    T = Base.promote_typeof(v0, b0, bp0)
+    Birch{T}(v0, b0, bp0, e0)
+end
 
-struct Murnaghan{T} <: EquationOfState{T, 3}
+struct Murnaghan{T} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
+    e0::MaybeData{T}
 end
 Murnaghan(v0, b0, bp0) = Murnaghan(promote(v0, b0, bp0))
 
-struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T, 2}
+struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
+    e0::MaybeData{T}
 end
 BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(promote(v0, b0))
 
-struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T, 3}
+struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
+    e0::MaybeData{T}
 end
 BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(promote(v0, b0, bp0))
 
-struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T, 4}
+struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
     bpp0::T
+    e0::MaybeData{T}
 end
 BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(promote(v0, b0, bp0, bpp0))
 
-struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T, 2}
+struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
+    e0::MaybeData{T}
 end
 PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(promote(v0, b0))
 
-struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T, 3}
+struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
+    e0::MaybeData{T}
 end
 PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(promote(v0, b0, bp0))
 
-struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T, 4}
+struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
     bpp0::T
+    e0::MaybeData{T}
 end
 PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(promote(v0, b0, bp0, bpp0))
 
-struct Vinet{T} <: EquationOfState{T, 3}
+struct Vinet{T} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
+    e0::MaybeData{T}
 end
 Vinet(v0, b0, bp0) = Vinet(promote(v0, b0, bp0))
 
-struct Holzapfel{T} <: EquationOfState{T, 4}
+struct Holzapfel{T} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
     z::NonFittingParameter
+    e0::MaybeData{T}
 end
 Holzapfel(v0, b0, bp0, z::NonFittingParameter) = Holzapfel(promote(v0, b0, bp0)..., z)
 Holzapfel(v0, b0, bp0, z::Number) = Holzapfel(v0, b0, bp0, NonFittingParameter(z))
 
-struct AntonSchmidt{T} <: EquationOfState{T, 3}
+struct AntonSchmidt{T} <: EquationOfState{T}
     v0::T
     β::T
     n::T
+    e0::MaybeData{T}
 end
 AntonSchmidt(v0, β, n) = AntonSchmidt(promote(v0, β, n))
 
-struct BreenanStacey{T} <: EquationOfState{T, 3}
+struct BreenanStacey{T} <: EquationOfState{T}
     v0::T
     b0::T
     γ0::T
+    e0::MaybeData{T}
 end
 BreenanStacey(v0, b0, γ0) = BreenanStacey(promote(v0, b0, γ0))
 # =================================== Types ================================== #
