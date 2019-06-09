@@ -19,7 +19,7 @@ export fit_energy,
     fit_pressure,
     fit_bulk_modulus
 
-convert_eltype(T::Type, a) = map(x -> convert(T, x), a)
+convert_eltype(T::Type, a) = map(x->convert(T, x), a)
 
 abstract type FitTrait end
 struct FitEnergy <: FitTrait end
