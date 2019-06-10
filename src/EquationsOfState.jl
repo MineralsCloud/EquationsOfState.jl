@@ -2,6 +2,9 @@ module EquationsOfState
 
 using Reexport
 
+include("Prelude.jl")
+@reexport using .Prelude
+
 include("Collections.jl")
 @reexport using .Collections
 
@@ -9,9 +12,9 @@ include("NonlinearFitting.jl")
 @reexport using .NonlinearFitting
 
 include("FiniteStrains.jl")
-@reexport using .FiniteStrains
+# @reexport using .FiniteStrains
 
 include("LinearFitting.jl")
-@reexport using .LinearFitting
+# @reexport using .LinearFitting
 
 end # module
