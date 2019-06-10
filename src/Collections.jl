@@ -470,11 +470,11 @@ end
 
 allimplemented(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
-# for E in allimplemented(EquationOfState)
-#     eval(quote
-#         similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
-#     end)
-# end
+for E in allimplemented(EquationOfState)
+    eval(quote
+        similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
+    end)
+end
 # =============================== Miscellaneous ============================== #
 
 end
