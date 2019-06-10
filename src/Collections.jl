@@ -468,9 +468,9 @@ function allsubtypes(t::Type, types = Type[])::Vector{Type}
     types
 end
 
-allimplemented(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
+nonabstract(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
-for E in allimplemented(EquationOfState)
+for E in nonabstract(EquationOfState)
     eval(quote
         similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
     end)
