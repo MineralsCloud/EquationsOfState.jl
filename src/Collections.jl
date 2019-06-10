@@ -226,6 +226,7 @@ end
 # ============================================================================ #
 #                               Energy evaluation                              #
 # ============================================================================ #
+eval_energy(eos::EquationOfState, vec::AbstractVector{<: Real}) = map(x->eval_energy(eos, x), vec)
 function eval_energy(eos::Birch, v::Real)
     v0, b0, bp0, e0 = collect(eos)
 
@@ -313,6 +314,7 @@ end
 # ============================================================================ #
 #                              Pressure evaluation                             #
 # ============================================================================ #
+eval_pressure(eos::EquationOfState, vec::AbstractVector{<: Real}) = map(x->eval_pressure(eos, x), vec)
 function eval_pressure(eos::Birch, v::Real)
     v0, b0, bp0 = collect(eos)
 
@@ -399,6 +401,7 @@ end
 # ============================================================================ #
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
+eval_bulk_modulus(eos::EquationOfState, vec::AbstractVector{<: Real}) = map(x->eval_bulk_modulus(eos, x), vec)
 function eval_bulk_modulus(eos::BirchMurnaghan2nd, v::Real)
     v0, b0 = collect(eos)
 
@@ -467,11 +470,11 @@ end
 
 allimplemented(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
-for E in allimplemented(EquationOfState)
-    eval(quote
-        similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
-    end)
-end
+# for E in allimplemented(EquationOfState)
+#     eval(quote
+#         similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
+#     end)
+# end
 # =============================== Miscellaneous ============================== #
 
 end

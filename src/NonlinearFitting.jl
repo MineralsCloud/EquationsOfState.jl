@@ -17,7 +17,12 @@ using EquationsOfState.Collections
 
 export fit_energy,
     fit_pressure,
-    fit_bulk_modulus
+    fit_bulk_modulus,
+    FitTrait,
+    FitEnergy,
+    FitPressure,
+    FitBulkModulus,
+    eval_of
 
 convert_eltype(T::Type, a) = map(x->convert(T, x), a)
 
@@ -26,16 +31,15 @@ struct FitEnergy <: FitTrait end
 struct FitPressure <: FitTrait end
 struct FitBulkModulus <: FitTrait end
 
-eval_of(::FitTrait) = error("Unsupported!")
-eval_of(::FitEnergy) = eval_energy
-eval_of(::FitPressure) = eval_pressure
-eval_of(::FitBulkModulus) = eval_bulk_modulus
+eval_of(::Type{FitEnergy}) = eval_energy
+eval_of(::Type{FitPressure}) = eval_pressure
+eval_of(::Type{FitBulkModulus}) = eval_bulk_modulus
 
-function lsqfit(F::FitTrait, eos::EquationOfState{T}, xdata::AbstractVector{T}, ydata::AbstractVector{T}; kwargs...) where {T <: AbstractFloat}
-    @. model(x, p) = eval_of(F)(typeof(eos)(p), x)
+function lsqfit(F::Type{<: FitTrait}, eos::EquationOfState{T}, xdata::AbstractVector{T}, ydata::AbstractVector{T}; kwargs...) where {T <: AbstractFloat}
+    model(x, p) = eval_of(F)(typeof(eos)(p), x)
     curve_fit(model, xdata, ydata, collect(eos); kwargs...)
 end  # function lsqfit
-function lsqfit(F::FitTrait, eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...)
+function lsqfit(F::Type{<: FitTrait}, eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...)
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
     lsqfit(F, convert_eltype(T, eos), convert_eltype(T, xdata), convert_eltype(T, ydata); kwargs...)
 end  # function lsqfit
