@@ -36,8 +36,10 @@ eval_of(::Type{FitPressure}) = eval_pressure
 eval_of(::Type{FitBulkModulus}) = eval_bulk_modulus
 
 function lsqfit(F::Type{<: FitTrait}, eos::EquationOfState{T}, xdata::AbstractVector{T}, ydata::AbstractVector{T}; kwargs...) where {T <: AbstractFloat}
-    model(x, p) = eval_of(F)(typeof(eos)(p), x)
-    curve_fit(model, xdata, ydata, collect(eos); kwargs...)
+    X = typeof(eos)
+    model(x, p) = eval_of(F)(X(p), x)
+    fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
+    X(fitted.param)
 end  # function lsqfit
 function lsqfit(F::Type{<: FitTrait}, eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...)
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
