@@ -472,7 +472,7 @@ nonabstract(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
 for E in nonabstract(EquationOfState)
     eval(quote
-        similar_type(::Type{A}, ::Type{T}, size::Size{N}) where {N,T,A <: $E} = $E{T}
+        similar_type(::Type{A}, ::Type{T}, size::Size{fieldcount($E)}) where {N,T,A <: $E} = $E{T}
     end)
 end
 # =============================== Miscellaneous ============================== #
