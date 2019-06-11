@@ -270,8 +270,8 @@ function eval_energy(eos::PoirierTarantola3rd, v::Real)
     v0, b0, bp0, e0 = collect(eos)
 
     x = (v / v0)^(1 / 3)
-    xi = log(x)
-    return e0 + b0 / 6 * v0 * xi^2 * ((bp0 + 2) * xi + 3)
+    xi = -3log(x)
+    return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
 function eval_energy(eos::PoirierTarantola4th, v::Real)
     v0, b0, bp0, bpp0, e0 = collect(eos)
