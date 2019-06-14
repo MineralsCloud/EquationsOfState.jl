@@ -45,16 +45,16 @@ function strain_volume_derivative(f::InfinitesimalStrain, v::Float64, m::Int)::F
     -(3 * m + 1) / 3 / v * strain_volume_derivative(f, v, m - 1)
 end
 
-function energy_volume_expansion(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int=degree(p))
+function energy_volume_expansion(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int = degree(p))
     # The zeroth order value plus values from the first to the ``highest_order`.
     p(v) + dot(energy_volume_derivatives(f, v, p, highest_order), get_strain(f, v).^collect(1:highest_order))
 end
 
 function energy_volume_derivatives(f::FiniteStrain, v::Float64, p::Poly, highest_order::Int)
     0 ≤ highest_order ≤ degree(p) ? (x = 1:highest_order) : throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
-    strain_derivatives::Vector{Float64} = map(m -> strain_volume_derivative(f, v, m), x)
-    energy_derivatives::Vector{Float64} = map(f -> f(v), map(m -> energy_strain_derivative(p, m), x))
-    map(m -> energy_volume_derivative_at_order(m)(strain_derivatives, energy_derivatives), x)
+    strain_derivatives::Vector{Float64} = map(m->strain_volume_derivative(f, v, m), x)
+    energy_derivatives::Vector{Float64} = map(f->f(v), map(m->energy_strain_derivative(p, m), x))
+    map(m->energy_volume_derivative_at_order(m)(strain_derivatives, energy_derivatives), x)
 end
 
 function energy_volume_derivative_at_order(m::Int)::Function
