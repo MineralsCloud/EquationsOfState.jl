@@ -9,6 +9,7 @@ module NonlinearFittingTests
 using Test
 
 using EquationsOfState
+using EquationsOfState.NonlinearFitting
 
 @testset "Test fitting energy with different element types" begin
     result = Birch(0.0057009512119028044, 103.58772269057364, -144.45152457521132, -40.31992619868024)
