@@ -15,8 +15,6 @@ using InteractiveUtils
 using Parameters
 using StaticArrays: FieldVector, Size
 
-using EquationsOfState.Prelude
-
 import StaticArrays: similar_type
 
 export eval_energy,

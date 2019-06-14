@@ -2,9 +2,6 @@ module EquationsOfState
 
 using Reexport
 
-include("Prelude.jl")
-@reexport using .Prelude
-
 include("Collections.jl")
 @reexport using .Collections
 
