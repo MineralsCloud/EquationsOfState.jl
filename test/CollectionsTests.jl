@@ -20,7 +20,6 @@ using EquationsOfState
     @test typeof(PoirierTarantola2nd(1, 2.0, 0)) == PoirierTarantola2nd{Float64}
     @test typeof(PoirierTarantola3rd(1, 2, 3.0, 0)) == PoirierTarantola3rd{Float64}
     @test typeof(PoirierTarantola4th(1, 2, 3, 4, 0)) == PoirierTarantola4th{Int}
-    @test typeof(Holzapfel{26}(1, 2, 3.0, 0)) == Holzapfel{26,Float64}
     @test typeof(AntonSchmidt(1, 2, 3.0, 0)) == AntonSchmidt{Float64}
     @test typeof(BreenanStacey(1, 2, 3.0, 0)) == BreenanStacey{Float64}
 end
@@ -35,9 +34,22 @@ end
     @test collect(PoirierTarantola2nd(1, 2.0, 0)) == [1.0, 2.0, 0.0]
     @test collect(PoirierTarantola3rd(1, 2, 3.0, 0)) == [1.0, 2.0, 3.0, 0.0]
     @test collect(PoirierTarantola4th(1, 2, 3, 4, 0)) == [1, 2, 3, 4, 0]
-    @test collect(Holzapfel{26}(1, 2, 3.0, 0)) == [1.0, 2.0, 3.0, 0.0]
     @test collect(AntonSchmidt(1, 2, 3.0, 0)) == [1.0, 2.0, 3.0, 0.0]
     @test collect(BreenanStacey(1, 2, 3.0, 0)) == [1.0, 2.0, 3.0, 0.0]
+end
+
+@testset "Test converting elements' type" begin
+    @test convert(Birch{Float64}, Birch(1, 2, 3, 0)) == Birch(1.0, 2.0, 3.0, 0.0)
+    @test convert(Murnaghan{Float64}, Murnaghan(1, 2, 3, 0)) == Murnaghan(1.0, 2.0, 3.0, 0.0)
+    @test convert(BirchMurnaghan2nd{Float64}, BirchMurnaghan2nd(1, 2, 0)) == BirchMurnaghan2nd(1.0, 2.0, 0.0)
+    @test convert(BirchMurnaghan3rd{Float64}, BirchMurnaghan3rd(1, 2, 3, 0)) == BirchMurnaghan3rd(1.0, 2.0, 3.0, 0.0)
+    @test convert(BirchMurnaghan4th{Float64}, BirchMurnaghan4th(1, 2, 3, 4, 0)) == BirchMurnaghan4th(1.0, 2.0, 3.0, 4.0, 0.0)
+    @test convert(Vinet{Float64}, Vinet(1, 2, 3, 0)) == Vinet(1.0, 2.0, 3.0, 0.0)
+    @test convert(PoirierTarantola2nd{Float64}, PoirierTarantola2nd(1, 2, 0)) == PoirierTarantola2nd(1.0, 2.0, 0.0)
+    @test convert(PoirierTarantola3rd{Float64}, PoirierTarantola3rd(1, 2, 3, 0)) == PoirierTarantola3rd(1.0, 2.0, 3.0, 0.0)
+    @test convert(PoirierTarantola4th{Float64}, PoirierTarantola4th(1, 2, 3, 4, 0)) == PoirierTarantola4th(1, 2, 3, 4, 0)
+    @test convert(AntonSchmidt{Float64}, AntonSchmidt(1, 2, 3, 0)) == AntonSchmidt(1.0, 2.0, 3.0, 0.0)
+    @test convert(BreenanStacey{Float64}, BreenanStacey(1, 2, 3, 0)) == BreenanStacey(1.0, 2.0, 3.0, 0.0)
 end
 
 end

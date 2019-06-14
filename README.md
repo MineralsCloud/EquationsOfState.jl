@@ -21,9 +21,8 @@ This package implements some _equations of state_ (EOS) of solids which are usef
     1. `PoirierTarantola2nd`
     2. `PoirierTarantola3rd`
     3. `PoirierTarantola4th`
-6. `Holzapfel` EOS (experimental)
-7. `AntonSchmidt` EOS (experimental)
-8. `BreenanStacey` EOS (experimental)
+6. `AntonSchmidt` EOS (experimental)
+7. `BreenanStacey` EOS (experimental)
 
 The formula are referenced from Ref. 1.
 
