@@ -40,7 +40,7 @@ abstract type EquationOfState{T <: Real,N} <: FieldVector{N,T} end
 
 abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
 
-@with_kw struct Birch{T} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct Birch{T <: Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -50,8 +50,9 @@ function Birch(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
     Birch{T}(v0, b0, bp0, e0)
 end
+Birch(v0, b0, bp0) = Birch(v0, b0, bp0, 0)
 
-@with_kw struct Murnaghan{T} <: EquationOfState{T,4}
+@with_kw struct Murnaghan{T <: Real} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -61,8 +62,9 @@ function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
     Murnaghan{T}(v0, b0, bp0, e0)
 end
+Murnaghan(v0, b0, bp0) = Murnaghan(v0, b0, bp0, 0)
 
-@with_kw struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T,3}
+@with_kw struct BirchMurnaghan2nd{T <: Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
     e0::T = 0
@@ -71,8 +73,9 @@ function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, e0)
     BirchMurnaghan2nd{T}(v0, b0, e0)
 end
+BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(v0, b0, 0)
 
-@with_kw struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct BirchMurnaghan3rd{T <: Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -82,8 +85,9 @@ function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
     BirchMurnaghan3rd{T}(v0, b0, bp0, e0)
 end
+BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(v0, b0, bp0, 0)
 
-@with_kw struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T,5}
+@with_kw struct BirchMurnaghan4th{T <: Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
     bp0::T
@@ -94,8 +98,9 @@ function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
     BirchMurnaghan4th{T}(v0, b0, bp0, bpp0, e0)
 end
+BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
 
-@with_kw struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T,3}
+@with_kw struct PoirierTarantola2nd{T <: Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
     e0::T = 0
@@ -104,8 +109,9 @@ function PoirierTarantola2nd(v0::Real, b0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, e0)
     PoirierTarantola2nd{T}(v0, b0, e0)
 end
+PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(v0, b0, 0)
 
-@with_kw struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct PoirierTarantola3rd{T <: Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -115,8 +121,9 @@ function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
     PoirierTarantola3rd{T}(v0, b0, bp0, e0)
 end
+PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(v0, b0, bp0, 0)
 
-@with_kw struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T,5}
+@with_kw struct PoirierTarantola4th{T <: Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
     bp0::T
@@ -127,8 +134,9 @@ function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real
     T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
     PoirierTarantola4th{T}(v0, b0, bp0, bpp0, e0)
 end
+PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
 
-@with_kw struct Vinet{T} <: EquationOfState{T,4}
+@with_kw struct Vinet{T <: Real} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -138,8 +146,9 @@ function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
     Vinet{T}(v0, b0, bp0, e0)
 end
+Vinet(v0, b0, bp0) = Vinet(v0, b0, bp0, 0)
 
-@with_kw struct AntonSchmidt{T} <: EquationOfState{T,4}
+@with_kw struct AntonSchmidt{T <: Real} <: EquationOfState{T,4}
     v0::T
     β::T
     n::T
@@ -149,8 +158,9 @@ function AntonSchmidt(v0::Real, β::Real, n::Real, e∞::Real)
     T = Base.promote_typeof(v0, β, n, e∞)
     AntonSchmidt{T}(v0, β, n, e∞)
 end
+AntonSchmidt(v0, β, n) = AntonSchmidt(v0, β, n, 0)
 
-@with_kw struct BreenanStacey{T} <: EquationOfState{T,4}
+@with_kw struct BreenanStacey{T <: Real} <: EquationOfState{T,4}
     v0::T
     b0::T
     γ0::T
@@ -160,6 +170,7 @@ function BreenanStacey(v0::Real, b0::Real, γ0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, γ0, e0)
     BreenanStacey{T}(v0, b0, γ0, e0)
 end
+BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 # =================================== Types ================================== #
 
 
