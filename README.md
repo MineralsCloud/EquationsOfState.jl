@@ -32,7 +32,7 @@ It is built for Julia v1.0+.
 
 ## TODOs
 
-- [ ] Add a logger to store `LsqFit.LsqFitResult`
+- [ ] ~~Add a logger to store `LsqFit.LsqFitResult`~~
 - [x] Let `fit_energy`, `fit_pressure` and `fit_bulk_modulus` return an `EquationOfState`
 
 ## References
