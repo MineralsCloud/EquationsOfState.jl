@@ -37,7 +37,7 @@ function fit_pressure(eos::EquationOfState, xdata::AbstractVector, ydata::Abstra
 end
 
 function fit_bulk_modulus(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; silent::Bool = true, kwargs...)
-    silent || @info "Fitting pressure... The parameter `e0` is not used and will be kept as input."
+    silent || @info "Fitting bulk modulus... The parameter `e0` is not used and will be kept as input."
     lsqfit(eval_bulk_modulus, eos, xdata, ydata; kwargs...)
 end
 
