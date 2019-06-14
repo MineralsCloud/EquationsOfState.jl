@@ -36,7 +36,7 @@ export eval_energy,
 # ============================================================================ #
 #                                     Types                                    #
 # ============================================================================ #
-abstract type EquationOfState{T <: Real,N} <: FieldVector{N,T} end
+abstract type EquationOfState{T,N} <: FieldVector{N,T} end
 
 abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
 
