@@ -24,6 +24,20 @@ using EquationsOfState
     @test typeof(BreenanStacey(1, 2, 3.0, 0)) == BreenanStacey{Float64}
 end
 
+@testset "Test default EOS parameter `e0` and promotion" begin
+    @test Birch(1, 2, 3.0) == Birch(1.0, 2.0, 3.0, 0.0)
+    @test Murnaghan(1, 2, 3.0) == Murnaghan(1.0, 2.0, 3.0, 0.0)
+    @test BirchMurnaghan2nd(1, 2.0) == BirchMurnaghan2nd(1.0, 2.0, 0.0)
+    @test BirchMurnaghan3rd(1, 2, 3.0) == BirchMurnaghan3rd(1.0, 2.0, 3.0, 0.0)
+    @test BirchMurnaghan4th(1, 2.0, 3, 4) == BirchMurnaghan4th(1.0, 2.0, 3.0, 4.0, 0.0)
+    @test Vinet(1, 2, 3.0) == Vinet(1.0, 2.0, 3.0, 0.0)
+    @test PoirierTarantola2nd(1, 2.0) == PoirierTarantola2nd(1.0, 2.0, 0.0)
+    @test PoirierTarantola3rd(1, 2, 3.0) == PoirierTarantola3rd(1.0, 2.0, 3.0, 0.0)
+    @test PoirierTarantola4th(1, 2, 3, 4) == PoirierTarantola4th(1, 2, 3, 4, 0)
+    @test AntonSchmidt(1, 2, 3.0) == AntonSchmidt(1.0, 2.0, 3.0, 0.0)
+    @test BreenanStacey(1, 2, 3.0) == BreenanStacey(1.0, 2.0, 3.0, 0.0)
+end
+
 @testset "Test collecting parameters" begin
     @test collect(Birch(1, 2, 3.0, 0)) == [1.0, 2.0, 3.0, 0.0]
     @test collect(Murnaghan(1, 2, 3.0, 0)) == [1.0, 2.0, 3.0, 0.0]
