@@ -20,18 +20,18 @@ end
 
 @testset "Test fitting pressure with different element types" begin
     result = Birch(1.1024687826597717, 29.30861698140365, 12.689089871112746, 0.0)
-    @test isapprox(fit_pressure(Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-6)
-    @test isapprox(fit_pressure(Birch(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]), result; atol = 1e-6)
-    @test isapprox(fit_pressure(Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]), result; atol = 1e-6)
-    @test isapprox(fit_pressure(Birch(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-6)
+    @test isapprox(fit_pressure(Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]; silent = false), result; atol = 1e-6)
+    @test isapprox(fit_pressure(Birch(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]; silent = false), result; atol = 1e-6)
+    @test isapprox(fit_pressure(Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]; silent = false), result; atol = 1e-6)
+    @test isapprox(fit_pressure(Birch(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]; silent = false), result; atol = 1e-6)
 end
 
 @testset "Test fitting bulk modulus with different element types" begin
     result = BirchMurnaghan3rd(7.218928431312577, 5.007900469653902, 4.06037725509478, 0.0)
-    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-5)
-    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]), result; atol = 1e-5)
-    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]), result; atol = 1e-5)
-    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-5)
+    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]; silent = false), result; atol = 1e-5)
+    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]; silent = false), result; atol = 1e-5)
+    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]; silent = false), result; atol = 1e-5)
+    @test isapprox(fit_bulk_modulus(BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]; silent = false), result; atol = 1e-5)
 end
 
 # Data in the following tests are from
