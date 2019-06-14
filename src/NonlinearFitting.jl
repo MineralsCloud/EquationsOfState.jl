@@ -32,12 +32,12 @@ end  # function lsqfit
 fit_energy(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...) = lsqfit(eval_energy, eos, xdata, ydata; kwargs...)
 
 function fit_pressure(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; silent::Bool = true, kwargs...)
-    silent || @info "Fitting pressure... The parameter `e0` is not used and will be kept as input."
+    silent || @info "Fitting pressure... The parameter `e0 = $(eos.e0)` is not used and will be kept as input."
     lsqfit(eval_pressure, eos, xdata, ydata; kwargs...)
 end
 
 function fit_bulk_modulus(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; silent::Bool = true, kwargs...)
-    silent || @info "Fitting bulk modulus... The parameter `e0` is not used and will be kept as input."
+    silent || @info "Fitting bulk modulus... The parameter `e0 = $(eos.e0)` is not used and will be kept as input."
     lsqfit(eval_bulk_modulus, eos, xdata, ydata; kwargs...)
 end
 
