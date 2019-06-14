@@ -20,7 +20,7 @@ export fit_energy,
     fit_bulk_modulus
 
 function lsqfit(f, eos::E, xdata::Vector{T}, ydata::Vector{T}; kwargs...) where {T <: AbstractFloat,E <: EquationOfState{T}}
-    model(x, p) = eval_of(F)(E(p), x)
+    model(x, p) = f(E(p), x)
     fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
     E(fitted.param)
 end  # function lsqfit
