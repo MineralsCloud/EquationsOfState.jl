@@ -19,14 +19,14 @@ export fit_energy,
     fit_pressure,
     fit_bulk_modulus
 
-function lsqfit(f::Function, eos::E, xdata::Vector{T}, ydata::Vector{T}; verbose::Bool = false, kwargs...) where {T <: AbstractFloat,E <: EquationOfState{T}}
+function lsqfit(f::Function, eos::E, xdata::Vector{T}, ydata::Vector{T}; debug::Bool = false, kwargs...) where {T <: AbstractFloat,E <: EquationOfState{T}}
     model(x, p) = f(E(p), x)
     fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
-    verbose ? fitted : E(fitted.param)
+    debug ? fitted : E(fitted.param)
 end  # function lsqfit
-function lsqfit(f::Function, eos::E, xdata::X, ydata::Y; verbose::Bool = false, kwargs...) where {E <: EquationOfState,X <: AbstractVector,Y <: AbstractVector}
+function lsqfit(f::Function, eos::E, xdata::X, ydata::Y; debug::Bool = false, kwargs...) where {E <: EquationOfState,X <: AbstractVector,Y <: AbstractVector}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    lsqfit(f, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
+    lsqfit(f, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); debug = debug, kwargs...)
 end  # function lsqfit
 
 fit_energy(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...) = lsqfit(eval_energy, eos, xdata, ydata; kwargs...)
