@@ -40,7 +40,7 @@ function lsqfit(F::Type{<: FitTrait}, eos::E, xdata::Vector{T}, ydata::Vector{T}
 end  # function lsqfit
 function lsqfit(F::Type{<: FitTrait}, eos::E, xdata::X, ydata::Y; kwargs...) where {E <: EquationOfState,X <: AbstractVector,Y <: AbstractVector}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    lsqfit(F, convert(E{T}, eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
+    lsqfit(F, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
 end  # function lsqfit
 
 fit_energy(eos::EquationOfState, xdata::AbstractVector, ydata::AbstractVector; kwargs...) = lsqfit(FitEnergy, eos, xdata, ydata; kwargs...)
