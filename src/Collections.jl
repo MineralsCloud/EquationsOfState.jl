@@ -29,7 +29,6 @@ export eval_energy,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
     PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
     Vinet,
-    Holzapfel,
     AntonSchmidt,
     BreenanStacey,
     similar_type
@@ -176,21 +175,6 @@ function Vinet(v0::Real, b0::Real, bp0::Real, e0::Missing)
     Vinet{T}(v0, b0, bp0, e0)
 end
 
-struct Holzapfel{Z,T} <: EquationOfState{T,4}
-    v0::T
-    b0::T
-    bp0::T
-    e0::MaybeData{T}
-end
-function Holzapfel{Z}(v0::Real, b0::Real, bp0::Real, e0::Real) where {Z}
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    Holzapfel{Z,T}(v0, b0, bp0, e0)
-end
-function Holzapfel{Z}(v0::Real, b0::Real, bp0::Real, e0::Missing) where {Z}
-    T = Base.promote_typeof(v0, b0, bp0)
-    Holzapfel{Z,T}(v0, b0, bp0, e0)
-end
-
 struct AntonSchmidt{T} <: EquationOfState{T,4}
     v0::T
     β::T
@@ -288,19 +272,6 @@ function eval_energy(eos::Vinet, v::Real)
     xi = 3 / 2 * (bp0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
-function eval_energy(eos::Holzapfel{Z}, v::Real) where {Z}
-    v0, b0, bp0, e0 = collect(eos)
-
-    η = (v / v0)^(1 / 3)
-    pfg0 = 3.8283120002509214 * (Z / v0)^(5 / 3)
-    c0 = -log(3b0 / pfg0)
-    c2 = 3 / 2 * (bp0 - 3) - c0
-    term1 = (sf_gamma_inc(-2, c0 * η) - sf_gamma_inc(-2, c0)) * c0^2 * exp(c0)
-    term2 = (sf_gamma_inc(-1, c0 * η) - sf_gamma_inc(-1, c0)) * c0 * (c2 - 1) * exp(c0)
-    term3 = (sf_gamma_inc(0, c0 * η) - sf_gamma_inc(0, c0)) * 2 * c2 * exp(c0)
-    term4 = c2 / c0 * (exp(c0 * (1 - η)) - 1)
-    return e0 + 9b0 * v0 * (term1 + term2 - term3 + term4)
-end
 function eval_energy(eos::AntonSchmidt, v::Real)
     v0, β, n, e∞ = collect(eos)
 
@@ -373,15 +344,6 @@ function eval_pressure(eos::Vinet, v::Real)
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
-end
-function eval_pressure(eos::Holzapfel{Z}, v::Real) where {Z}
-    v0, b0, bp0 = collect(eos)
-
-    η = (v / v0)^(1 / 3)
-    pfg0 = 3.8283120002509214 * (Z / v0)^(5 / 3)
-    c0 = -log(3b0 / pfg0)
-    c2 = 3 / 2 * (bp0 - 3) - c0
-    return p0 + 3b0 * (1 - η) / η^5 * exp(c0 * (1 - η)) * (1 + c2 * η * (1 - η))
 end
 function eval_pressure(eos::AntonSchmidt, v::Real)
     v0, β, n = collect(eos)
