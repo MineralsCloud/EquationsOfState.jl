@@ -36,6 +36,11 @@ It is built for Julia v1.0+.
 - [x] Let `fit_energy`, `fit_pressure` and `fit_bulk_modulus` return an `EquationOfState`
 - [ ] Implement nonlinear fitting using [CMPFit.jl](https://github.com/gcalderone/CMPFit.jl).
 
+## Related packages
+
+1. [CommandLineEquationsOfState.jl](https://github.com/singularitti/CommandLineEquationsOfState.jl)
+2. [ExtendedEquationsOfState.jl](https://github.com/singularitti/ExtendedEquationsOfState.jl)
+
 ## References
 
 1. A. Otero-De-La-Roza, V. Luaña, *Comput. Phys. Commun.* **182**, 1708–1720 (2011).
