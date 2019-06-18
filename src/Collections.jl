@@ -291,9 +291,9 @@ end
 function eval_pressure(eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
-    x = (v / v0)^(1 / 3)
+    x = v / v0
     xi = log(x)
-    return -b0 * xi / (2x) * ((bp0 + 2) * xi + 2)
+    return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
 end
 function eval_pressure(eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
@@ -357,9 +357,9 @@ end
 function eval_bulk_modulus(eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
-    x = (v / v0)^(1 / 3)
+    x = v / v0
     xi = log(x)
-    return -b0 / (2x) * ((bp0 + 2) * xi * (xi - 1) - 2)
+    return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
 end
 function eval_bulk_modulus(eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
