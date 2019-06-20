@@ -1,7 +1,7 @@
 name = "EquationsOfState"
 uuid = "0438fec6-b81c-52d9-9651-d286848f50a8"
 authors = ["Qi Zhang <singularitti@outlook.com>"]
-version = "1.1.4"
+version = "2.0.0"
 
 [deps]
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"
