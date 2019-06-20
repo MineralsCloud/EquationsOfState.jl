@@ -416,10 +416,7 @@ for E in nonabstract(EquationOfState)
     end)
 end
 
-function Base.getproperty(eos::PolynomialEquationOfState{T,N}, s::Symbol) where {T,N}
-    s in (:a, :b, :c, :d, :e, :f, :g, :h, :i, :j) || error("")
-    eos[findfirst(x->x == :f, (:a, :b, :c, :d, :e, :f, :g, :h, :i, :j))]
-end
+Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 # ==============================u ======================== #
 
 end
