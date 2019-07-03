@@ -1,12 +1,12 @@
 # EquationsOfState.jl
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://singularitti.github.io/EquationsOfState.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://singularitti.github.io/EquationsOfState.jl/dev)
-[![Build Status](https://travis-ci.com/singularitti/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/singularitti/EquationsOfState.jl)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/singularitti/EquationsOfState.jl?svg=true)](https://ci.appveyor.com/project/singularitti/EquationsOfState-jl)
-[![Codecov](https://codecov.io/gh/singularitti/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/singularitti/EquationsOfState.jl)
-[![Coveralls](https://coveralls.io/repos/github/singularitti/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/singularitti/EquationsOfState.jl?branch=master)
-[![Build Status](https://api.cirrus-ci.com/github/singularitti/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/singularitti/EquationsOfState.jl)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/dev)
+[![Build Status](https://travis-ci.com/MineralsCloud/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/MineralsCloud/EquationsOfState.jl)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/MineralsCloud/EquationsOfState.jl?svg=true)](https://ci.appveyor.com/project/MineralsCloud/EquationsOfState-jl)
+[![Codecov](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
+[![Coveralls](https://coveralls.io/repos/github/MineralsCloud/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/MineralsCloud/EquationsOfState.jl?branch=master)
+[![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
 
 This package implements some _equations of state_ (EOS) of solids which are useful in research. It currently includes:
 
@@ -38,8 +38,8 @@ It is built for Julia v1.0+.
 
 ## Related packages
 
-1. [CommandLineEquationsOfState.jl](https://github.com/singularitti/CommandLineEquationsOfState.jl)
-2. [ExtendedEquationsOfState.jl](https://github.com/singularitti/ExtendedEquationsOfState.jl)
+1. [CommandLineEquationsOfState.jl](https://github.com/MineralsCloud/CommandLineEquationsOfState.jl)
+2. [ExtendedEquationsOfState.jl](https://github.com/MineralsCloud/ExtendedEquationsOfState.jl)
 
 ## References
 
