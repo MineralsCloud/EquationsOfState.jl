@@ -380,7 +380,7 @@ end
     energies = data[:, 2]  # unit: Rydberg
     @test fit_energy(BirchMurnaghan3rd(224, 0.0006, 4, -323), volumes, energies) ≈ BirchMurnaghan3rd(224.444565, 0.00062506191050572675, 3.740369, -323.417714)
     @test isapprox(fit_energy(BirchMurnaghan4th(224, 0.0006, 4, -5460, -323), volumes, energies),
-                              BirchMurnaghan4th(224.457562, 0.00062293812247621543, 3.730992, -5322.69673452213, -323.417712); atol = 1e-4)
+                              BirchMurnaghan4th(224.457562, 0.00062293812247621543, 3.730992, -5322.69673452213, -323.417712); atol = 1e-3)
     @test isapprox(fit_energy(Murnaghan(224, 0.006, 4, -323), volumes, energies),
                               Murnaghan(224.501825, 0.00060479524074699499, 3.723835, -323.417686); atol = 1e-5)
     @test isapprox(fit_energy(PoirierTarantola3rd(100, 0.0006, 3.7, -323), volumes, energies), PoirierTarantola3rd(224.509208, 0.000635892264159838, 3.690448, -323.41773); atol = 1e-5)

@@ -22,6 +22,7 @@ export eval_energy,
     eval_bulk_modulus,
     EquationOfState,
     FiniteStrainEquationOfState,
+    PolynomialEquationOfState,
     Birch,
     Murnaghan,
     BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
@@ -37,6 +38,18 @@ export eval_energy,
 abstract type EquationOfState{T,N} <: FieldVector{N,T} end
 
 abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
+
+struct PolynomialEquationOfState{T <: Real,N} <: EquationOfState{T,N}
+    data::NTuple{N,T}
+    function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T, N}
+        @assert N ≤ 10
+        new(args)
+    end
+end
+function PolynomialEquationOfState(args...)
+    T = Base.promote_typeof(args...)
+    PolynomialEquationOfState{T,length(args)}(args)
+end
 
 @with_kw struct Birch{T <: Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
@@ -402,6 +415,8 @@ for E in nonabstract(EquationOfState)
         similar_type(::Type{A}, ::Type{T}, size::Size{(fieldcount($E),)}) where {A <: $E,T} = $E{T}
     end)
 end
-# =============================== Miscellaneous ============================== #
+
+Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
+# ==============================u ======================== #
 
 end
