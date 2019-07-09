@@ -35,8 +35,19 @@ export eval_energy,
 # ============================================================================ #
 #                                     Types                                    #
 # ============================================================================ #
+"""
+    EquationOfState{T,N}
+
+An abstraction of equations of state, where `T` specifies the elements' type,
+and `N` specifies the number of fields.
+"""
 abstract type EquationOfState{T,N} <: FieldVector{N,T} end
 
+"""
+    FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N}
+
+An abstraction of finite strain equations of state.
+"""
 abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
 
 struct PolynomialEquationOfState{T <: Real,N} <: EquationOfState{T,N}
@@ -51,6 +62,41 @@ function PolynomialEquationOfState(args...)
     PolynomialEquationOfState{T,length(args)}(args)
 end
 
+"""
+    Birch(v0, b0, bp0, e0=0)
+
+Create a Birch equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at 0 pressure.
+- `b0`: the bulk modulus of solid at 0 pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at 0 pressure.
+- `e0=0`: the energy of solid at 0 pressure. By default is `0`.
+
+# Examples
+```jldoctest
+julia> Birch(1, 2, 3)
+4-element Birch{Int64}:
+ 1
+ 2
+ 3
+ 0
+
+julia> Birch(1, 2, 3, 4)
+4-element Birch{Int64}:
+ 1
+ 2
+ 3
+ 4
+
+julia> Birch(1, 2, 3, 4.0)
+4-element Birch{Float64}:
+ 1.0
+ 2.0
+ 3.0
+ 4.0
+```
+"""
 @with_kw struct Birch{T <: Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
