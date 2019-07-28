@@ -18,18 +18,16 @@ export FiniteStrain,
     InfinitesimalStrain,
     get_strain
 
-struct FiniteStrain{T}
-    v0::Float64
-end
+abstract type FiniteStrain{T} end
 
 const EulerianStrain = FiniteStrain{:Eulerian}
 const LagrangianStrain = FiniteStrain{:Lagrangian}
 const NaturalStrain = FiniteStrain{:Natural}
 const InfinitesimalStrain = FiniteStrain{:Infinitesimal}
 
-get_strain(f::EulerianStrain, v::Float64)::Float64 = ((f.v0 / v)^(2 / 3) - 1) / 2
-get_strain(f::LagrangianStrain, v::Float64)::Float64 = ((v / f.v0)^(2 / 3) - 1) / 2
-get_strain(f::NaturalStrain, v::Float64)::Float64 = log(v / f.v0) / 3
-get_strain(f::InfinitesimalStrain, v::Float64)::Float64 = 1 - (f.v0 / v)^(1 / 3)
+get_strain(::Type{EulerianStrain}, v0::Real, v::Real) = ((v0 / v)^(2 / 3) - 1) / 2
+get_strain(::Type{LagrangianStrain}, v0::Real, v::Real) = ((v / v0)^(2 / 3) - 1) / 2
+get_strain(::Type{NaturalStrain}, v0::Real, v::Real) = log(v / v0) / 3
+get_strain(::Type{InfinitesimalStrain}, v0::Real, v::Real) = 1 - (v0 / v)^(1 / 3)
 
 end

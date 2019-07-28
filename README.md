@@ -1,9 +1,14 @@
 # EquationsOfState.jl
 
-[![master Build Status Travis](https://travis-ci.com/singularitti/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/singularitti/EquationsOfState.jl) [![develop Build Status Travis](https://travis-ci.com/singularitti/EquationsOfState.jl.svg?branch=develop)](https://travis-ci.com/singularitti/EquationsOfState.jl) [![master Build status Appveyor](https://ci.appveyor.com/api/projects/status/mqfsm1ssxergkmec/branch/master?svg=true)](https://ci.appveyor.com/project/singularitti/equationsofstate-jl/branch/master) [![Build status Appveyor](https://ci.appveyor.com/api/projects/status/mqfsm1ssxergkmec?svg=true)](https://ci.appveyor.com/project/singularitti/equationsofstate-jl) [![codecov](https://codecov.io/gh/singularitti/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/singularitti/EquationsOfState.jl)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/stable)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/dev)
+[![Build Status](https://travis-ci.com/MineralsCloud/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/MineralsCloud/EquationsOfState.jl)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/MineralsCloud/EquationsOfState.jl?svg=true)](https://ci.appveyor.com/project/MineralsCloud/EquationsOfState-jl)
+[![Codecov](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
+[![Coveralls](https://coveralls.io/repos/github/MineralsCloud/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/MineralsCloud/EquationsOfState.jl?branch=master)
+[![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
 
-
-This package implements some _equations of state_ (EOS) of solid which are useful in research. It includes:
+This package implements some _equations of state_ (EOS) of solids which are useful in research. It currently includes:
 
 1. `Birch` EOS
 2. `Murnaghan` EOS
@@ -16,14 +21,25 @@ This package implements some _equations of state_ (EOS) of solid which are usefu
     1. `PoirierTarantola2nd`
     2. `PoirierTarantola3rd`
     3. `PoirierTarantola4th`
-6. `Holzapfel` EOS (experimental)
-7. `AntonSchmidt` EOS
+6. `AntonSchmidt` EOS (experimental)
+7. `BreenanStacey` EOS (experimental)
 
 The formula are referenced from Ref. 1.
 
 This package also includes linear and nonlinear fitting methods, also referenced from Ref. 1.
 
 It is built for Julia v1.0+.
+
+## TODOs
+
+- [ ] ~~Add a logger to store `LsqFit.LsqFitResult`~~
+- [x] Let `fit_energy`, `fit_pressure` and `fit_bulk_modulus` return an `EquationOfState`
+- [ ] Implement nonlinear fitting using [CMPFit.jl](https://github.com/gcalderone/CMPFit.jl).
+
+## Related packages
+
+1. [CommandLineEquationsOfState.jl](https://github.com/MineralsCloud/CommandLineEquationsOfState.jl)
+2. [ExtendedEquationsOfState.jl](https://github.com/MineralsCloud/ExtendedEquationsOfState.jl)
 
 ## References
 

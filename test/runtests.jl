@@ -1,9 +1,8 @@
-#=
-runtests: A file for running a tests in this package
-- Julia version: 1.0
-- Author: qz
-- Date: Jan 29, 2019
-=#
+using EquationsOfState
+using Test
 
-include("CollectionsTests.jl")
-include("NonlinearFittingTests.jl")
+@testset "EquationsOfState.jl" begin
+    include("CollectionsTests.jl")
+    include("NonlinearFittingTests.jl")
+    include("LinearFittingTests.jl")
+end
