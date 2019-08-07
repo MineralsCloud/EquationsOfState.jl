@@ -11,6 +11,8 @@ julia>
 """
 module FiniteStrainsTests
 
+using Test
+
 using EquationsOfState.FiniteStrains
 
 @testset "Test data from Pymatgen" begin
