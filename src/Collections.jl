@@ -13,9 +13,7 @@ module Collections
 
 using InteractiveUtils
 using Parameters
-using StaticArrays: FieldVector, Size
-
-import StaticArrays: similar_type
+using StaticArrays  # FieldVector, Size
 
 export eval_energy,
     eval_pressure,
@@ -29,8 +27,7 @@ export eval_energy,
     PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
     Vinet,
     AntonSchmidt,
-    BreenanStacey,
-    similar_type
+    BreenanStacey
 
 # ============================================================================ #
 #                                     Types                                    #
@@ -435,7 +432,7 @@ nonabstract(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
 for E in nonabstract(EquationOfState)
     eval(quote
-        similar_type(::Type{A}, ::Type{T}, size::Size{(fieldcount($E),)}) where {A <: $E,T} = $E{T}
+        StaticArrays.similar_type(::Type{A}, ::Type{T}, size::Size{(fieldcount($E),)}) where {A <: $E,T} = $E{T}
     end)
 end
 
