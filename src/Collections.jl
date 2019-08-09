@@ -211,6 +211,7 @@ BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 # ============================================================================ #
 #                               Energy evaluation                              #
 # ============================================================================ #
+calculate(::Type{EnergyTarget}, eos::EquationOfState) = v -> calculate(EnergyTarget, eos, v)
 function calculate(::Type{EnergyTarget}, eos::Birch, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
@@ -285,6 +286,7 @@ end
 # ============================================================================ #
 #                              Pressure evaluation                             #
 # ============================================================================ #
+calculate(::Type{PressureTarget}, eos::EquationOfState) = v -> calculate(PressureTarget, eos, v)
 function calculate(::Type{PressureTarget}, eos::Birch, v::Real)
     @unpack v0, b0, bp0 = eos
 
@@ -362,6 +364,7 @@ end
 # ============================================================================ #
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
+calculate(::Type{BulkModulusTarget}, eos::EquationOfState) = v -> calculate(BulkModulusTarget, eos, v)
 function calculate(::Type{BulkModulusTarget}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
