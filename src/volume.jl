@@ -6,17 +6,13 @@ volume:
 =#
 using IntervalRootFinding
 
+using EquationsOfState.Targets
 using EquationsOfState.Collections
 
 export find_volume
 
-# function find_volume(eos, energies, interval, method)
-#     f(v) = eval_energy(eos, v)
-#     solutions = roots(f, interval, method)
-#     length(solutions) != 1 ? error("Multiple roots find!") : return first(solutions)
-# end # function find_volume
-function find_volume(eos, pressures, interval, method)
-    f(v) = eval_pressure(eos, v)
+function find_volume(T::Type{<: EquationOfStateTarget}, eos, y, interval, method)
+    f = v -> calculate(T, eos, v)
     solutions = roots(f, interval, method)
     length(solutions) != 1 ? error("Multiple roots find!") : return first(solutions)
 end # function find_volume
