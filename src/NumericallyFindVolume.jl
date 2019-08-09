@@ -1,9 +1,16 @@
-#=
-volume:
-- Julia version: 1.0
-- Author: singularitti
-- Date: 2019-08-06
-=#
+"""
+# module NumericallyFindVolume
+
+
+
+# Examples
+
+```jldoctest
+julia>
+```
+"""
+module NumericallyFindVolume
+
 using IntervalRootFinding
 
 using EquationsOfState.Targets
@@ -16,3 +23,5 @@ function find_volume(T::Type{<: EquationOfStateTarget}, eos::EquationOfState, y:
     solutions = roots(f, interval, method)
     length(solutions) != 1 ? error("Multiple roots find!") : return first(solutions)
 end # function find_volume
+
+end

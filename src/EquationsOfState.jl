@@ -7,7 +7,7 @@ include("Collections.jl")
 include("NonlinearFitting.jl")
 include("FiniteStrains.jl")
 include("LinearFitting.jl")
-include("volume.jl")
+include("NumericallyFindVolume.jl")
 
 @reexport using .Collections
 
