@@ -9,6 +9,6 @@ include("FiniteStrains.jl")
 include("LinearFitting.jl")
 include("NumericallyFindVolume.jl")
 
-@reexport using .Collections
+@reexport using .Targets
 
 end # module

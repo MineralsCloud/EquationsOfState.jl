@@ -8,7 +8,8 @@ module NonlinearFittingTests
 
 using Test
 
-using EquationsOfState
+using EquationsOfState.Targets
+using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 
 @testset "Test fitting energy with different element types" begin
