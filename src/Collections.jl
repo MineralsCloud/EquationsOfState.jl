@@ -444,6 +444,6 @@ for E in nonabstract(EquationOfState)
 end
 
 Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
-# ==============================u ======================== #
+# =============================== Miscellaneous ============================== #
 
 end
