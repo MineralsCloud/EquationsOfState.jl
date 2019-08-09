@@ -19,7 +19,7 @@ using EquationsOfState.Collections
 export lsqfit
 
 function lsqfit(A::Type{<: EquationOfStateTarget}, eos::E, xdata::Vector{T}, ydata::Vector{T}; debug::Bool = false, kwargs...) where {T <: AbstractFloat,E <: EquationOfState{T}}
-    model(x, p) = calculate(A, E(p), x)
+    model(x, p) = map(calculate(A, E(p)), x)
     fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
     debug ? fitted : E(fitted.param)
 end  # function lsqfit
