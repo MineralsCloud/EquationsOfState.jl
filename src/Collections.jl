@@ -20,17 +20,21 @@ using EquationsOfState.Targets
 import StaticArrays: similar_type
 
 export calculate,
-    EquationOfState,
-    FiniteStrainEquationOfState,
-    PolynomialEquationOfState,
-    Birch,
-    Murnaghan,
-    BirchMurnaghan2nd, BirchMurnaghan3rd, BirchMurnaghan4th,
-    PoirierTarantola2nd, PoirierTarantola3rd, PoirierTarantola4th,
-    Vinet,
-    AntonSchmidt,
-    BreenanStacey,
-    similar_type
+       EquationOfState,
+       FiniteStrainEquationOfState,
+       PolynomialEquationOfState,
+       Birch,
+       Murnaghan,
+       BirchMurnaghan2nd,
+       BirchMurnaghan3rd,
+       BirchMurnaghan4th,
+       PoirierTarantola2nd,
+       PoirierTarantola3rd,
+       PoirierTarantola4th,
+       Vinet,
+       AntonSchmidt,
+       BreenanStacey,
+       similar_type
 
 # ============================================================================ #
 #                                     Types                                    #
@@ -50,9 +54,9 @@ An abstraction of finite strain equations of state.
 """
 abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
 
-struct PolynomialEquationOfState{T <: Real,N} <: EquationOfState{T,N}
+struct PolynomialEquationOfState{T<:Real,N} <: EquationOfState{T,N}
     data::NTuple{N,T}
-    function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T, N}
+    function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T,N}
         @assert N ≤ 10
         new(args)
     end
@@ -74,7 +78,7 @@ Create a Birch equation of state. The elements' type will be handled automatical
 - `e0=0`: the energy of solid at 0 pressure. By default is `0`.
 ```
 """
-@with_kw struct Birch{T <: Real} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct Birch{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -86,7 +90,7 @@ function Birch(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Birch(v0, b0, bp0) = Birch(v0, b0, bp0, 0)
 
-@with_kw struct Murnaghan{T <: Real} <: EquationOfState{T,4}
+@with_kw struct Murnaghan{T<:Real} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -98,7 +102,7 @@ function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Murnaghan(v0, b0, bp0) = Murnaghan(v0, b0, bp0, 0)
 
-@with_kw struct BirchMurnaghan2nd{T <: Real} <: FiniteStrainEquationOfState{T,3}
+@with_kw struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
     e0::T = 0
@@ -109,7 +113,7 @@ function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Real)
 end
 BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(v0, b0, 0)
 
-@with_kw struct BirchMurnaghan3rd{T <: Real} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -121,7 +125,7 @@ function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(v0, b0, bp0, 0)
 
-@with_kw struct BirchMurnaghan4th{T <: Real} <: FiniteStrainEquationOfState{T,5}
+@with_kw struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
     bp0::T
@@ -134,7 +138,7 @@ function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
 end
 BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
 
-@with_kw struct PoirierTarantola2nd{T <: Real} <: FiniteStrainEquationOfState{T,3}
+@with_kw struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
     e0::T = 0
@@ -145,7 +149,7 @@ function PoirierTarantola2nd(v0::Real, b0::Real, e0::Real)
 end
 PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(v0, b0, 0)
 
-@with_kw struct PoirierTarantola3rd{T <: Real} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -157,7 +161,7 @@ function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(v0, b0, bp0, 0)
 
-@with_kw struct PoirierTarantola4th{T <: Real} <: FiniteStrainEquationOfState{T,5}
+@with_kw struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
     bp0::T
@@ -170,7 +174,7 @@ function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real
 end
 PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
 
-@with_kw struct Vinet{T <: Real} <: EquationOfState{T,4}
+@with_kw struct Vinet{T<:Real} <: EquationOfState{T,4}
     v0::T
     b0::T
     bp0::T
@@ -182,7 +186,7 @@ function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Vinet(v0, b0, bp0) = Vinet(v0, b0, bp0, 0)
 
-@with_kw struct AntonSchmidt{T <: Real} <: EquationOfState{T,4}
+@with_kw struct AntonSchmidt{T<:Real} <: EquationOfState{T,4}
     v0::T
     β::T
     n::T
@@ -194,7 +198,7 @@ function AntonSchmidt(v0::Real, β::Real, n::Real, e∞::Real)
 end
 AntonSchmidt(v0, β, n) = AntonSchmidt(v0, β, n, 0)
 
-@with_kw struct BreenanStacey{T <: Real} <: EquationOfState{T,4}
+@with_kw struct BreenanStacey{T<:Real} <: EquationOfState{T,4}
     v0::T
     b0::T
     γ0::T
@@ -435,7 +439,7 @@ nonabstract(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
 
 for E in nonabstract(EquationOfState)
     eval(quote
-        similar_type(::Type{A}, ::Type{T}, size::Size{(fieldcount($E),)}) where {A <: $E,T} = $E{T}
+        similar_type(::Type{A}, ::Type{T}, size::Size{(fieldcount($E),)}) where {A<:$E,T} = $E{T}
     end)
 end
 

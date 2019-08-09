@@ -11,12 +11,7 @@ julia>
 """
 module FiniteStrains
 
-export FiniteStrain,
-    EulerianStrain,
-    LagrangianStrain,
-    NaturalStrain,
-    InfinitesimalStrain,
-    get_strain
+export FiniteStrain, EulerianStrain, LagrangianStrain, NaturalStrain, InfinitesimalStrain, get_strain
 
 abstract type FiniteStrain{T} end
 
