@@ -8,7 +8,7 @@ module CollectionsTests
 
 using Test
 
-using EquationsOfState
+using EquationsOfState.Collections
 
 @testset "Test EOS promotion" begin
     @test typeof(Birch(1, 2, 3.0, 0)) == Birch{Float64}
