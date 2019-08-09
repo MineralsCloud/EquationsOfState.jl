@@ -12,7 +12,7 @@ using EquationsOfState.Collections
 export find_volume
 
 function find_volume(T::Type{<: EquationOfStateTarget}, eos, y, interval, method)
-    f = v -> calculate(T, eos, v)
+    f = v -> calculate(T, eos, v) - y
     solutions = roots(f, interval, method)
     length(solutions) != 1 ? error("Multiple roots find!") : return first(solutions)
 end # function find_volume
