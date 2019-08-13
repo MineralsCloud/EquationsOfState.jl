@@ -338,6 +338,17 @@ function calculate(::Type{EnergyTarget}, eos::Murnaghan, v::Real)
     y = (v0 / v)^bp0
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
+"""
+    calculate(EnergyTarget, eos::BirchMurnaghan2nd, v::Real)
+
+Evaluate Birch–Murnaghan 2nd order equation of state of energy on volume `v`.
+
+The formula is given as
+```math
+E = E_0 + \\frac{ 9 }{ 8 } B_0 V_0 (x^{ -2/3 } - 1)^2
+```
+where ``x = V / V_0``.
+"""
 function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
