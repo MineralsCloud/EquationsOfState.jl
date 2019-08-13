@@ -72,10 +72,10 @@ end
 Create a Birch equation of state. The elements' type will be handled automatically.
 
 # Arguments
-- `v0`: the volume of solid at 0 pressure.
-- `b0`: the bulk modulus of solid at 0 pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at 0 pressure.
-- `e0=0`: the energy of solid at 0 pressure. By default is `0`.
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
 ```
 """
 @with_kw struct Birch{T<:Real} <: FiniteStrainEquationOfState{T,4}
@@ -96,10 +96,10 @@ Birch(v0, b0, bp0) = Birch(v0, b0, bp0, 0)
 Create a Murnaghan equation of state. The elements' type will be handled automatically.
 
 # Arguments
-- `v0`: the volume of solid at 0 pressure.
-- `b0`: the bulk modulus of solid at 0 pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at 0 pressure.
-- `e0=0`: the energy of solid at 0 pressure. By default is `0`.
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
 ```
 """
 @with_kw struct Murnaghan{T<:Real} <: EquationOfState{T,4}
