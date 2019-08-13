@@ -76,7 +76,6 @@ Create a Birch equation of state. The elements' type will be handled automatical
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct Birch{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
@@ -100,7 +99,6 @@ Create a Murnaghan equation of state. The elements' type will be handled automat
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct Murnaghan{T<:Real} <: EquationOfState{T,4}
     v0::T
@@ -123,7 +121,6 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
@@ -146,7 +143,6 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
@@ -171,7 +167,6 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
@@ -195,7 +190,6 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
@@ -218,7 +212,6 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
@@ -243,7 +236,6 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
@@ -268,7 +260,6 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
-```
 """
 @with_kw struct Vinet{T<:Real} <: EquationOfState{T,4}
     v0::T
