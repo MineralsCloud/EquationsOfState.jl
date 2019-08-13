@@ -311,6 +311,27 @@ BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 # ============================================================================ #
 #                               Energy evaluation                              #
 # ============================================================================ #
+"""
+    calculate(EnergyTarget, eos::EquationOfState)
+
+Return a function that can take volume as the last parameter, suitable for batch-applying.
+
+# Examples
+```jldoctest
+julia> map(calculate(EnergyTarget, Vinet(1, 2, 3)), 1:1:10)
+10-element Array{Float64,1}:
+ 0.0
+ 0.367905230584308
+ 0.7652477289745814
+ 1.0516459435179233
+ 1.2560420090256408
+ 1.405149833626178
+ 1.5165867441792136
+ 1.6017034530570884
+ 1.6679539823686644
+ 1.7203642945516917
+```
+"""
 calculate(::Type{EnergyTarget}, eos::EquationOfState) = v -> calculate(EnergyTarget, eos, v)
 function calculate(::Type{EnergyTarget}, eos::Birch, v::Real)
     @unpack v0, b0, bp0, e0 = eos
