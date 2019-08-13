@@ -90,6 +90,18 @@ function Birch(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Birch(v0, b0, bp0) = Birch(v0, b0, bp0, 0)
 
+"""
+    Murnaghan(v0, b0, bp0, e0=0)
+
+Create a Murnaghan equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at 0 pressure.
+- `b0`: the bulk modulus of solid at 0 pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at 0 pressure.
+- `e0=0`: the energy of solid at 0 pressure. By default is `0`.
+```
+"""
 @with_kw struct Murnaghan{T<:Real} <: EquationOfState{T,4}
     v0::T
     b0::T
