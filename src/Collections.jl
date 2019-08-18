@@ -72,11 +72,10 @@ end
 Create a Birch equation of state. The elements' type will be handled automatically.
 
 # Arguments
-- `v0`: the volume of solid at 0 pressure.
-- `b0`: the bulk modulus of solid at 0 pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at 0 pressure.
-- `e0=0`: the energy of solid at 0 pressure. By default is `0`.
-```
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
 @with_kw struct Birch{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
@@ -90,6 +89,17 @@ function Birch(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Birch(v0, b0, bp0) = Birch(v0, b0, bp0, 0)
 
+"""
+    Murnaghan(v0, b0, bp0, e0=0)
+
+Create a Murnaghan equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct Murnaghan{T<:Real} <: EquationOfState{T,4}
     v0::T
     b0::T
@@ -102,6 +112,16 @@ function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Murnaghan(v0, b0, bp0) = Murnaghan(v0, b0, bp0, 0)
 
+"""
+    BirchMurnaghan2nd(v0, b0, e0=0)
+
+Create a Birch–Murnaghan 2nd order equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
@@ -113,6 +133,17 @@ function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Real)
 end
 BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(v0, b0, 0)
 
+"""
+    BirchMurnaghan3rd(v0, b0, bp0, e0=0)
+
+Create a Birch–Murnaghan 3rd order equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
@@ -125,6 +156,18 @@ function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(v0, b0, bp0, 0)
 
+"""
+    BirchMurnaghan4th(v0, b0, bp0, bpp0, e0=0)
+
+Create a Birch–Murnaghan 4th order equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
@@ -138,6 +181,16 @@ function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
 end
 BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
 
+"""
+    PoirierTarantola2nd(v0, b0, e0=0)
+
+Create a Poirier–Tarantola order equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
     v0::T
     b0::T
@@ -149,6 +202,17 @@ function PoirierTarantola2nd(v0::Real, b0::Real, e0::Real)
 end
 PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(v0, b0, 0)
 
+"""
+    PoirierTarantola3rd(v0, b0, bp0, e0=0)
+
+Create a Poirier–Tarantola 3rd order equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
     v0::T
     b0::T
@@ -161,6 +225,18 @@ function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(v0, b0, bp0, 0)
 
+"""
+    PoirierTarantola4th(v0, b0, bp0, bpp0, e0=0)
+
+Create a Birch–Murnaghan 4th order equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
     v0::T
     b0::T
@@ -174,6 +250,17 @@ function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real
 end
 PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
 
+"""
+    Vinet(v0, b0, bp0, e0=0)
+
+Create a Vinet equation of state. The elements' type will be handled automatically.
+
+# Arguments
+- `v0`: the volume of solid at zero pressure.
+- `b0`: the bulk modulus of solid at zero pressure.
+- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+"""
 @with_kw struct Vinet{T<:Real} <: EquationOfState{T,4}
     v0::T
     b0::T
@@ -215,6 +302,27 @@ BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 # ============================================================================ #
 #                               Energy evaluation                              #
 # ============================================================================ #
+"""
+    calculate(EnergyTarget, eos::EquationOfState)
+
+Return a function that can take volume as the last parameter, suitable for batch-applying.
+
+# Examples
+```jldoctest
+julia> map(calculate(EnergyTarget, Vinet(1, 2, 3)), 1:1:10)
+10-element Array{Float64,1}:
+ 0.0
+ 0.367905230584308
+ 0.7652477289745814
+ 1.0516459435179233
+ 1.2560420090256408
+ 1.405149833626178
+ 1.5165867441792136
+ 1.6017034530570884
+ 1.6679539823686644
+ 1.7203642945516917
+```
+"""
 calculate(::Type{EnergyTarget}, eos::EquationOfState) = v -> calculate(EnergyTarget, eos, v)
 function calculate(::Type{EnergyTarget}, eos::Birch, v::Real)
     @unpack v0, b0, bp0, e0 = eos
@@ -230,6 +338,17 @@ function calculate(::Type{EnergyTarget}, eos::Murnaghan, v::Real)
     y = (v0 / v)^bp0
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
+"""
+    calculate(EnergyTarget, eos::BirchMurnaghan2nd, v::Real)
+
+Evaluate Birch–Murnaghan 2nd order equation of state of energy on volume `v`.
+
+The formula is given as
+```math
+E = E_0 + \\frac{ 9 }{ 8 } B_0 V_0 (x^{ -2/3 } - 1)^2
+```
+where ``x = V / V_0``.
+"""
 function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
