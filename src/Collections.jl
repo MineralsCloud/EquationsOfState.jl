@@ -23,7 +23,6 @@ export calculate,
        EquationOfState,
        FiniteStrainEquationOfState,
        PolynomialEquationOfState,
-       Birch,
        Murnaghan,
        BirchMurnaghan2nd,
        BirchMurnaghan3rd,
@@ -65,29 +64,6 @@ function PolynomialEquationOfState(args...)
     T = Base.promote_typeof(args...)
     PolynomialEquationOfState{T,length(args)}(args)
 end
-
-"""
-    Birch(v0, b0, bp0, e0=0)
-
-Create a Birch equation of state. The elements' type will be handled automatically.
-
-# Arguments
-- `v0`: the volume of solid at zero pressure.
-- `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
-"""
-@with_kw struct Birch{T<:Real} <: FiniteStrainEquationOfState{T,4}
-    v0::T
-    b0::T
-    bp0::T
-    e0::T = 0
-end
-function Birch(v0::Real, b0::Real, bp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    Birch{T}(v0, b0, bp0, e0)
-end
-Birch(v0, b0, bp0) = Birch(v0, b0, bp0, 0)
 
 """
     Murnaghan(v0, b0, bp0, e0=0)
@@ -324,13 +300,6 @@ julia> map(calculate(EnergyTarget, Vinet(1, 2, 3)), 1:1:10)
 ```
 """
 calculate(::Type{EnergyTarget}, eos::EquationOfState) = v -> calculate(EnergyTarget, eos, v)
-function calculate(::Type{EnergyTarget}, eos::Birch, v::Real)
-    @unpack v0, b0, bp0, e0 = eos
-
-    x = (v0 / v)^(2 / 3) - 1
-    xi = 9 / 16 * b0 * v0 * x^2
-    return e0 + 2 * xi + (bp0 - 4) * xi * x
-end
 function calculate(::Type{EnergyTarget}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
@@ -410,13 +379,6 @@ end
 #                              Pressure evaluation                             #
 # ============================================================================ #
 calculate(::Type{PressureTarget}, eos::EquationOfState) = v -> calculate(PressureTarget, eos, v)
-function calculate(::Type{PressureTarget}, eos::Birch, v::Real)
-    @unpack v0, b0, bp0 = eos
-
-    x = v0 / v
-    xi = x^(2 / 3) - 1
-    return 3 / 8 * b0 * x^(5 / 3) * xi * (4 + 3(bp0 - 4) * xi)
-end
 function calculate(::Type{PressureTarget}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0 = eos
 
