@@ -85,7 +85,7 @@ lsqfit(EnergyTarget, Murnaghan(41, 0.5, 4, 0), volumes, energies)
 lsqfit(EnergyTarget, PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
 lsqfit(EnergyTarget, Vinet(41, 0.5, 4, 0), volumes, energies)
 ```
-The 4 different equations of state will be fitted. The 
+The 4 different equations of state will be fitted.
 
 ```@docs
 lsqfit(::Type{<:EquationOfStateTarget}, eos::E, xdata::X, ydata::Y; debug = false, kwargs...) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
@@ -94,4 +94,4 @@ lsqfit(::Type{<:EquationOfStateTarget}, eos::E, xdata::X, ydata::Y; debug = fals
 
 ## References
 
-1. A. Otero-De-La-Roza, V. Luaña, *Comput. Phys. Commun.* **182**, 1708–1720 (2011).
+1. [A. Otero-De-La-Roza, V. Luaña, *Computer Physics Communications*. **182**, 1708–1720 (2011), doi:10.1016/j.cpc.2011.04.016.](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
