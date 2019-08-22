@@ -7,6 +7,8 @@
 [![Codecov](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
 [![Coveralls](https://coveralls.io/repos/github/MineralsCloud/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/MineralsCloud/EquationsOfState.jl?branch=master)
 [![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
+[![GitHub license](https://img.shields.io/github/license/MineralsCloud/EquationsOfState.jl)](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/LICENSE)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/MineralsCloud/EquationsOfState.jl?include_prereleases)
 
 This package implements some _equations of state_ (EOS) of solids which are useful in research. It currently includes:
 
