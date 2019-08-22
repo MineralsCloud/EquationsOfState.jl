@@ -30,7 +30,7 @@ function lsqfit(
     debug ? fitted : E(fitted.param)
 end  # function lsqfit
 """
-    lsqfit(T, eos, xdata, ydata; debug, kwargs...)
+    lsqfit(T, eos, xdata, ydata; debug = false, kwargs...)
 
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
