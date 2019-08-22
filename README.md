@@ -1,3 +1,9 @@
+<div align="center">
+  <img src="./docs/logo/eos_logo.png" height="200"><br>
+</div>
+
+------
+
 # EquationsOfState.jl
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/stable)
