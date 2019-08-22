@@ -13,19 +13,19 @@ using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 
 @testset "Test fitting energy with different element types" begin
-    result = Birch(0.0057009512119028044, 103.58772269057364, -144.45152457521132, -40.31992619868024)
-    @test isapprox(lsqfit(EnergyTarget, Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-5)
-    @test isapprox(lsqfit(EnergyTarget, Birch(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]), result; atol = 1e-5)
-    @test isapprox(lsqfit(EnergyTarget, Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]), result; atol = 1e-5)
-    @test isapprox(lsqfit(EnergyTarget, Birch(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-5)
+    result = BirchMurnaghan3rd(0.0057009512119028044, 103.58772269057364, -144.45152457521132, -40.31992619868024)
+    @test isapprox(lsqfit(EnergyTarget, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-5)
+    @test isapprox(lsqfit(EnergyTarget, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]), result; atol = 1e-5)
+    @test isapprox(lsqfit(EnergyTarget, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]), result; atol = 1e-5)
+    @test isapprox(lsqfit(EnergyTarget, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-5)
 end
 
 @testset "Test fitting pressure with different element types" begin
-    result = Birch(1.1024687826597717, 29.30861698140365, 12.689089871112746, 0.0)
-    @test isapprox(lsqfit(PressureTarget, Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-6)
-    @test isapprox(lsqfit(PressureTarget, Birch(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]), result; atol = 1e-6)
-    @test isapprox(lsqfit(PressureTarget, Birch(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]), result; atol = 1e-6)
-    @test isapprox(lsqfit(PressureTarget, Birch(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-6)
+    result = BirchMurnaghan3rd(1.1024687826597717, 29.30861698140365, 12.689089871112746, 0.0)
+    @test isapprox(lsqfit(PressureTarget, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-6)
+    @test isapprox(lsqfit(PressureTarget, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]), result; atol = 1e-6)
+    @test isapprox(lsqfit(PressureTarget, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]), result; atol = 1e-6)
+    @test isapprox(lsqfit(PressureTarget, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]), result; atol = 1e-6)
 end
 
 @testset "Test fitting bulk modulus with different element types" begin
@@ -115,10 +115,6 @@ end
         -9.86535084973,
         -9.73155247952
     ]
-    @test isapprox(
-        lsqfit(EnergyTarget, Birch(40, 0.5, 4, 0), volumes, energies),
-        Birch(40.98926572870838, 0.5369258244952931, 4.178644231838501, -10.8428039082307)
-    )
     @test isapprox(
         lsqfit(EnergyTarget, BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies),
         BirchMurnaghan3rd(40.98926572528106, 0.5369258245417454, 4.178644235500821, -10.842803908240892)
