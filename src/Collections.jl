@@ -281,11 +281,13 @@ BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 """
     calculate(EnergyTarget, eos::EquationOfState)
 
-Return a function that can take volume as the last parameter, suitable for batch-applying.
+Return a function that can take a volume as a parameter, suitable for batch-applying.
 
 # Examples
 ```jldoctest
-julia> map(calculate(EnergyTarget, Vinet(1, 2, 3)), 1:1:10)
+julia> f = calculate(EnergyTarget, Vinet(1, 2, 3))
+
+julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
  0.0
  0.367905230584308
@@ -300,6 +302,11 @@ julia> map(calculate(EnergyTarget, Vinet(1, 2, 3)), 1:1:10)
 ```
 """
 calculate(::Type{EnergyTarget}, eos::EquationOfState) = v -> calculate(EnergyTarget, eos, v)
+"""
+    calculate(EnergyTarget, eos::Murnaghan, v::Real)
+
+Return ``E(V)`` of a `Murnaghan` equation of state on volume ``V``.
+"""
 function calculate(::Type{EnergyTarget}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
