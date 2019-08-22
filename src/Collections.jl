@@ -285,7 +285,9 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 
 # Examples
 ```jldoctest
-julia> f = calculate(EnergyTarget, Vinet(1, 2, 3))
+julia> using EquationsOfState, EquationsOfState.Collections
+
+julia> f = calculate(EnergyTarget, Vinet(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
