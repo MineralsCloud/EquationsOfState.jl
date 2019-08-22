@@ -1,3 +1,9 @@
+<div align="center">
+  <img src="./docs/logo/eos_logo.png" height="200"><br>
+</div>
+
+------
+
 # EquationsOfState.jl
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/stable)
@@ -7,22 +13,23 @@
 [![Codecov](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
 [![Coveralls](https://coveralls.io/repos/github/MineralsCloud/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/MineralsCloud/EquationsOfState.jl?branch=master)
 [![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
+[![GitHub license](https://img.shields.io/github/license/MineralsCloud/EquationsOfState.jl)](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/LICENSE)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/MineralsCloud/EquationsOfState.jl?include_prereleases)
 
 This package implements some _equations of state_ (EOS) of solids which are useful in research. It currently includes:
 
-1. `Birch` EOS
-2. `Murnaghan` EOS
-3. Birch–Murnaghan EOS family:
+1. `Murnaghan` EOS
+2. Birch–Murnaghan EOS family:
     1. `BirchMurnaghan2nd`
     2. `BirchMurnaghan3rd`
     3. `BirchMurnaghan4th`
-4. `Vinet` EOS
-5. Poirier–Tarantola EOS family:
+3. `Vinet` EOS
+4. Poirier–Tarantola EOS family:
     1. `PoirierTarantola2nd`
     2. `PoirierTarantola3rd`
     3. `PoirierTarantola4th`
-6. `AntonSchmidt` EOS (experimental)
-7. `BreenanStacey` EOS (experimental)
+5. `AntonSchmidt` EOS (experimental)
+6. `BreenanStacey` EOS (experimental)
 
 The formula are referenced from Ref. 1.
 
