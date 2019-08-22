@@ -5,6 +5,7 @@
 ```@contents
 Pages = [
     "Collections.md",
+    "NonlinearFitting.md"
 ]
 Depth = 3
 ```
