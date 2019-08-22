@@ -25,7 +25,7 @@ We will use `BirchMurnaghan3rd` as an example.
 
 `BirchMurnaghan3rd` can be constructed from scratch:
 
-```jldoctest
+```julia
 julia> BirchMurnaghan3rd(1, 2, 3)
 4-element BirchMurnaghan3rd{Int64}:
  1
@@ -50,23 +50,23 @@ julia> BirchMurnaghan3rd(1, 2, 3, 4.0)
 
 It can also be constructed from an existing `BirchMurnaghan3rd`:
 
-```jldoctest
+```julia
 julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), b0=10, e0=5)
-4-element Birch{Float64}:
+4-element BirchMurnaghan3rd{Float64}:
   1.0
  10.0
   3.0
   5.0
 
 julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), Dict(:b0=>10, :e0=>5))
-4-element Birch{Float64}:
+4-element BirchMurnaghan3rd{Float64}:
   1.0
  10.0
   3.0
   5.0
 
 julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), (:b0, 10))
-4-element Birch{Float64}:
+4-element BirchMurnaghan3rd{Float64}:
   1.0
  10.0
   3.0
@@ -75,7 +75,7 @@ julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), (:b0, 10))
 
 Users can access `BirchMurnaghan3rd`'s element by either "dot notation" or indexing:
 
-```jldoctest
+```julia
 julia> b = BirchMurnaghan3rd(1, 2, 3, 4.0)
 4-element BirchMurnaghan3rd{Float64}:
  1.0
@@ -102,7 +102,7 @@ The $E(V)$ relation of equations of state are listed as below:
    ```math
    E = E_{0} + \frac{9}{8} B_{0} V_{0} \left(x^{-2 / 3}-1\right)^{2}
    ```
-   where ``x= V / V_0``.
+   where ``x = V / V_0``.
 
 
 ```@docs
