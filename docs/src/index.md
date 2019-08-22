@@ -1,8 +1,15 @@
 # EquationsOfState.jl
 
-```@index
+## Manual Outline
+
+```@contents
+Pages = [
+    "Collections.md",
+]
+Depth = 3
 ```
 
-```@autodocs
-Modules = [EquationsOfState]
+### [Index](@id main-index)
+
+```@index
 ```
