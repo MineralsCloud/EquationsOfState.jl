@@ -22,6 +22,21 @@ EquationOfState
 └─ Vinet
 ```
 
+## Types
+
+```@docs
+EquationOfState
+FiniteStrainEquationOfState
+Murnaghan
+BirchMurnaghan2nd
+BirchMurnaghan3rd
+BirchMurnaghan4th
+PoirierTarantola2nd
+PoirierTarantola3rd
+PoirierTarantola4th
+Vinet
+```
+
 ## Usage
 
 ### Construct an `EquationOfState`
@@ -140,6 +155,10 @@ calculate(::Type{EnergyRelation}, eos::Murnaghan, v::Real)
 calculate(::Type{EnergyRelation}, eos::BirchMurnaghan2nd, v::Real)
 calculate(::Type{EnergyRelation}, eos::BirchMurnaghan3rd, v::Real)
 calculate(::Type{EnergyRelation}, eos::BirchMurnaghan4th, v::Real)
+
+calculate(::Type{PressureRelation}, eos::EquationOfState)
+
+calculate(::Type{BulkModulusRelation}, eos::EquationOfState)
 ```
 
 
