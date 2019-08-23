@@ -8,7 +8,7 @@ module NonlinearFittingTests
 
 using Test
 
-using EquationsOfState.Targets
+using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 

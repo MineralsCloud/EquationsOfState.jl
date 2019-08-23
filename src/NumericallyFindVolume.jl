@@ -13,7 +13,7 @@ module NumericallyFindVolume
 
 using IntervalRootFinding
 
-using EquationsOfState.Targets
+using EquationsOfState
 using EquationsOfState.Collections
 
 export find_volume

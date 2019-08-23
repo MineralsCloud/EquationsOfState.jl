@@ -15,7 +15,7 @@ using InteractiveUtils
 using Parameters
 using StaticArrays: FieldVector, Size
 
-using EquationsOfState.Targets
+using EquationsOfState
 
 import StaticArrays: similar_type
 

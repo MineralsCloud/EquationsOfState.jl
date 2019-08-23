@@ -13,7 +13,7 @@ module NonlinearFitting
 
 using LsqFit: curve_fit
 
-using EquationsOfState.Targets
+using EquationsOfState
 using EquationsOfState.Collections
 
 export lsqfit
