@@ -155,6 +155,10 @@ calculate(::Type{EnergyRelation}, eos::Murnaghan, v::Real)
 calculate(::Type{EnergyRelation}, eos::BirchMurnaghan2nd, v::Real)
 calculate(::Type{EnergyRelation}, eos::BirchMurnaghan3rd, v::Real)
 calculate(::Type{EnergyRelation}, eos::BirchMurnaghan4th, v::Real)
+
+calculate(::Type{PressureRelation}, eos::EquationOfState)
+
+calculate(::Type{BulkModulusRelation}, eos::EquationOfState)
 ```
 
 

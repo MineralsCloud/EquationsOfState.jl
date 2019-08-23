@@ -391,6 +391,31 @@ end
 # ============================================================================ #
 #                              Pressure evaluation                             #
 # ============================================================================ #
+"""
+    calculate(PressureRelation, eos::EquationOfState)
+
+Return a function that can take a volume as a parameter, suitable for batch-applying.
+
+# Examples
+```jldoctest
+julia> using EquationsOfState, EquationsOfState.Collections
+
+julia> f = calculate(PressureRelation, Vinet(1, 2, 3));
+
+julia> map(f, 1:1:10)
+10-element Array{Float64,1}:
+  0.0                
+ -0.45046308428750254
+ -0.3384840350043251 
+ -0.24010297221667418
+ -0.17314062272722755
+ -0.12795492664586872
+ -0.09677154467733216
+ -0.07468060255179591
+ -0.05864401631176751
+ -0.04674768462396211
+```
+"""
 calculate(::Type{PressureRelation}, eos::EquationOfState) = v -> calculate(PressureRelation, eos, v)
 function calculate(::Type{PressureRelation}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0 = eos
@@ -462,6 +487,31 @@ end
 # ============================================================================ #
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
+"""
+    calculate(BulkModulusRelation, eos::EquationOfState)
+
+Return a function that can take a volume as a parameter, suitable for batch-applying.
+
+# Examples
+```jldoctest
+julia> using EquationsOfState, EquationsOfState.Collections
+
+julia> f = calculate(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3));
+
+julia> map(f, 1:1:10)
+10-element Array{Float64,1}:
+ 2.0                 
+ 0.9216086833346415  
+ 0.444903691617472   
+ 0.2540009203153288  
+ 0.16193296566524193 
+ 0.11130584492987289 
+ 0.08076305569984538 
+ 0.06103515625       
+ 0.047609811583958425
+ 0.03808959181078831 
+```
+"""
 calculate(::Type{BulkModulusRelation}, eos::EquationOfState) = v -> calculate(BulkModulusRelation, eos, v)
 function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
