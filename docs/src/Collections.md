@@ -22,6 +22,21 @@ EquationOfState
 └─ Vinet
 ```
 
+## Types
+
+```@docs
+EquationOfState
+FiniteStrainEquationOfState
+Murnaghan
+BirchMurnaghan2nd
+BirchMurnaghan3rd
+BirchMurnaghan4th
+PoirierTarantola2nd
+PoirierTarantola3rd
+PoirierTarantola4th
+Vinet
+```
+
 ## Usage
 
 ### Construct an `EquationOfState`
