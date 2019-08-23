@@ -39,10 +39,15 @@ export calculate,
 #                                     Types                                    #
 # ============================================================================ #
 """
-    EquationOfState{T,N}
+    EquationOfState{T,N} <: FieldVector{N,T}
 
 An abstraction of equations of state, where `T` specifies the elements' type,
 and `N` specifies the number of fields.
+
+`EquationOfState{T,N}` is the abstraction of all equations of state. Subtype it with your
+customized `T` and `N`. It is also a subtype of
+[`FieldVector`](https://juliaarrays.github.io/StaticArrays.jl/latest/pages/api/#StaticArrays.FieldVector)
+from package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl).
 """
 abstract type EquationOfState{T,N} <: FieldVector{N,T} end
 
