@@ -5,6 +5,10 @@ makedocs(;
     format=Documenter.HTML(),
     pages=[
         "Home" => "index.md",
+        "Manual" => [
+            "Collections" => "Collections.md",
+            "Nonlinear fitting" => "NonlinearFitting.md"
+        ]
     ],
     repo="https://github.com/MineralsCloud/EquationsOfState.jl/blob/{commit}{path}#L{line}",
     sitename="EquationsOfState.jl",
