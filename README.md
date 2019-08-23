@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./docs/logo/eos_logo.png" height="200"><br>
+  <img src="./docs/src/assets/logo.png" height="200"><br>
 </div>
 
 ------
