@@ -1,5 +1,5 @@
 """
-# module NumericallyFindVolume
+# module FindVolume
 
 
 
@@ -9,7 +9,7 @@
 julia>
 ```
 """
-module NumericallyFindVolume
+module FindVolume
 
 using IntervalRootFinding
 

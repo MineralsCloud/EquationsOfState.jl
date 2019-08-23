@@ -12,6 +12,6 @@ include("Collections.jl")
 include("NonlinearFitting.jl")
 include("FiniteStrains.jl")
 include("LinearFitting.jl")
-include("NumericallyFindVolume.jl")
+include("FindVolume.jl")
 
 end # module
