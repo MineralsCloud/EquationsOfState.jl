@@ -13,7 +13,7 @@ module LinearFitting
 
 using LinearAlgebra: dot
 using Polynomials: polyder, polyfit, degree, coeffs, Poly
-using Rematch
+using MLStyle: @match
 
 using EquationsOfState.FiniteStrains
 

@@ -2,8 +2,8 @@ using EquationsOfState
 using Test
 
 @testset "EquationsOfState.jl" begin
-    include("CollectionsTests.jl")
-    include("FiniteStrainsTests.jl")
-    include("NonlinearFittingTests.jl")
-    include("LinearFittingTests.jl")
+    include("Collections.jl")
+    include("FiniteStrains.jl")
+    include("NonlinearFitting.jl")
+    include("LinearFitting.jl")
 end

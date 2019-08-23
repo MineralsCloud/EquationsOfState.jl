@@ -1,11 +1,3 @@
-#=
-CollectionsTests:
-- Julia version: 1.0
-- Author: qz
-- Date: Jan 29, 2019
-=#
-module CollectionsTests
-
 using Test
 
 using EquationsOfState.Collections
@@ -77,6 +69,4 @@ end
     )
     @test convert(AntonSchmidt{Float64}, AntonSchmidt(1, 2, 3, 0)) == AntonSchmidt(1.0, 2.0, 3.0, 0.0)
     @test convert(BreenanStacey{Float64}, BreenanStacey(1, 2, 3, 0)) == BreenanStacey(1.0, 2.0, 3.0, 0.0)
-end
-
 end

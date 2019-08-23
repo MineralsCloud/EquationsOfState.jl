@@ -3,7 +3,7 @@
 !!! note
 
     Starting from `v2.0.0`, `EquationsOfState.jl` has been rewritten. 
-    The former behaviors of `EquationsOfState.jl` will be deprecated and unmaintained.
+    The former behaviors of `EquationsOfState.jl` (`v1.1.4` and earlier) will be deprecated.
     Please follow the latest documentation.
 
 ## Package Features

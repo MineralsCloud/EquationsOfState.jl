@@ -1,14 +1,17 @@
 module EquationsOfState
 
-using Reexport
+export EquationOfStateRelation, EnergyRelation, PressureRelation, BulkModulusRelation
 
-include("Targets.jl")
+abstract type EquationOfStateRelation end
+
+struct EnergyRelation <: EquationOfStateRelation end
+struct PressureRelation <: EquationOfStateRelation end
+struct BulkModulusRelation <: EquationOfStateRelation end
+
 include("Collections.jl")
 include("NonlinearFitting.jl")
 include("FiniteStrains.jl")
 include("LinearFitting.jl")
-include("NumericallyFindVolume.jl")
-
-@reexport using .Targets
+include("FindVolume.jl")
 
 end # module
