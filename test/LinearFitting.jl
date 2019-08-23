@@ -1,16 +1,3 @@
-"""
-# module LinearFittingTests
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
-"""
-module LinearFittingTests
-
 using Test
 
 using EquationsOfState.FiniteStrains
@@ -168,6 +155,4 @@ using EquationsOfState.LinearFitting
         1.2252230465391096e-5,
         1.121020710562245e-5
     ]
-end
-
 end

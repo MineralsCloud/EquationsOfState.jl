@@ -1,11 +1,3 @@
-#=
-NonlinearFittingTests:
-- Julia version: 1.0
-- Author: qz
-- Date: Jan 29, 2019
-=#
-module NonlinearFittingTests
-
 using Test
 
 using EquationsOfState
@@ -496,6 +488,4 @@ end
         atol = 1e-5
     )
     # @test lsqfit(EnergyRelation, PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
-end
-
 end

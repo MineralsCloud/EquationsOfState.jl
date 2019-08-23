@@ -1,16 +1,3 @@
-"""
-# module FiniteStrainsTests
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
-"""
-module FiniteStrainsTests
-
 using Test
 
 using EquationsOfState.FiniteStrains
@@ -167,6 +154,4 @@ using EquationsOfState.FiniteStrains
         0.10618193139700183,
         0.11409127770318894
     ]
-end
-
 end
