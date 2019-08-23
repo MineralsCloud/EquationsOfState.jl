@@ -13,13 +13,13 @@ module NonlinearFitting
 
 using LsqFit: curve_fit
 
-using EquationsOfState.Targets
+using EquationsOfState
 using EquationsOfState.Collections
 
 export lsqfit
 
 function lsqfit(
-    A::Type{<:EquationOfStateTarget},
+    A::Type{<:EquationOfStateRelation},
     eos::E,
     xdata::Vector{T},
     ydata::Vector{T};
@@ -35,7 +35,7 @@ end  # function lsqfit
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
 # Arguments
-- `T::Type{<:EquationOfStateTarget}`: an `EquationOfStateTarget`. If it is `EnergyTarget`, fit \$E(V)\$; if `PressureTarget`, fit \$P(V)\$; if `BulkModulusTarget`, fit \$B(V)\$.
+- `T::Type{<:EquationOfStateRelation}`: an `EquationOfStateRelation`. If it is `EnergyRelation`, fit \$E(V)\$; if `PressureRelation`, fit \$P(V)\$; if `BulkModulusRelation`, fit \$B(V)\$.
 - `eos::EquationOfState`: a trial equation of state.
 - `xdata::AbstractVector`: a vector of volumes.
 - `ydata::AbstractVector`: a vector of energies, pressures, or bulk moduli.
@@ -43,7 +43,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 - `kwargs`: the rest keyword arguments that will be sent to `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md).
 """
 function lsqfit(
-    A::Type{<:EquationOfStateTarget},
+    A::Type{<:EquationOfStateRelation},
     eos::E,
     xdata::X,
     ydata::Y;
