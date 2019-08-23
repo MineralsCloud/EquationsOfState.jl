@@ -1,5 +1,9 @@
 # Collections
 
+```@meta
+CurrentModule = EquationsOfState.Collections
+```
+
 The current `EquationOfState`s contain
 
 ```
@@ -18,7 +22,7 @@ EquationOfState
 └─ Vinet
 ```
 
-## Guide
+## Usage
 
 ### Construct an `EquationOfState`
 We will use `BirchMurnaghan3rd` as an example.
@@ -96,18 +100,46 @@ The $E(V)$ relation of equations of state are listed as below:
 
 1. `Murnaghan`:
    ```math
-   E(V)=E_{0}+K_{0} V_{0}\left[\frac{1}{K_{0}^{\prime}\left(K_{0}^{\prime}-1\right)}\left(\frac{V}{V_{0}}\right)^{1-K_{0}^{\prime}}+\frac{1}{K_{0}^{\prime}} \frac{V}{V_{0}}-\frac{1}{K_{0}^{\prime}-1}\right]
+   E(V) = E_{0}+K_{0} V_{0}\left[\frac{1}{K_{0}^{\prime}\left(K_{0}^{\prime}-1\right)}\left(\frac{V}{V_{0}}\right)^{1-K_{0}^{\prime}}+\frac{1}{K_{0}^{\prime}} \frac{V}{V_{0}}-\frac{1}{K_{0}^{\prime}-1}\right]
    ```
+   
 2. `BirchMurnaghan2nd`:
+   
    ```math
-   E = E_{0} + \frac{9}{8} B_{0} V_{0} \left(x^{-2 / 3}-1\right)^{2}
+   E(V) = E_{0} + \frac{9}{8} B_{0} V_{0} \left(\left( V / V_0 \right)^{-2 / 3}-1\right)^{2}
    ```
-   where ``x = V / V_0``.
+   
+3. `BirchMurnaghan3rd`:
 
+   ```math
+   E(V) = E_{0}+\frac{9}{16} V_{0} B_{0} \frac{\left(x^{2 / 3}-1\right)^{2}}{x^{7 / 3}}\left\{x^{1 / 3}\left(B_{0}^{\prime}-4\right)-x\left(B_{0}^{\prime}-6\right)\right\}
+   ```
+
+   where ``x = V / V_0``, and ``f = \frac{ 1 }{ 2 } \bigg[ \bigg( \frac{ V_0 }{ V } \bigg)^{2/3} - 1 \bigg]``.
+
+4. `BirchMurnaghan4th`:
+
+   ```math
+   E(V) = E_{0}+\frac{3}{8} V_{0} B_{0} f^{2}\left[\left(9 H-63 B_{0}^{\prime}+143\right) f^{2}+12\left(B_{0}^{\prime}-4\right) f+12\right]
+   ```
+
+   where ``H = B_0 B_0'' + (B_0')^2``.
+
+5. `PoirierTarantola2nd`:
+
+   ```math
+   E(V) = E_{0}+\frac{1}{2} B_{0} V_{0} \ln ^{2} x
+   ```
+
+   
+## Public interfaces
 
 ```@docs
 calculate(::Type{EnergyTarget}, eos::EquationOfState)
 calculate(::Type{EnergyTarget}, eos::Murnaghan, v::Real)
+calculate(::Type{EnergyTarget}, eos::BirchMurnaghan2nd, v::Real)
+calculate(::Type{EnergyTarget}, eos::BirchMurnaghan3rd, v::Real)
+calculate(::Type{EnergyTarget}, eos::BirchMurnaghan4th, v::Real)
 ```
 
 

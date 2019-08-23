@@ -307,7 +307,7 @@ calculate(::Type{EnergyTarget}, eos::EquationOfState) = v -> calculate(EnergyTar
 """
     calculate(EnergyTarget, eos::Murnaghan, v::Real)
 
-Return ``E(V)`` of a `Murnaghan` equation of state on volume ``V``.
+Return the energy of a `Murnaghan` equation of state on volume `v`.
 """
 function calculate(::Type{EnergyTarget}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0, e0 = eos
@@ -319,13 +319,7 @@ end
 """
     calculate(EnergyTarget, eos::BirchMurnaghan2nd, v::Real)
 
-Evaluate Birch–Murnaghan 2nd order equation of state of energy on volume `v`.
-
-The formula is given as
-```math
-E = E_0 + \\frac{ 9 }{ 8 } B_0 V_0 (x^{ -2/3 } - 1)^2
-```
-where ``x = V / V_0``.
+Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
 function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0, e0 = eos
@@ -333,6 +327,11 @@ function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan2nd, v::Real)
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
+"""
+    calculate(EnergyTarget, eos::BirchMurnaghan3rd, v::Real)
+
+Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
+"""
 function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
@@ -340,6 +339,11 @@ function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan3rd, v::Real)
     xi = eta^2 - 1
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
 end
+"""
+    calculate(EnergyTarget, eos::BirchMurnaghan4th, v::Real)
+
+Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
+"""
 function calculate(::Type{EnergyTarget}, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 

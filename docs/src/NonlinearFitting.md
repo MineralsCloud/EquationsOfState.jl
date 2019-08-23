@@ -10,7 +10,7 @@ From Ref. 1,
 
 In [`EquationsOfState`](https://github.com/MineralsCloud/EquationsOfState.jl), the nonlinear fitting is currently implemented by [`LsqFit`](https://github.com/JuliaNLSolvers/LsqFit.jl), a small library that provides basic least-squares fitting in pure Julia. It only utilizes the *Levenberg-Marquardt algorithm* for non-linear fitting. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) for more information.
 
-## Guide
+## Usage
 
 We provide API `lsqfit` currently.
 
@@ -85,7 +85,9 @@ lsqfit(EnergyTarget, Murnaghan(41, 0.5, 4, 0), volumes, energies)
 lsqfit(EnergyTarget, PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
 lsqfit(EnergyTarget, Vinet(41, 0.5, 4, 0), volumes, energies)
 ```
-The 4 different equations of state will be fitted.
+Then 4 different equations of state will be fitted.
+
+## Public interfaces
 
 ```@docs
 lsqfit(::Type{<:EquationOfStateTarget}, eos::E, xdata::X, ydata::Y; debug = false, kwargs...) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
