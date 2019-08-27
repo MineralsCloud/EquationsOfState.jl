@@ -43,27 +43,32 @@ This package also includes linear and nonlinear fitting methods, also referenced
 
 ## Installation
 
-Install the latest testing version:
+1. Install [Julia executable](https://julialang.org/downloads/)
 
-```julia
-julia> using Pkg
+2. Install the package:
 
-julia> Pkg.add("https://github.com/MineralsCloud/EquationsOfState.jl")
-```
+   Install the latest testing version:
 
-Install the stable version:
+   ```julia
+   julia> using Pkg
+   
+   julia> Pkg.add("https://github.com/MineralsCloud/EquationsOfState.jl")
+   ```
 
-```julia
-julia> using Pkg
+   Install the stable version:
 
-julia> Pkg.add("EquationsOfState")
-```
+   ```julia
+   julia> using Pkg
+   
+   julia> Pkg.add("EquationsOfState")
+   ```
 
-This is currently not suggested since `v2.0.0` has been rewritten.
+   This is currently not suggested since `v2.0.0` has been rewritten.
 
 ## TODOs
 
 - [ ] Implement nonlinear fitting using [CMPFit.jl](https://github.com/gcalderone/CMPFit.jl).
+- [ ] Finish [docs](https://mineralscloud.github.io/EquationsOfState.jl/)
 
 ## Related packages
 
