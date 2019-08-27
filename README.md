@@ -35,7 +35,11 @@ The formula are referenced from Ref. 1.
 
 This package also includes linear and nonlinear fitting methods, also referenced from Ref. 1.
 
-It is built for Julia v1.0+.
+## Compatibility
+
+- Julia version: `v1.0.0` and above
+- Dependencies: see [`Project.toml`]([Project.toml](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/Project.toml))
+- OS versions: `macOS`, `Linux`, and `Windows`
 
 ## Installation
 
