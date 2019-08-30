@@ -1,12 +1,12 @@
 module EquationsOfState
 
-export EquationOfStateRelation, EnergyRelation, PressureRelation, BulkModulusRelation
+export EquationOfStateForm, EnergyRelation, PressureRelation, BulkModulusRelation
 
-abstract type EquationOfStateRelation end
+abstract type EquationOfStateForm end
 
-struct EnergyRelation <: EquationOfStateRelation end
-struct PressureRelation <: EquationOfStateRelation end
-struct BulkModulusRelation <: EquationOfStateRelation end
+struct EnergyRelation <: EquationOfStateForm end
+struct PressureRelation <: EquationOfStateForm end
+struct BulkModulusRelation <: EquationOfStateForm end
 
 include("Collections.jl")
 include("NonlinearFitting.jl")
