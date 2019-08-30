@@ -241,7 +241,7 @@ end
 
     fitted_eos = lsqfit(EnergyForm, Vinet(23, 0.5, 4, -2), mp153_volumes, mp153_energies)
     @test isapprox(fitted_eos, Vinet(22.95764559358769, 0.2257091141420788, 4.060543387224629, -1.5944292606251582))
-    @test isapprox(map(calculate(EnergyForm, fitted_eos), mp153_volumes), mp153_known_energies_vinet; atol = 1e-5)
+    @test isapprox(map(apply(EnergyForm, fitted_eos), mp153_volumes), mp153_known_energies_vinet; atol = 1e-5)
 end
 
 @testset "Test Si dataset" begin
@@ -319,7 +319,7 @@ end
 
     fitted_eos = lsqfit(EnergyForm, Vinet(20, 0.5, 4, -5), mp149_volumes, mp149_energies)
     @test isapprox(fitted_eos, Vinet(20.446696754873944, 0.5516638521306302, 4.324373909783161, -5.424963389876503))
-    @test isapprox(map(calculate(EnergyForm, fitted_eos), mp149_volumes), mp149_known_energies_vinet; atol = 1e-5)
+    @test isapprox(map(apply(EnergyForm, fitted_eos), mp149_volumes), mp149_known_energies_vinet; atol = 1e-5)
 end
 
 @testset "Test Ti dataset" begin
@@ -397,7 +397,7 @@ end
 
     fitted_eos = lsqfit(EnergyForm, Vinet(17, 0.5, 4, -7), mp72_volumes, mp72_energies)
     @test isapprox(fitted_eos, Vinet(17.13223026131245, 0.7029766224730147, 3.6388077563621812, -7.897414959124461))
-    @test isapprox(map(calculate(EnergyForm, fitted_eos), mp72_volumes), mp72_known_energies_vinet; atol = 1e-5)
+    @test isapprox(map(apply(EnergyForm, fitted_eos), mp72_volumes), mp72_known_energies_vinet; atol = 1e-5)
 end
 
 @testset "`Test w2k-lda-na.dat` from `Gibbs2`" begin

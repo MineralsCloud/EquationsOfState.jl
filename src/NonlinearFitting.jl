@@ -25,7 +25,7 @@ function lsqfit(
     ydata::Vector{T};
     debug::Bool = false, kwargs...
 ) where {T<:AbstractFloat,E<:EquationOfState{T}}
-    model(x, p) = map(calculate(A, E(p)), x)
+    model(x, p) = map(apply(A, E(p)), x)
     fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
     debug ? fitted : E(fitted.param)
 end  # function lsqfit

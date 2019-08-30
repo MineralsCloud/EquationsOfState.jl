@@ -150,15 +150,15 @@ The $E(V)$ relation of equations of state are listed as below:
 ## Public interfaces
 
 ```@docs
-calculate(::Type{EnergyForm}, eos::EquationOfState)
-calculate(::Type{EnergyForm}, eos::Murnaghan, v::Real)
-calculate(::Type{EnergyForm}, eos::BirchMurnaghan2nd, v::Real)
-calculate(::Type{EnergyForm}, eos::BirchMurnaghan3rd, v::Real)
-calculate(::Type{EnergyForm}, eos::BirchMurnaghan4th, v::Real)
+apply(::Type{EnergyForm}, eos::EquationOfState)
+apply(::Type{EnergyForm}, eos::Murnaghan, v::Real)
+apply(::Type{EnergyForm}, eos::BirchMurnaghan2nd, v::Real)
+apply(::Type{EnergyForm}, eos::BirchMurnaghan3rd, v::Real)
+apply(::Type{EnergyForm}, eos::BirchMurnaghan4th, v::Real)
 
-calculate(::Type{PressureForm}, eos::EquationOfState)
+apply(::Type{PressureForm}, eos::EquationOfState)
 
-calculate(::Type{BulkModulusForm}, eos::EquationOfState)
+apply(::Type{BulkModulusForm}, eos::EquationOfState)
 ```
 
 
