@@ -1,10 +1,10 @@
 module EquationsOfState
 
-export EquationOfStateForm, EnergyRelation, PressureRelation, BulkModulusRelation
+export EquationOfStateForm, EnergyForm, PressureRelation, BulkModulusRelation
 
 abstract type EquationOfStateForm end
 
-struct EnergyRelation <: EquationOfStateForm end
+struct EnergyForm <: EquationOfStateForm end
 struct PressureRelation <: EquationOfStateForm end
 struct BulkModulusRelation <: EquationOfStateForm end
 

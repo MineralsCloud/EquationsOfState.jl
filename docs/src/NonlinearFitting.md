@@ -80,10 +80,10 @@ energies = [
     -9.73155247952
 ]
 
-lsqfit(EnergyRelation, BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies)
-lsqfit(EnergyRelation, Murnaghan(41, 0.5, 4, 0), volumes, energies)
-lsqfit(EnergyRelation, PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
-lsqfit(EnergyRelation, Vinet(41, 0.5, 4, 0), volumes, energies)
+lsqfit(EnergyForm, BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies)
+lsqfit(EnergyForm, Murnaghan(41, 0.5, 4, 0), volumes, energies)
+lsqfit(EnergyForm, PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
+lsqfit(EnergyForm, Vinet(41, 0.5, 4, 0), volumes, energies)
 ```
 Then 4 different equations of state will be fitted.
 

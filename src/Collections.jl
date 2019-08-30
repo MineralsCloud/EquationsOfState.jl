@@ -284,7 +284,7 @@ BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 #                               Energy evaluation                              #
 # ============================================================================ #
 """
-    calculate(EnergyRelation, eos::EquationOfState)
+    calculate(EnergyForm, eos::EquationOfState)
 
 Return a function that can take a volume as a parameter, suitable for batch-applying.
 
@@ -292,7 +292,7 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = calculate(EnergyRelation, Vinet(1, 2, 3));
+julia> f = calculate(EnergyForm, Vinet(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -308,13 +308,13 @@ julia> map(f, 1:1:10)
  1.7203642945516917
 ```
 """
-calculate(::Type{EnergyRelation}, eos::EquationOfState) = v -> calculate(EnergyRelation, eos, v)
+calculate(::Type{EnergyForm}, eos::EquationOfState) = v -> calculate(EnergyForm, eos, v)
 """
-    calculate(EnergyRelation, eos::Murnaghan, v::Real)
+    calculate(EnergyForm, eos::Murnaghan, v::Real)
 
 Return the energy of a `Murnaghan` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::Murnaghan, v::Real)
+function calculate(::Type{EnergyForm}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     x = bp0 - 1
@@ -322,22 +322,22 @@ function calculate(::Type{EnergyRelation}, eos::Murnaghan, v::Real)
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
 """
-    calculate(EnergyRelation, eos::BirchMurnaghan2nd, v::Real)
+    calculate(EnergyForm, eos::BirchMurnaghan2nd, v::Real)
 
 Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan2nd, v::Real)
+function calculate(::Type{EnergyForm}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 """
-    calculate(EnergyRelation, eos::BirchMurnaghan3rd, v::Real)
+    calculate(EnergyForm, eos::BirchMurnaghan3rd, v::Real)
 
 Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan3rd, v::Real)
+function calculate(::Type{EnergyForm}, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     eta = (v0 / v)^(1 / 3)
@@ -345,30 +345,30 @@ function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan3rd, v::Real)
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
 end
 """
-    calculate(EnergyRelation, eos::BirchMurnaghan4th, v::Real)
+    calculate(EnergyForm, eos::BirchMurnaghan4th, v::Real)
 
 Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan4th, v::Real)
+function calculate(::Type{EnergyForm}, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12(bp0 - 4) * f + 12)
 end
-function calculate(::Type{EnergyRelation}, eos::PoirierTarantola2nd, v::Real)
+function calculate(::Type{EnergyForm}, eos::PoirierTarantola2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
     return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
 end
-function calculate(::Type{EnergyRelation}, eos::PoirierTarantola3rd, v::Real)
+function calculate(::Type{EnergyForm}, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = -3log(x)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
-function calculate(::Type{EnergyRelation}, eos::PoirierTarantola4th, v::Real)
+function calculate(::Type{EnergyForm}, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 
     x = (v / v0)^(1 / 3)
@@ -376,14 +376,14 @@ function calculate(::Type{EnergyRelation}, eos::PoirierTarantola4th, v::Real)
     h = b0 * bpp0 + bp0^2
     return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4(bp0 + 2) * xi + 12)
 end
-function calculate(::Type{EnergyRelation}, eos::Vinet, v::Real)
+function calculate(::Type{EnergyForm}, eos::Vinet, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
-function calculate(::Type{EnergyRelation}, eos::AntonSchmidt, v::Real)
+function calculate(::Type{EnergyForm}, eos::AntonSchmidt, v::Real)
     @unpack v0, β, n, e∞ = eos
 
     x = v / v0
