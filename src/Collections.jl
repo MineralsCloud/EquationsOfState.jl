@@ -493,7 +493,7 @@ end
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
 """
-    calculate(BulkModulusRelation, eos::EquationOfState)
+    calculate(BulkModulusForm, eos::EquationOfState)
 
 Return a function that can take a volume as a parameter, suitable for batch-applying.
 
@@ -501,7 +501,7 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = calculate(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3));
+julia> f = calculate(BulkModulusForm, BirchMurnaghan3rd(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -517,40 +517,40 @@ julia> map(f, 1:1:10)
  0.03808959181078831 
 ```
 """
-calculate(::Type{BulkModulusRelation}, eos::EquationOfState) = v -> calculate(BulkModulusRelation, eos, v)
-function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan2nd, v::Real)
+calculate(::Type{BulkModulusForm}, eos::EquationOfState) = v -> calculate(BulkModulusForm, eos, v)
+function calculate(::Type{BulkModulusForm}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
-function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan3rd, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
-function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan4th, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
     return b0 / 6 * (2f + 1)^(5 / 2) * ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
-function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola2nd, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::PoirierTarantola2nd, v::Real)
     @unpack v0, b0 = eos
 
     x = (v / v0)^(1 / 3)
     return b0 / x * (1 - log(x))
 end
-function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola3rd, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = v / v0
     xi = log(x)
     return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
 end
-function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola4th, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     x = (v / v0)^(1 / 3)
@@ -558,14 +558,14 @@ function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola4th, v::Rea
     h = b0 * bpp0 + bp0^2
     return -b0 / (6x) * ((h + 3bp0 + 3) * xi^3 - 3xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
 end
-function calculate(::Type{BulkModulusRelation}, eos::Vinet, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::Vinet, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return -b0 / (2x^2) * (3x * (x - 1) * (bp0 - 1) + 2(x - 2)) * exp(-xi * (x - 1))
 end
-function calculate(::Type{BulkModulusRelation}, eos::AntonSchmidt, v::Real)
+function calculate(::Type{BulkModulusForm}, eos::AntonSchmidt, v::Real)
     @unpack v0, β, n = eos
 
     x = v / v0
