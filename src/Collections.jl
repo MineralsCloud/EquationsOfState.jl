@@ -397,7 +397,7 @@ end
 #                              Pressure evaluation                             #
 # ============================================================================ #
 """
-    calculate(PressureRelation, eos::EquationOfState)
+    calculate(PressureForm, eos::EquationOfState)
 
 Return a function that can take a volume as a parameter, suitable for batch-applying.
 
@@ -405,7 +405,7 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = calculate(PressureRelation, Vinet(1, 2, 3));
+julia> f = calculate(PressureForm, Vinet(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -421,45 +421,45 @@ julia> map(f, 1:1:10)
  -0.04674768462396211
 ```
 """
-calculate(::Type{PressureRelation}, eos::EquationOfState) = v -> calculate(PressureRelation, eos, v)
-function calculate(::Type{PressureRelation}, eos::Murnaghan, v::Real)
+calculate(::Type{PressureForm}, eos::EquationOfState) = v -> calculate(PressureForm, eos, v)
+function calculate(::Type{PressureForm}, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0 = eos
 
     return b0 / bp0 * ((v0 / v)^bp0 - 1)
 end
-function calculate(::Type{PressureRelation}, eos::BirchMurnaghan2nd, v::Real)
+function calculate(::Type{PressureForm}, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
-function calculate(::Type{PressureRelation}, eos::BirchMurnaghan3rd, v::Real)
+function calculate(::Type{PressureForm}, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     eta = (v0 / v)^(1 / 3)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
 end
-function calculate(::Type{PressureRelation}, eos::BirchMurnaghan4th, v::Real)
+function calculate(::Type{PressureForm}, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9(bp0 - 4) * f + 6)
 end
-function calculate(::Type{PressureRelation}, eos::PoirierTarantola2nd, v::Real)
+function calculate(::Type{PressureForm}, eos::PoirierTarantola2nd, v::Real)
     @unpack v0, b0 = eos
 
     x = (v / v0)^(1 / 3)
     return -b0 / x * log(x)
 end
-function calculate(::Type{PressureRelation}, eos::PoirierTarantola3rd, v::Real)
+function calculate(::Type{PressureForm}, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = v / v0
     xi = log(x)
     return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
 end
-function calculate(::Type{PressureRelation}, eos::PoirierTarantola4th, v::Real)
+function calculate(::Type{PressureForm}, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     x = (v / v0)^(1 / 3)
@@ -467,20 +467,20 @@ function calculate(::Type{PressureRelation}, eos::PoirierTarantola4th, v::Real)
     h = b0 * bpp0 + bp0^2
     return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3(bp0 + 6) * xi + 6)
 end
-function calculate(::Type{PressureRelation}, eos::Vinet, v::Real)
+function calculate(::Type{PressureForm}, eos::Vinet, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
-function calculate(::Type{PressureRelation}, eos::AntonSchmidt, v::Real)
+function calculate(::Type{PressureForm}, eos::AntonSchmidt, v::Real)
     @unpack v0, β, n = eos
 
     x = v / v0
     return -β * x^n * log(x)
 end
-function calculate(::Type{PressureRelation}, eos::BreenanStacey, v::Real)
+function calculate(::Type{PressureForm}, eos::BreenanStacey, v::Real)
     @unpack v0, b0, γ0 = eos
 
     x = v0 / v

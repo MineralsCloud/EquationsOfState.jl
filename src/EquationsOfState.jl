@@ -1,11 +1,11 @@
 module EquationsOfState
 
-export EquationOfStateForm, EnergyForm, PressureRelation, BulkModulusRelation
+export EquationOfStateForm, EnergyForm, PressureForm, BulkModulusRelation
 
 abstract type EquationOfStateForm end
 
 struct EnergyForm <: EquationOfStateForm end
-struct PressureRelation <: EquationOfStateForm end
+struct PressureForm <: EquationOfStateForm end
 struct BulkModulusRelation <: EquationOfStateForm end
 
 include("Collections.jl")

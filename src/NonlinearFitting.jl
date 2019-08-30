@@ -35,7 +35,7 @@ end  # function lsqfit
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
 # Arguments
-- `T::Type{<:EquationOfStateForm}`: an `EquationOfStateForm`. If it is `EnergyForm`, fit ``E(V)``; if `PressureRelation`, fit ``P(V)``; if `BulkModulusRelation`, fit ``B(V)``.
+- `T::Type{<:EquationOfStateForm}`: an `EquationOfStateForm`. If it is `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusRelation`, fit ``B(V)``.
 - `eos::EquationOfState`: a trial equation of state.
 - `xdata::AbstractVector`: a vector of volumes.
 - `ydata::AbstractVector`: a vector of energies, pressures, or bulk moduli.
