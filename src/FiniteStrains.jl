@@ -20,9 +20,9 @@ struct LagrangianStrain <: FiniteStrain end
 struct NaturalStrain <: FiniteStrain end
 struct InfinitesimalStrain <: FiniteStrain end
 
-get_strain(::Type{EulerianStrain}, v0::Real, v::Real) = ((v0 / v)^(2 / 3) - 1) / 2
-get_strain(::Type{LagrangianStrain}, v0::Real, v::Real) = ((v / v0)^(2 / 3) - 1) / 2
-get_strain(::Type{NaturalStrain}, v0::Real, v::Real) = log(v / v0) / 3
-get_strain(::Type{InfinitesimalStrain}, v0::Real, v::Real) = 1 - (v0 / v)^(1 / 3)
+get_strain(::EulerianStrain, v0::Real, v::Real) = ((v0 / v)^(2 / 3) - 1) / 2
+get_strain(::LagrangianStrain, v0::Real, v::Real) = ((v / v0)^(2 / 3) - 1) / 2
+get_strain(::NaturalStrain, v0::Real, v::Real) = log(v / v0) / 3
+get_strain(::InfinitesimalStrain, v0::Real, v::Real) = 1 - (v0 / v)^(1 / 3)
 
 end
