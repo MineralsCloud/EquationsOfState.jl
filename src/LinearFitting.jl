@@ -41,13 +41,13 @@ function strain_volume_derivative(T::Type{NaturalStrain}, v0::Real, v::Real, m::
     -m / v * strain_volume_derivative(T, v0, v, m - 1)
 end
 function strain_volume_derivative(T::Type{InfinitesimalStrain}, v0::Real, v::Real, m::Int)
-    m == 1 && return (1 - get_strain(T, v0, v))^4 / 3 / v0
+    m == 1 && return (1 - getstrain(T, v0, v))^4 / 3 / v0
     -(3 * m + 1) / 3 / v * strain_volume_derivative(T, v0, v, m - 1)
 end
 
 function energy_volume_expansion(T::Type{<:FiniteStrain}, v0::Real, v::Real, p::Poly, highest_order::Int = degree(p))
     # The zeroth order value plus values from the first to the ``highest_order`.
-    p(v) + dot(energy_volume_derivatives(T, v0, v, p, highest_order), get_strain(T, v0, v).^collect(1:highest_order))
+    p(v) + dot(energy_volume_derivatives(T, v0, v, p, highest_order), getstrain(T, v0, v).^collect(1:highest_order))
 end
 
 function energy_volume_derivatives(T::Type{<:FiniteStrain}, v0::Real, v::Real, p::Poly, highest_order::Int)
