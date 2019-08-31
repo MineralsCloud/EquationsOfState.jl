@@ -329,7 +329,7 @@ Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 function apply(::EnergyForm, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 """
@@ -340,7 +340,7 @@ Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
 function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
-    eta = (v0 / v)^(1 / 3)
+    eta = cbrt(v0 / v)
     xi = eta^2 - 1
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
 end
@@ -352,7 +352,7 @@ Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
 function apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12(bp0 - 4) * f + 12)
 end
@@ -364,14 +364,14 @@ end
 function apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = -3log(x)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
 function apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4(bp0 + 2) * xi + 12)
@@ -379,7 +379,7 @@ end
 function apply(::EnergyForm, eos::Vinet, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = 3 / 2 * (bp0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
