@@ -310,7 +310,7 @@ julia> map(f, 1:1:10)
 """
 apply(::EnergyForm, eos::EquationOfState) = v -> apply(EnergyForm(), eos, v)
 """
-    apply(EnergyForm, eos::Murnaghan, v::Real)
+    apply(EnergyForm(), eos::Murnaghan, v::Real)
 
 Return the energy of a `Murnaghan` equation of state on volume `v`.
 """
@@ -322,7 +322,7 @@ function apply(::EnergyForm, eos::Murnaghan, v::Real)
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
 """
-    apply(EnergyForm, eos::BirchMurnaghan2nd, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan2nd, v::Real)
 
 Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
@@ -333,7 +333,7 @@ function apply(::EnergyForm, eos::BirchMurnaghan2nd, v::Real)
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 """
-    apply(EnergyForm, eos::BirchMurnaghan3rd, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan3rd, v::Real)
 
 Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
@@ -345,7 +345,7 @@ function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
 end
 """
-    apply(EnergyForm, eos::BirchMurnaghan4th, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan4th, v::Real)
 
 Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
