@@ -55,22 +55,22 @@ end
 @testset "Test fitting bulk modulus with different element types" begin
     result = BirchMurnaghan3rd(7.218928431312577, 5.007900469653902, 4.06037725509478, 0.0)
     @test isapprox(
-        lsqfit(BulkModulusForm, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        lsqfit(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-5
     )
     @test isapprox(
-        lsqfit(BulkModulusForm, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
+        lsqfit(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-5
     )
     @test isapprox(
-        lsqfit(BulkModulusForm, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]),
+        lsqfit(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]),
         result;
         atol = 1e-5
     )
     @test isapprox(
-        lsqfit(BulkModulusForm, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        lsqfit(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-5
     )
