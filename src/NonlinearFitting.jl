@@ -19,23 +19,23 @@ using EquationsOfState.Collections
 export lsqfit
 
 function lsqfit(
-    A::Type{<:EquationOfStateRelation},
+    form::EquationOfStateForm,
     eos::E,
     xdata::Vector{T},
     ydata::Vector{T};
     debug::Bool = false, kwargs...
 ) where {T<:AbstractFloat,E<:EquationOfState{T}}
-    model(x, p) = map(calculate(A, E(p)), x)
+    model(x, p) = map(apply(form, E(p)), x)
     fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
     debug ? fitted : E(fitted.param)
 end  # function lsqfit
 """
-    lsqfit(T, eos, xdata, ydata; debug = false, kwargs...)
+    lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
 
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
 # Arguments
-- `T::Type{<:EquationOfStateRelation}`: an `EquationOfStateRelation`. If it is `EnergyRelation`, fit ``E(V)``; if `PressureRelation`, fit ``P(V)``; if `BulkModulusRelation`, fit ``B(V)``.
+- `form::EquationOfStateForm`: an `EquationOfStateForm` instance. If `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusForm`, fit ``B(V)``.
 - `eos::EquationOfState`: a trial equation of state.
 - `xdata::AbstractVector`: a vector of volumes.
 - `ydata::AbstractVector`: a vector of energies, pressures, or bulk moduli.
@@ -43,14 +43,14 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 - `kwargs`: the rest keyword arguments that will be sent to `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md).
 """
 function lsqfit(
-    A::Type{<:EquationOfStateRelation},
+    form::EquationOfStateForm,
     eos::E,
     xdata::X,
     ydata::Y;
     kwargs...
 ) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    lsqfit(A, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
+    lsqfit(form, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
 end  # function lsqfit
 
 end

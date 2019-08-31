@@ -35,11 +35,40 @@ The formula are referenced from Ref. 1.
 
 This package also includes linear and nonlinear fitting methods, also referenced from Ref. 1.
 
-It is built for Julia v1.0+.
+## Compatibility
+
+- Julia version: `v1.0.0` and above
+- Dependencies: see [`Project.toml`]([Project.toml](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/Project.toml))
+- OS versions: `macOS`, `Linux`, and `Windows`
+
+## Installation
+
+1. Install [Julia executable](https://julialang.org/downloads/)
+
+2. Install the package:
+
+   Install the latest testing version:
+
+   ```julia
+   julia> using Pkg
+   
+   julia> Pkg.add("https://github.com/MineralsCloud/EquationsOfState.jl")
+   ```
+
+   Install the stable version:
+
+   ```julia
+   julia> using Pkg
+   
+   julia> Pkg.add("EquationsOfState")
+   ```
+
+   This is currently not suggested since `v2.0.0` has been rewritten.
 
 ## TODOs
 
 - [ ] Implement nonlinear fitting using [CMPFit.jl](https://github.com/gcalderone/CMPFit.jl).
+- [ ] Finish [docs](https://mineralscloud.github.io/EquationsOfState.jl/)
 
 ## Related packages
 

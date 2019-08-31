@@ -17,5 +17,5 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="https://github.com/MineralsCloud/EquationsOfState.jl",
+    repo="github.com/MineralsCloud/EquationsOfState.jl.git"
 )
