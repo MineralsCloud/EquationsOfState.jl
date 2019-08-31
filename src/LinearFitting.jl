@@ -29,20 +29,20 @@ energy_strain_expansion(f::Vector{<:Real}, e::Vector{<:Real}, n::Int)::Poly = po
 energy_strain_derivative(p::Poly, m::Int)::Poly = polyder(p, m)
 
 function strain_volume_derivative(T::EulerianStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return -1 / 3 / v * (v0 / v)^(2 / 3)
-    -(3 * m + 2) / (3 * v) * strain_volume_derivative(T, v0, v, m - 1)
+    m == 1 && return -1 / (3v) * cbrt(v0 / v)^2
+    -(3m + 2) / (3v) * strain_volume_derivative(T, v0, v, m - 1)
 end
 function strain_volume_derivative(T::LagrangianStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return -1 / 3 / v * (v / v0)^(2 / 3)
-    -(3 * m - 2) / (3 * v) * strain_volume_derivative(T, v0, v, m - 1)
+    m == 1 && return -1 / (3v) * cbrt(v / v0)^2
+    -(3m - 2) / (3v) * strain_volume_derivative(T, v0, v, m - 1)
 end
 function strain_volume_derivative(T::NaturalStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return 1 / 3 / v
+    m == 1 && return 1 / (3v)
     -m / v * strain_volume_derivative(T, v0, v, m - 1)
 end
 function strain_volume_derivative(T::InfinitesimalStrain, v0::Real, v::Real, m::Int)
     m == 1 && return (1 - getstrain(T, v0, v))^4 / 3 / v0
-    -(3 * m + 1) / 3 / v * strain_volume_derivative(T, v0, v, m - 1)
+    -(3m + 1) / (3v) * strain_volume_derivative(T, v0, v, m - 1)
 end
 
 function energy_volume_expansion(T::FiniteStrain, v0::Real, v::Real, p::Poly, highest_order::Int = degree(p))
