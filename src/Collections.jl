@@ -19,7 +19,7 @@ using EquationsOfState
 
 import StaticArrays: similar_type
 
-export calculate,
+export apply,
        EquationOfState,
        FiniteStrainEquationOfState,
        PolynomialEquationOfState,
@@ -284,7 +284,7 @@ BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
 #                               Energy evaluation                              #
 # ============================================================================ #
 """
-    calculate(EnergyRelation, eos::EquationOfState)
+    apply(EnergyForm(), eos::EquationOfState)
 
 Return a function that can take a volume as a parameter, suitable for batch-applying.
 
@@ -292,7 +292,7 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = calculate(EnergyRelation, Vinet(1, 2, 3));
+julia> f = apply(EnergyForm(), Vinet(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -308,13 +308,13 @@ julia> map(f, 1:1:10)
  1.7203642945516917
 ```
 """
-calculate(::Type{EnergyRelation}, eos::EquationOfState) = v -> calculate(EnergyRelation, eos, v)
+apply(::EnergyForm, eos::EquationOfState) = v -> apply(EnergyForm(), eos, v)
 """
-    calculate(EnergyRelation, eos::Murnaghan, v::Real)
+    apply(EnergyForm(), eos::Murnaghan, v::Real)
 
 Return the energy of a `Murnaghan` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::Murnaghan, v::Real)
+function apply(::EnergyForm, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     x = bp0 - 1
@@ -322,22 +322,22 @@ function calculate(::Type{EnergyRelation}, eos::Murnaghan, v::Real)
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
 """
-    calculate(EnergyRelation, eos::BirchMurnaghan2nd, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan2nd, v::Real)
 
 Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan2nd, v::Real)
+function apply(::EnergyForm, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 """
-    calculate(EnergyRelation, eos::BirchMurnaghan3rd, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan3rd, v::Real)
 
 Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan3rd, v::Real)
+function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     eta = (v0 / v)^(1 / 3)
@@ -345,30 +345,30 @@ function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan3rd, v::Real)
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
 end
 """
-    calculate(EnergyRelation, eos::BirchMurnaghan4th, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan4th, v::Real)
 
 Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
-function calculate(::Type{EnergyRelation}, eos::BirchMurnaghan4th, v::Real)
+function apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12(bp0 - 4) * f + 12)
 end
-function calculate(::Type{EnergyRelation}, eos::PoirierTarantola2nd, v::Real)
+function apply(::EnergyForm, eos::PoirierTarantola2nd, v::Real)
     @unpack v0, b0, e0 = eos
 
     return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
 end
-function calculate(::Type{EnergyRelation}, eos::PoirierTarantola3rd, v::Real)
+function apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = -3log(x)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
-function calculate(::Type{EnergyRelation}, eos::PoirierTarantola4th, v::Real)
+function apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0, e0 = eos
 
     x = (v / v0)^(1 / 3)
@@ -376,14 +376,14 @@ function calculate(::Type{EnergyRelation}, eos::PoirierTarantola4th, v::Real)
     h = b0 * bpp0 + bp0^2
     return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4(bp0 + 2) * xi + 12)
 end
-function calculate(::Type{EnergyRelation}, eos::Vinet, v::Real)
+function apply(::EnergyForm, eos::Vinet, v::Real)
     @unpack v0, b0, bp0, e0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
-function calculate(::Type{EnergyRelation}, eos::AntonSchmidt, v::Real)
+function apply(::EnergyForm, eos::AntonSchmidt, v::Real)
     @unpack v0, β, n, e∞ = eos
 
     x = v / v0
@@ -397,7 +397,7 @@ end
 #                              Pressure evaluation                             #
 # ============================================================================ #
 """
-    calculate(PressureRelation, eos::EquationOfState)
+    apply(PressureForm(), eos::EquationOfState)
 
 Return a function that can take a volume as a parameter, suitable for batch-applying.
 
@@ -405,7 +405,7 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = calculate(PressureRelation, Vinet(1, 2, 3));
+julia> f = apply(PressureForm(), Vinet(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -421,45 +421,45 @@ julia> map(f, 1:1:10)
  -0.04674768462396211
 ```
 """
-calculate(::Type{PressureRelation}, eos::EquationOfState) = v -> calculate(PressureRelation, eos, v)
-function calculate(::Type{PressureRelation}, eos::Murnaghan, v::Real)
+apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
+function apply(::PressureForm, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0 = eos
 
     return b0 / bp0 * ((v0 / v)^bp0 - 1)
 end
-function calculate(::Type{PressureRelation}, eos::BirchMurnaghan2nd, v::Real)
+function apply(::PressureForm, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
-function calculate(::Type{PressureRelation}, eos::BirchMurnaghan3rd, v::Real)
+function apply(::PressureForm, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     eta = (v0 / v)^(1 / 3)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
 end
-function calculate(::Type{PressureRelation}, eos::BirchMurnaghan4th, v::Real)
+function apply(::PressureForm, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9(bp0 - 4) * f + 6)
 end
-function calculate(::Type{PressureRelation}, eos::PoirierTarantola2nd, v::Real)
+function apply(::PressureForm, eos::PoirierTarantola2nd, v::Real)
     @unpack v0, b0 = eos
 
     x = (v / v0)^(1 / 3)
     return -b0 / x * log(x)
 end
-function calculate(::Type{PressureRelation}, eos::PoirierTarantola3rd, v::Real)
+function apply(::PressureForm, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = v / v0
     xi = log(x)
     return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
 end
-function calculate(::Type{PressureRelation}, eos::PoirierTarantola4th, v::Real)
+function apply(::PressureForm, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     x = (v / v0)^(1 / 3)
@@ -467,20 +467,20 @@ function calculate(::Type{PressureRelation}, eos::PoirierTarantola4th, v::Real)
     h = b0 * bpp0 + bp0^2
     return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3(bp0 + 6) * xi + 6)
 end
-function calculate(::Type{PressureRelation}, eos::Vinet, v::Real)
+function apply(::PressureForm, eos::Vinet, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
-function calculate(::Type{PressureRelation}, eos::AntonSchmidt, v::Real)
+function apply(::PressureForm, eos::AntonSchmidt, v::Real)
     @unpack v0, β, n = eos
 
     x = v / v0
     return -β * x^n * log(x)
 end
-function calculate(::Type{PressureRelation}, eos::BreenanStacey, v::Real)
+function apply(::PressureForm, eos::BreenanStacey, v::Real)
     @unpack v0, b0, γ0 = eos
 
     x = v0 / v
@@ -493,7 +493,7 @@ end
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
 """
-    calculate(BulkModulusRelation, eos::EquationOfState)
+    apply(BulkModulusForm(), eos::EquationOfState)
 
 Return a function that can take a volume as a parameter, suitable for batch-applying.
 
@@ -501,7 +501,7 @@ Return a function that can take a volume as a parameter, suitable for batch-appl
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = calculate(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3));
+julia> f = apply(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -517,40 +517,40 @@ julia> map(f, 1:1:10)
  0.03808959181078831 
 ```
 """
-calculate(::Type{BulkModulusRelation}, eos::EquationOfState) = v -> calculate(BulkModulusRelation, eos, v)
-function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan2nd, v::Real)
+apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
+function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
-function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan3rd, v::Real)
+function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
-function calculate(::Type{BulkModulusRelation}, eos::BirchMurnaghan4th, v::Real)
+function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
     return b0 / 6 * (2f + 1)^(5 / 2) * ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
-function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola2nd, v::Real)
+function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v::Real)
     @unpack v0, b0 = eos
 
     x = (v / v0)^(1 / 3)
     return b0 / x * (1 - log(x))
 end
-function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola3rd, v::Real)
+function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = v / v0
     xi = log(x)
     return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
 end
-function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola4th, v::Real)
+function apply(::BulkModulusForm, eos::PoirierTarantola4th, v::Real)
     @unpack v0, b0, bp0, bpp0 = eos
 
     x = (v / v0)^(1 / 3)
@@ -558,14 +558,14 @@ function calculate(::Type{BulkModulusRelation}, eos::PoirierTarantola4th, v::Rea
     h = b0 * bpp0 + bp0^2
     return -b0 / (6x) * ((h + 3bp0 + 3) * xi^3 - 3xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
 end
-function calculate(::Type{BulkModulusRelation}, eos::Vinet, v::Real)
+function apply(::BulkModulusForm, eos::Vinet, v::Real)
     @unpack v0, b0, bp0 = eos
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
     return -b0 / (2x^2) * (3x * (x - 1) * (bp0 - 1) + 2(x - 2)) * exp(-xi * (x - 1))
 end
-function calculate(::Type{BulkModulusRelation}, eos::AntonSchmidt, v::Real)
+function apply(::BulkModulusForm, eos::AntonSchmidt, v::Real)
     @unpack v0, β, n = eos
 
     x = v / v0

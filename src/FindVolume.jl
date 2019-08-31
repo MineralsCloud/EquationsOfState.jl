@@ -18,8 +18,8 @@ using EquationsOfState.Collections
 
 export find_volume
 
-function find_volume(T::Type{<:EquationOfStateRelation}, eos::EquationOfState, y::Real, interval, method)
-    f = v -> calculate(T, eos, v) - y
+function find_volume(form::EquationOfStateForm, eos::EquationOfState, y::Real, interval, method)
+    f = v -> apply(form, eos, v) - y
     solutions = roots(f, interval, method)
     length(solutions) != 1 ? error("Multiple roots find!") : return first(solutions)
 end # function find_volume
