@@ -308,7 +308,7 @@ julia> map(f, 1:1:10)
  1.7203642945516917
 ```
 """
-apply(::EnergyForm, eos::EquationOfState) = v -> apply(EnergyForm(), eos, v)
+apply(f::EnergyForm, eos::EquationOfState) = v -> apply(f, eos, v)
 """
     apply(EnergyForm(), eos::Murnaghan, v::Real)
 
@@ -421,7 +421,7 @@ julia> map(f, 1:1:10)
  -0.04674768462396211
 ```
 """
-apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
+apply(f::PressureForm, eos::EquationOfState) = v -> apply(f, eos, v)
 function apply(::PressureForm, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0 = eos
 
@@ -517,7 +517,7 @@ julia> map(f, 1:1:10)
  0.03808959181078831 
 ```
 """
-apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
+apply(f::BulkModulusForm, eos::EquationOfState) = v -> apply(f, eos, v)
 function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
