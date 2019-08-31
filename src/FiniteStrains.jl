@@ -13,12 +13,12 @@ module FiniteStrains
 
 export FiniteStrain, EulerianStrain, LagrangianStrain, NaturalStrain, InfinitesimalStrain, get_strain
 
-abstract type FiniteStrain{T} end
+abstract type FiniteStrain end
 
-const EulerianStrain = FiniteStrain{:Eulerian}
-const LagrangianStrain = FiniteStrain{:Lagrangian}
-const NaturalStrain = FiniteStrain{:Natural}
-const InfinitesimalStrain = FiniteStrain{:Infinitesimal}
+struct EulerianStrain <: FiniteStrain end
+struct LagrangianStrain <: FiniteStrain end
+struct NaturalStrain <: FiniteStrain end
+struct InfinitesimalStrain <: FiniteStrain end
 
 get_strain(::Type{EulerianStrain}, v0::Real, v::Real) = ((v0 / v)^(2 / 3) - 1) / 2
 get_strain(::Type{LagrangianStrain}, v0::Real, v::Real) = ((v / v0)^(2 / 3) - 1) / 2
