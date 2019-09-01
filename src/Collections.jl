@@ -308,7 +308,7 @@ julia> map(f, 1:1:10)
  1.7203642945516917
 ```
 """
-apply(::EnergyForm, eos::EquationOfState) = v -> apply(EnergyForm(), eos, v)
+apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
 """
     apply(EnergyForm(), eos::Murnaghan, v::Real)
 
@@ -421,7 +421,7 @@ julia> map(f, 1:1:10)
  -0.04674768462396211
 ```
 """
-apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
+apply(form::PressureForm, eos::EquationOfState) = v -> apply(form, eos, v)
 function apply(::PressureForm, eos::Murnaghan, v::Real)
     @unpack v0, b0, bp0 = eos
 
@@ -517,7 +517,7 @@ julia> map(f, 1:1:10)
  0.03808959181078831 
 ```
 """
-apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
+apply(form::BulkModulusForm, eos::EquationOfState) = v -> apply(form, eos, v)
 function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v::Real)
     @unpack v0, b0 = eos
 
@@ -577,14 +577,14 @@ end
 # ============================================================================ #
 #                                 Miscellaneous                                #
 # ============================================================================ #
-function allsubtypes(t::Type, types = Type[])::Vector{Type}
-    for s in subtypes(t)
-        types = allsubtypes(s, push!(types, s))
+function allsubtypes(T::Type, types = Type[])::Vector{Type}
+    for S in subtypes(T)
+        types = allsubtypes(S, push!(types, S))
     end
     types
 end
 
-nonabstract(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
+nonabstract(T::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(T))
 
 for E in nonabstract(EquationOfState)
     eval(quote
