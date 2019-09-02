@@ -11,7 +11,7 @@ julia>
 """
 module FindVolume
 
-using Roots
+using Roots: find_zero
 
 using EquationsOfState
 using EquationsOfState.Collections
