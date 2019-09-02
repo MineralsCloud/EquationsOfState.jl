@@ -474,7 +474,7 @@ end
     )
     @test isapprox(
         lsqfit(EnergyForm(), BirchMurnaghan4th(224, 0.0006, 4, -5460, -323), volumes, energies),
-        BirchMurnaghan4th(224.457562, 0.00062293812247621543, 3.730992, -5322.69673452213, -323.417712);
+        BirchMurnaghan4th(224.45756247137314, 0.0006229382259822287, 3.730991473426449, -5322.693307704408, -323.4177113158418);
         atol = 1e-3
     )
     @test isapprox(
