@@ -19,7 +19,7 @@ using EquationsOfState.Collections
 export find_volume
 
 function find_volume(form::EquationOfStateForm, eos::EquationOfState, y::Real, interval, method)
-    f = v -> apply(form, eos, v) - y
+    f(v) = apply(form, eos, v) - y
     return find_zero(f, (minimum(interval), maximum(interval)), method)
 end # function find_volume
 
