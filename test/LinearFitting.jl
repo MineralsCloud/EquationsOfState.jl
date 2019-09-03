@@ -35,7 +35,7 @@ using EquationsOfState.LinearFitting
         58.9526328669
     ]
     v0 = 40.98926572870838
-    @test strain_volume_derivative.(EulerianStrain, v0, volumes, 3) ≈ [
+    @test [strain_volume_derivative(EulerianStrain(), v0, v, 3) for v in volumes] ≈ [
         -0.00025163164656036914,
         -0.00022158317701314234,
         -0.0001954064296869249,
@@ -65,7 +65,7 @@ using EquationsOfState.LinearFitting
         -1.3767304534537318e-5,
         -1.2484962604556655e-5
     ]
-    @test strain_volume_derivative.(LagrangianStrain, v0, volumes, 3) ≈ [
+    @test [strain_volume_derivative(LagrangianStrain(), v0, v, 3) for v in volumes] ≈ [
         -4.360792585446927e-5,
         -4.021795998862133e-5,
         -3.7125806529670504e-5,
@@ -95,7 +95,7 @@ using EquationsOfState.LinearFitting
         -6.863217457745042e-6,
         -6.449212613211634e-6
     ]
-    @test strain_volume_derivative.(NaturalStrain, v0, volumes, 3) ≈ [
+    @test [strain_volume_derivative(NaturalStrain(), v0, v, 3) for v in volumes] ≈ [
         0.00011395640842831919,
         0.00010269559592471744,
         9.265754335710983e-5,
@@ -125,7 +125,7 @@ using EquationsOfState.LinearFitting
         1.0574546405738849e-5,
         9.761585855581402e-6
     ]
-    @test strain_volume_derivative.(InfinitesimalStrain, v0, volumes, 3) ≈ [
+    @test [strain_volume_derivative(InfinitesimalStrain(), v0, v, 3) for v in volumes] ≈ [
         0.00017195382081596378,
         0.00015318072693119346,
         0.0001366374157858279,

@@ -6,4 +6,5 @@ using Test
     include("FiniteStrains.jl")
     include("NonlinearFitting.jl")
     include("LinearFitting.jl")
+    include("FindVolume.jl")
 end

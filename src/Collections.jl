@@ -308,7 +308,7 @@ julia> map(f, 1:1:10)
  1.7203642945516917
 ```
 """
-apply(::EnergyForm, eos::EquationOfState) = v -> apply(EnergyForm(), eos, v)
+apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
 """
     apply(EnergyForm(), eos::Murnaghan, v::Real)
 
@@ -692,14 +692,14 @@ end
 # ============================================================================ #
 #                                 Miscellaneous                                #
 # ============================================================================ #
-function allsubtypes(t::Type, types = Type[])::Vector{Type}
-    for s in subtypes(t)
-        types = allsubtypes(s, push!(types, s))
+function allsubtypes(T::Type, types = Type[])::Vector{Type}
+    for S in subtypes(T)
+        types = allsubtypes(S, push!(types, S))
     end
     types
 end
 
-nonabstract(t::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(t))
+nonabstract(T::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(T))
 
 for E in nonabstract(EquationOfState)
     eval(quote
