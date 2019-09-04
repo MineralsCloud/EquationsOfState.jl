@@ -155,8 +155,7 @@ The $E(V)$ relation of equations of state are listed as below:
 7. `PoirierTarantola4th`:
 
    ```math
-   E(V) = E_{0}+\frac{1}{24} B_{0} V_{0} \ln ^{2} x\left\{\left(H+3 B_{0}^{\prime}+3\right) \ln ^{2} x\right.
-\left.+4\left(B_{0}^{\prime}+2\right) \ln x+12\right\}.
+   E(V) = E_{0}+\frac{1}{24} B_{0} V_{0} \ln ^{2} x\left\{\left(H+3 B_{0}^{\prime}+3\right) \ln ^{2} x\right. \left.+4\left(B_{0}^{\prime}+2\right) \ln x+12\right\}.
    ```
    where ``H = B_0 B_0'' + (B_0')^2``.
    
