@@ -90,7 +90,7 @@ Then 4 different equations of state will be fitted.
 ## Public interfaces
 
 ```@docs
-lsqfit(::Type{<:EquationOfStateForm}, eos::E, xdata::X, ydata::Y; debug = false, kwargs...) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
+lsqfit(::EquationOfStateForm, eos::E, xdata::X, ydata::Y; debug = false, kwargs...) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
 ```
 
 
