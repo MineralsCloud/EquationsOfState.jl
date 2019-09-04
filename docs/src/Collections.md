@@ -109,7 +109,7 @@ julia> b[1]
 1.0
 ```
 
-### Calculate energies on an `EquationOfState`
+### Calculate energy on an `EquationOfState`
 
 The $E(V)$ relation of equations of state are listed as below:
 
@@ -172,7 +172,7 @@ The $E(V)$ relation of equations of state are listed as below:
    E(V)=\frac{\beta V_{0}}{n+1}\left(\frac{V}{V_{0}}\right)^{n+1}\left[\ln \left(\frac{V}{V_{0}}\right)-\frac{1}{n+1}\right]+E_{\infty}.
    ```
    
-### Calculate pressures on an `EquationOfState`
+### Calculate pressure on an `EquationOfState`
 
 The $P(V)$ relation of equations of state are listed as below:
 
@@ -230,7 +230,7 @@ The $P(V)$ relation of equations of state are listed as below:
    P(V) = -\beta\left(\frac{V}{V_{0}}\right)^{n} \ln \left(\frac{V}{V_{0}}\right).
    ```
 
-### Calculate bulk moduli on an `EquationOfState`
+### Calculate bulk modulus on an `EquationOfState`
 
 The $B(V)$ relation of equations of state are listed as below:
 
