@@ -6,9 +6,24 @@ CurrentModule = EquationsOfState.NonlinearFitting
 
 From Ref. 1,
 
-> The equations of state depend nonlinearly of a collection of parameters, $E_0$, $V_0$, $B_0$, $B_0'$, ..., that represent physical properties of the solid at equilibrium and can, in principle, be obtained expermentally by independent methods. The use of a given analytical EOS may have significant influence on the results obtained, particularly because the parameters are far from being independent. The number of parameters has to be considered in comparing the goodness of fit of functional forms with different analytical flexibility. The possibility of using too many parameters, beyond what is physically justified by the information contained in the experimental data, is a serious aspect that deserves consideration.
+> The equations of state depend nonlinearly of a collection of parameters,
+> $E_0$, $V_0$, $B_0$, $B_0'$, ..., that represent physical properties of the
+> solid at equilibrium and can, in principle, be obtained expermentally by
+> independent methods. The use of a given analytical EOS may have significant
+> influence on the results obtained, particularly because the parameters are far
+> from being independent. The number of parameters has to be considered in
+> comparing the goodness of fit of functional forms with different analytical
+> flexibility. The possibility of using too many parameters, beyond what is
+> physically justified by the information contained in the experimental data, is
+> a serious aspect that deserves consideration.
 
-In [`EquationsOfState`](https://github.com/MineralsCloud/EquationsOfState.jl), the nonlinear fitting is currently implemented by [`LsqFit`](https://github.com/JuliaNLSolvers/LsqFit.jl), a small library that provides basic least-squares fitting in pure Julia. It only utilizes the *Levenberg-Marquardt algorithm* for non-linear fitting. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) for more information.
+In [`EquationsOfState`](https://github.com/MineralsCloud/EquationsOfState.jl),
+the nonlinear fitting is currently implemented by
+[`LsqFit`](https://github.com/JuliaNLSolvers/LsqFit.jl), a small library that
+provides basic least-squares fitting in pure Julia. It only utilizes the
+_Levenberg-Marquardt algorithm_ for non-linear fitting. See its
+[documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md)
+for more information.
 
 ## Usage
 
@@ -85,6 +100,7 @@ lsqfit(EnergyForm(), Murnaghan(41, 0.5, 4, 0), volumes, energies)
 lsqfit(EnergyForm(), PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
 lsqfit(EnergyForm(), Vinet(41, 0.5, 4, 0), volumes, energies)
 ```
+
 Then 4 different equations of state will be fitted.
 
 ## Public interfaces
@@ -93,7 +109,6 @@ Then 4 different equations of state will be fitted.
 lsqfit(::EquationOfStateForm, eos::E, xdata::X, ydata::Y; debug = false, kwargs...) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
 ```
 
-
 ## References
 
-1. [A. Otero-De-La-Roza, V. Luaña, *Computer Physics Communications*. **182**, 1708–1720 (2011), doi:10.1016/j.cpc.2011.04.016.](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
+1. [A. Otero-De-La-Roza, V. Luaña, _Computer Physics Communications_. **182**, 1708–1720 (2011), doi:10.1016/j.cpc.2011.04.016.](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
