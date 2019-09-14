@@ -68,8 +68,8 @@ function findvolume(
         @info("Using method \"$T\"...")
         try
             return findvolume(form, eos, y, domain, T())
-        catch BoundsError, ConvergenceFailed
-            @info("Method \"$T\" failed!")
+        catch e
+            @info("Method \"$T\" failed because of $e.")
             continue
         end
     end
