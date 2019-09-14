@@ -11,6 +11,7 @@ julia>
 """
 module FindVolume
 
+using InteractiveUtils: subtypes
 using Statistics: median
 
 using Roots: find_zero,
