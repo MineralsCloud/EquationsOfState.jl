@@ -65,10 +65,10 @@ function findvolume(
         Newton;
         subtypes(AbstractSecant)
     ]
+        @info("Using method \"$T\"...")
         try
-            findvolume(form, eos, y, domain, T())
-        catch
-            BoundsError, ConvergenceFailed
+            return findvolume(form, eos, y, domain, T())
+        catch BoundsError, ConvergenceFailed
             @info("Method \"$T\" failed!")
             continue
         end
