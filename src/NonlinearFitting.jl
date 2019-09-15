@@ -12,6 +12,7 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
+using StaticArrays: similar_type
 
 import ..EquationOfStateForm
 using ..Collections
