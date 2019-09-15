@@ -15,7 +15,7 @@ using LinearAlgebra: dot
 using Polynomials: polyder, polyfit, degree, coeffs, Poly
 using MLStyle: @match
 
-using EquationsOfState.FiniteStrains
+using ..FiniteStrains
 
 export energy_strain_expansion,
        energy_strain_derivative,
