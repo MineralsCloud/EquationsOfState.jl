@@ -26,8 +26,8 @@ using Roots: find_zero,
              Newton,
              ConvergenceFailed
 
-using EquationsOfState
-using EquationsOfState.Collections
+import ..EquationOfStateForm
+using ..Collections: EquationOfState, apply
 
 export findvolume
 

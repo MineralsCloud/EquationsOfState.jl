@@ -1,13 +1,6 @@
 module EquationsOfState
 
-export EquationOfStateForm, EnergyForm, PressureForm, BulkModulusForm
-
-abstract type EquationOfStateForm end
-
-struct EnergyForm <: EquationOfStateForm end
-struct PressureForm <: EquationOfStateForm end
-struct BulkModulusForm <: EquationOfStateForm end
-
+include("prelude.jl")
 include("Collections.jl")
 include("NonlinearFitting.jl")
 include("FiniteStrains.jl")
