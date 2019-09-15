@@ -13,8 +13,8 @@ module NonlinearFitting
 
 using LsqFit: curve_fit
 
-using EquationsOfState
-using EquationsOfState.Collections
+import ..EquationOfStateForm
+using ..Collections
 
 export lsqfit
 
