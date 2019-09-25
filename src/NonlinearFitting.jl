@@ -35,11 +35,11 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 function lsqfit(
     form::EquationOfStateForm,
     eos::E,
-    xdata::X,
-    ydata::Y;
+    xdata::AbstractVector,
+    ydata::AbstractVector;
     debug = false,
     kwargs...
-) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
+) where {E<:EquationOfState}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
     P = Collections.similar_type(E, T)
     model(x, p) = map(apply(form, P(p...)), x)
