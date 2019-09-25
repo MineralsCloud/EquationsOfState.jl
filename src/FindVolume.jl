@@ -11,17 +11,68 @@ julia>
 """
 module FindVolume
 
-using IntervalRootFinding
+using InteractiveUtils: subtypes
+using Statistics: median
 
-using EquationsOfState
-using EquationsOfState.Collections
+using Roots: find_zero,
+             AbstractBracketing,
+             AbstractNonBracketing,
+             AbstractHalleyLikeMethod,
+             AbstractNewtonLikeMethod,
+             AbstractAlefeldPotraShi,
+             AbstractBisection,
+             AbstractSecant,
+             Brent,
+             Newton,
+             ConvergenceFailed
 
-export find_volume
+import ..EquationOfStateForm
+using ..Collections: EquationOfState, apply
 
-function find_volume(T::Type{<:EquationOfStateRelation}, eos::EquationOfState, y::Real, interval, method)
-    f = v -> calculate(T, eos, v) - y
-    solutions = roots(f, interval, method)
-    length(solutions) != 1 ? error("Multiple roots find!") : return first(solutions)
-end # function find_volume
+export findvolume
+
+function findvolume(
+    form::EquationOfStateForm,
+    eos::EquationOfState,
+    y::Real,
+    domain::Union{AbstractVector,Tuple},
+    method::AbstractBracketing,
+)
+    f(v) = apply(form, eos, v) - y
+    return find_zero(f, (minimum(domain), maximum(domain)), method)
+end # function findvolume
+function findvolume(
+    form::EquationOfStateForm,
+    eos::EquationOfState,
+    y::Real,
+    domain::Union{AbstractVector,Tuple},
+    method::Union{AbstractNonBracketing,AbstractHalleyLikeMethod,AbstractNewtonLikeMethod},
+)
+    f(v) = apply(form, eos, v) - y
+    return find_zero(f, median(domain), method)
+end # function findvolume
+function findvolume(
+    form::EquationOfStateForm,
+    eos::EquationOfState,
+    y::Real,
+    domain::Union{AbstractVector,Tuple},
+)
+    for T in [
+        subtypes(AbstractAlefeldPotraShi)
+        subtypes(AbstractBisection)
+        Brent
+        subtypes(AbstractHalleyLikeMethod)
+        Newton
+        subtypes(AbstractSecant)
+    ]
+        @info("Using method \"$T\"...")
+        try
+            return findvolume(form, eos, y, domain, T())
+        catch e
+            @info("Method \"$T\" failed because of $e.")
+            continue
+        end
+    end
+end # function findvolume
 
 end

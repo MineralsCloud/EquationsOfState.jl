@@ -31,10 +31,10 @@ using EquationsOfState.FiniteStrains
         54.3808371612,
         55.8775030703,
         57.4014349722,
-        58.9526328669
+        58.9526328669,
     ]
     v0 = 40.98926572870838
-    @test get_strain.(EulerianStrain, v0, volumes) ≈ [
+    @test map(v -> getstrain(EulerianStrain(), v0, v), volumes) ≈ [
         0.17749734613767998,
         0.16201229839015363,
         0.14705196468522874,
@@ -62,9 +62,9 @@ using EquationsOfState.FiniteStrains
         -0.08588638996615916,
         -0.09331442415000685,
         -0.10054463011940301,
-        -0.1075828678792159
+        -0.1075828678792159,
     ]
-    @test get_strain.(LagrangianStrain, v0, volumes) ≈ [
+    @test [getstrain(LagrangianStrain(), v0, v) for v in volumes] ≈ [
         -0.13099486451833953,
         -0.12236351105872695,
         -0.11363226812607319,
@@ -92,9 +92,9 @@ using EquationsOfState.FiniteStrains
         0.10369906697722475,
         0.11472551485871496,
         0.125852144820906,
-        0.13707718021610538
+        0.13707718021610538,
     ]
-    @test get_strain.(NaturalStrain, v0, volumes) ≈ [
+    @test [getstrain(NaturalStrain(), v0, v) for v in volumes] ≈ [
         -0.15189876859201823,
         -0.14033801748544264,
         -0.1289092546069999,
@@ -122,9 +122,9 @@ using EquationsOfState.FiniteStrains
         0.09423387093583208,
         0.10328387622610548,
         0.11225302719931324,
-        0.1211413559225737
+        0.1211413559225737,
     ]
-    @test get_strain.(InfinitesimalStrain, v0, volumes) ≈ [
+    @test [getstrain(InfinitesimalStrain(), v0, v) for v in volumes] ≈ [
         -0.1640423928171002,
         -0.1506626772344306,
         -0.13758688871244362,
@@ -152,6 +152,6 @@ using EquationsOfState.FiniteStrains
         0.08993010154841308,
         0.09812908257335062,
         0.10618193139700183,
-        0.11409127770318894
+        0.11409127770318894,
     ]
 end

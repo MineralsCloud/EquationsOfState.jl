@@ -5,74 +5,144 @@ using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 
 @testset "Test fitting energy with different element types" begin
-    result = BirchMurnaghan3rd(0.0057009512119028044, 103.58772269057364, -144.45152457521132, -40.31992619868024)
-    @test isapprox(
-        lsqfit(EnergyRelation, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
-        result;
-        atol = 1e-5
+    result = BirchMurnaghan3rd(
+        0.0057009512119028044,
+        103.58772269057364,
+        -144.45152457521132,
+        -40.31992619868024,
     )
     @test isapprox(
-        lsqfit(EnergyRelation, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(1, 2, 3.0, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(EnergyRelation, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]),
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(1, 2, 3, 0),
+            [1, 2, 3, 4, 5.0],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(EnergyRelation, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(1, 2, 3.0, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7.0],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
+    )
+    @test isapprox(
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(1, 2, 3, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ),
+        result;
+        atol = 1e-5,
     )
 end
 
 @testset "Test fitting pressure with different element types" begin
-    result = BirchMurnaghan3rd(1.1024687826597717, 29.30861698140365, 12.689089871112746, 0.0)
-    @test isapprox(
-        lsqfit(PressureRelation, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
-        result;
-        atol = 1e-6
+    result = BirchMurnaghan3rd(
+        1.1024687826597717,
+        29.30861698140365,
+        12.689089871112746,
+        0.0,
     )
     @test isapprox(
-        lsqfit(PressureRelation, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, 3.0, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-6
+        atol = 1e-6,
     )
     @test isapprox(
-        lsqfit(PressureRelation, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]),
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, 3, 0),
+            [1, 2, 3, 4, 5.0],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-6
+        atol = 1e-6,
     )
     @test isapprox(
-        lsqfit(PressureRelation, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, 3.0, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7.0],
+        ),
         result;
-        atol = 1e-6
+        atol = 1e-6,
+    )
+    @test isapprox(
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, 3, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ),
+        result;
+        atol = 1e-6,
     )
 end
 
 @testset "Test fitting bulk modulus with different element types" begin
     result = BirchMurnaghan3rd(7.218928431312577, 5.007900469653902, 4.06037725509478, 0.0)
     @test isapprox(
-        lsqfit(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3.0, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3, 0),
+            [1, 2, 3, 4, 5.0],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3.0, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7.0]),
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3.0, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7.0],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(BulkModulusRelation, BirchMurnaghan3rd(1, 2, 3, 0), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3, 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ),
         result;
-        atol = 1e-5
+        atol = 1e-5,
     )
 end
 
@@ -107,7 +177,7 @@ end
         54.3808371612,
         55.8775030703,
         57.4014349722,
-        58.9526328669
+        58.9526328669,
     ]
     energies = [
         -7.63622156576,
@@ -137,23 +207,43 @@ end
         -10.1197772808,
         -9.99504030111,
         -9.86535084973,
-        -9.73155247952
+        -9.73155247952,
     ]
     @test isapprox(
-        lsqfit(EnergyRelation, BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies),
-        BirchMurnaghan3rd(40.98926572528106, 0.5369258245417454, 4.178644235500821, -10.842803908240892)
+        lsqfit(EnergyForm(), BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies),
+        BirchMurnaghan3rd(
+            40.98926572528106,
+            0.5369258245417454,
+            4.178644235500821,
+            -10.842803908240892,
+        ),
     )
     @test isapprox(
-        lsqfit(EnergyRelation, Murnaghan(41, 0.5, 4, 0), volumes, energies),
-        Murnaghan(41.13757930387086, 0.5144967693786603, 3.9123862262572264, -10.836794514626673)
+        lsqfit(EnergyForm(), Murnaghan(41, 0.5, 4, 0), volumes, energies),
+        Murnaghan(
+            41.13757930387086,
+            0.5144967693786603,
+            3.9123862262572264,
+            -10.836794514626673,
+        ),
     )
     @test isapprox(
-        lsqfit(EnergyRelation, PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies),
-        PoirierTarantola3rd(40.86770643373908, 0.5667729960804602, 4.331688936974368, -10.851486685041658)
+        lsqfit(EnergyForm(), PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies),
+        PoirierTarantola3rd(
+            40.86770643373908,
+            0.5667729960804602,
+            4.331688936974368,
+            -10.851486685041658,
+        ),
     )
     @test isapprox(
-        lsqfit(EnergyRelation, Vinet(41, 0.5, 4, 0), volumes, energies),
-        Vinet(40.916875663779784, 0.5493839425156859, 4.3051929654936885, -10.846160810560756)
+        lsqfit(EnergyForm(), Vinet(41, 0.5, 4, 0), volumes, energies),
+        Vinet(
+            40.916875663779784,
+            0.5493839425156859,
+            4.3051929654936885,
+            -10.846160810560756,
+        ),
     )
     # 'deltafactor': {'b0': 0.5369258245611414,
 #             'b1': 4.178644231924639,
@@ -188,7 +278,7 @@ end
         24.29834347,
         22.21681221,
         23.59066888,
-        22.89687316
+        22.89687316,
     ]
 
     mp153_energies = [
@@ -212,7 +302,7 @@ end
         -1.58647189,
         -1.591436505,
         -1.592563495,
-        -1.594347355
+        -1.594347355,
     ]
 
     mp153_known_energies_vinet = [
@@ -236,12 +326,24 @@ end
         -1.586404575,
         -1.591578378,
         -1.592547954,
-        -1.594410995
+        -1.594410995,
     ]
 
-    fitted_eos = lsqfit(EnergyRelation, Vinet(23, 0.5, 4, -2), mp153_volumes, mp153_energies)
-    @test isapprox(fitted_eos, Vinet(22.95764559358769, 0.2257091141420788, 4.060543387224629, -1.5944292606251582))
-    @test isapprox(map(calculate(EnergyRelation, fitted_eos), mp153_volumes), mp153_known_energies_vinet; atol = 1e-5)
+    fitted_eos = lsqfit(EnergyForm(), Vinet(23, 0.5, 4, -2), mp153_volumes, mp153_energies)
+    @test isapprox(
+        fitted_eos,
+        Vinet(
+            22.95764559358769,
+            0.2257091141420788,
+            4.060543387224629,
+            -1.5944292606251582,
+        ),
+    )
+    @test isapprox(
+        map(apply(EnergyForm(), fitted_eos), mp153_volumes),
+        mp153_known_energies_vinet;
+        atol = 1e-5,
+    )
 end
 
 @testset "Test Si dataset" begin
@@ -266,7 +368,7 @@ end
         24.34931029,
         25.04496106,
         27.21116571,
-        26.4757653
+        26.4757653,
     ]
 
     mp149_energies = [
@@ -290,7 +392,7 @@ end
         -5.27481447,
         -5.227210275,
         -5.058992615,
-        -5.118805775
+        -5.118805775,
     ]
 
     mp149_known_energies_vinet = [
@@ -314,12 +416,24 @@ end
         -5.275096644,
         -5.227427635,
         -5.058639193,
-        -5.118654229
+        -5.118654229,
     ]
 
-    fitted_eos = lsqfit(EnergyRelation, Vinet(20, 0.5, 4, -5), mp149_volumes, mp149_energies)
-    @test isapprox(fitted_eos, Vinet(20.446696754873944, 0.5516638521306302, 4.324373909783161, -5.424963389876503))
-    @test isapprox(map(calculate(EnergyRelation, fitted_eos), mp149_volumes), mp149_known_energies_vinet; atol = 1e-5)
+    fitted_eos = lsqfit(EnergyForm(), Vinet(20, 0.5, 4, -5), mp149_volumes, mp149_energies)
+    @test isapprox(
+        fitted_eos,
+        Vinet(
+            20.446696754873944,
+            0.5516638521306302,
+            4.324373909783161,
+            -5.424963389876503,
+        ),
+    )
+    @test isapprox(
+        map(apply(EnergyForm(), fitted_eos), mp149_volumes),
+        mp149_known_energies_vinet;
+        atol = 1e-5,
+    )
 end
 
 @testset "Test Ti dataset" begin
@@ -344,7 +458,7 @@ end
         18.18514127,
         16.62729878,
         17.65550599,
-        17.13626153
+        17.13626153,
     ]
 
     mp72_energies = [
@@ -368,7 +482,7 @@ end
         -7.876767777,
         -7.892161533,
         -7.892199957,
-        -7.897605303
+        -7.897605303,
     ]
 
     mp72_known_energies_vinet = [
@@ -392,100 +506,128 @@ end
         -7.876686864,
         -7.891937429,
         -7.892053535,
-        -7.897414664
+        -7.897414664,
     ]
 
-    fitted_eos = lsqfit(EnergyRelation, Vinet(17, 0.5, 4, -7), mp72_volumes, mp72_energies)
-    @test isapprox(fitted_eos, Vinet(17.13223026131245, 0.7029766224730147, 3.6388077563621812, -7.897414959124461))
-    @test isapprox(map(calculate(EnergyRelation, fitted_eos), mp72_volumes), mp72_known_energies_vinet; atol = 1e-5)
+    fitted_eos = lsqfit(EnergyForm(), Vinet(17, 0.5, 4, -7), mp72_volumes, mp72_energies)
+    @test isapprox(
+        fitted_eos,
+        Vinet(
+            17.13223026131245,
+            0.7029766224730147,
+            3.6388077563621812,
+            -7.897414959124461,
+        ),
+    )
+    @test isapprox(
+        map(apply(EnergyForm(), fitted_eos), mp72_volumes),
+        mp72_known_energies_vinet;
+        atol = 1e-5,
+    )
 end
 
 @testset "`Test w2k-lda-na.dat` from `Gibbs2`" begin
     data = [
-        159.9086  -323.4078898
-        162.5738  -323.4089153
-        165.2389  -323.4098546
-        167.9041  -323.410722
-        170.5692  -323.4115195
-        173.2344  -323.4122481
-        175.8995  -323.4129189
-        178.5647  -323.413528
-        181.2298  -323.4140871
-        183.8949  -323.4145889
-        186.5601  -323.4150471
-        189.2252  -323.415459
-        191.8904  -323.4158302
-        194.5555  -323.4161579
-        197.2207  -323.4164498
-        199.8858  -323.4167071
-        202.551   -323.4169305
-        205.2161  -323.4171194
-        207.8812  -323.4172809
-        210.5464  -323.4174144
-        213.2115  -323.4175216
-        215.8767  -323.4176029
-        218.5418  -323.417661
-        221.207   -323.4176975
-        223.8721  -323.41771
-        226.5373  -323.4177051
-        229.2024  -323.417682
-        231.8675  -323.4176375
-        234.5327  -323.417579
-        237.1978  -323.4175048
-        239.863   -323.4174142
-        242.5281  -323.4173101
-        245.1933  -323.4171922
-        247.8584  -323.4170611
-        250.5236  -323.4169184
-        253.1887  -323.4167647
-        255.8538  -323.4166002
-        258.519   -323.4164244
-        261.1841  -323.4162386
-        263.8493  -323.4160446
-        266.5144  -323.4158421
-        269.1796  -323.4156312
-        271.8447  -323.4154125
-        274.5098  -323.4151861
-        277.175   -323.4149528
-        279.8401  -323.4147131
-        282.5053  -323.414467
-        285.1704  -323.414215
-        287.8356  -323.4139583
-        290.5007  -323.4136953
-        293.1659  -323.4134285
-        295.831   -323.4131559
-        298.4961  -323.4128797
-        301.1613  -323.4125984
-        303.8264  -323.4123147
-        306.4916  -323.4120269
-        309.1567  -323.411736
-        311.8219  -323.4114399
-        314.487   -323.4111421
-        317.1522  -323.4108418
-        319.8173  -323.4105393
+        159.9086 -323.4078898
+        162.5738 -323.4089153
+        165.2389 -323.4098546
+        167.9041 -323.410722
+        170.5692 -323.4115195
+        173.2344 -323.4122481
+        175.8995 -323.4129189
+        178.5647 -323.413528
+        181.2298 -323.4140871
+        183.8949 -323.4145889
+        186.5601 -323.4150471
+        189.2252 -323.415459
+        191.8904 -323.4158302
+        194.5555 -323.4161579
+        197.2207 -323.4164498
+        199.8858 -323.4167071
+        202.551 -323.4169305
+        205.2161 -323.4171194
+        207.8812 -323.4172809
+        210.5464 -323.4174144
+        213.2115 -323.4175216
+        215.8767 -323.4176029
+        218.5418 -323.417661
+        221.207 -323.4176975
+        223.8721 -323.41771
+        226.5373 -323.4177051
+        229.2024 -323.417682
+        231.8675 -323.4176375
+        234.5327 -323.417579
+        237.1978 -323.4175048
+        239.863 -323.4174142
+        242.5281 -323.4173101
+        245.1933 -323.4171922
+        247.8584 -323.4170611
+        250.5236 -323.4169184
+        253.1887 -323.4167647
+        255.8538 -323.4166002
+        258.519 -323.4164244
+        261.1841 -323.4162386
+        263.8493 -323.4160446
+        266.5144 -323.4158421
+        269.1796 -323.4156312
+        271.8447 -323.4154125
+        274.5098 -323.4151861
+        277.175 -323.4149528
+        279.8401 -323.4147131
+        282.5053 -323.414467
+        285.1704 -323.414215
+        287.8356 -323.4139583
+        290.5007 -323.4136953
+        293.1659 -323.4134285
+        295.831 -323.4131559
+        298.4961 -323.4128797
+        301.1613 -323.4125984
+        303.8264 -323.4123147
+        306.4916 -323.4120269
+        309.1567 -323.411736
+        311.8219 -323.4114399
+        314.487 -323.4111421
+        317.1522 -323.4108418
+        319.8173 -323.4105393
     ]
     volumes = data[:, 1]  # unit: bohr^3
     energies = data[:, 2]  # unit: Rydberg
-    @test lsqfit(EnergyRelation, BirchMurnaghan3rd(224, 0.0006, 4, -323), volumes, energies) ≈ BirchMurnaghan3rd(
-        224.444565,
-        0.00062506191050572675,
-        3.740369,
-        -323.417714
+    @test lsqfit(
+        EnergyForm(),
+        BirchMurnaghan3rd(224, 0.0006, 4, -323),
+        volumes,
+        energies,
+    ) ≈ BirchMurnaghan3rd(224.444565, 0.00062506191050572675, 3.740369, -323.417714)
+    @test isapprox(
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan4th(224, 0.0006, 4, -5460, -323),
+            volumes,
+            energies,
+        ),
+        BirchMurnaghan4th(
+            224.45756247137314,
+            0.0006229382259822287,
+            3.730991473426449,
+            -5322.693307704408,
+            -323.4177113158418,
+        );
+        atol = 1e-3,
     )
     @test isapprox(
-        lsqfit(EnergyRelation, BirchMurnaghan4th(224, 0.0006, 4, -5460, -323), volumes, energies),
-        BirchMurnaghan4th(224.457562, 0.00062293812247621543, 3.730992, -5322.69673452213, -323.417712);
-        atol = 1e-3
-    )
-    @test isapprox(
-        lsqfit(EnergyRelation, Murnaghan(224, 0.006, 4, -323), volumes, energies),
+        lsqfit(EnergyForm(), Murnaghan(224, 0.006, 4, -323), volumes, energies),
         Murnaghan(224.501825, 0.00060479524074699499, 3.723835, -323.417686);
-        atol = 1e-5
+        atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(EnergyRelation, PoirierTarantola3rd(100, 0.0006, 3.7, -323), volumes, energies),
+        lsqfit(
+            EnergyForm(),
+            PoirierTarantola3rd(100, 0.0006, 3.7, -323),
+            volumes,
+            energies,
+        ),
         PoirierTarantola3rd(224.509208, 0.000635892264159838, 3.690448, -323.41773);
-        atol = 1e-5
+        atol = 1e-5,
     )
-    # @test lsqfit(EnergyRelation, PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
+    # @test lsqfit(EnergyForm(), PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
 end
