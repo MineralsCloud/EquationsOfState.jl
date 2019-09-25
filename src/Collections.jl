@@ -706,6 +706,8 @@ end # function Base.iterate
 Base.length(eos::EquationOfState) = nfields(eos)
 Base.size(eos::EquationOfState) = (length(eos),)
 Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
+
+Base.isapprox(a::T, b::T; kwargs...) where {T<:EquationOfState} = isapprox(collect(a), collect(b); kwargs...)
 # Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 # =============================== Miscellaneous ============================== #
 
