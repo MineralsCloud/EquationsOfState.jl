@@ -13,7 +13,7 @@ module NonlinearFitting
 
 using LsqFit: curve_fit
 
-import ..EquationOfStateForm
+import ..EquationForm
 using ..Collections
 
 export lsqfit
@@ -24,7 +24,7 @@ export lsqfit
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
 # Arguments
-- `form::EquationOfStateForm`: an `EquationOfStateForm` instance. If `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusForm`, fit ``B(V)``.
+- `form::EquationForm`: an `EquationForm` instance. If `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusForm`, fit ``B(V)``.
 - `eos::EquationOfState`: a trial equation of state.
 - `xdata::AbstractVector`: a vector of volumes.
 - `ydata::AbstractVector`: a vector of energies, pressures, or bulk moduli.
@@ -32,7 +32,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 - `kwargs`: the rest keyword arguments that will be sent to `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md).
 """
 function lsqfit(
-    form::EquationOfStateForm,
+    form::EquationForm,
     eos::E,
     xdata::AbstractVector,
     ydata::AbstractVector;
