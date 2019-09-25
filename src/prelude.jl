@@ -1,6 +1,6 @@
-export EquationOfStateForm, EnergyForm, PressureForm, BulkModulusForm
+export EquationForm, EnergyForm, PressureForm, BulkModulusForm
 
-abstract type EquationOfStateForm end
-struct EnergyForm <: EquationOfStateForm end
-struct PressureForm <: EquationOfStateForm end
-struct BulkModulusForm <: EquationOfStateForm end
+abstract type EquationForm end
+struct EnergyForm <: EquationForm end
+struct PressureForm <: EquationForm end
+struct BulkModulusForm <: EquationForm end
