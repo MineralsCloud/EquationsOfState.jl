@@ -331,7 +331,7 @@ function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
 
     eta = cbrt(v0 / v)
     xi = eta^2 - 1
-    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4eta^2)
+    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
 end
 """
     apply(EnergyForm(), eos::BirchMurnaghan4th, v::Real)
@@ -343,7 +343,7 @@ function apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12(bp0 - 4) * f + 12)
+    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
 """
     apply(EnergyForm(), eos::PoirierTarantola2nd, v::Real)
@@ -364,7 +364,7 @@ function apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
     v0, b0, bp0, e0 = collect(eos)
 
     x = cbrt(v / v0)
-    xi = -3log(x)
+    xi = -3 * log(x)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
 """
@@ -378,7 +378,7 @@ function apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
-    return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4(bp0 + 2) * xi + 12)
+    return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
 end
 """
     apply(EnergyForm(), eos::Vinet, v::Real)
@@ -478,7 +478,7 @@ function apply(::PressureForm, eos::BirchMurnaghan4th, v::Real)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9(bp0 - 4) * f + 6)
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
 end
 """
     apply(PressureForm(), eos::PoirierTarantola2nd, v::Real)
@@ -514,7 +514,7 @@ function apply(::PressureForm, eos::PoirierTarantola4th, v::Real)
     x = (v / v0)^(1 / 3)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
-    return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3(bp0 + 6) * xi + 6)
+    return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
 end
 """
     apply(PressureForm(), eos::Vinet, v::Real)
@@ -602,7 +602,7 @@ function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v::Real)
     v0, b0, bp0 = collect(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((27f^2 + 6f) * (bp0 - 4) - 4f + 2)
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
 """
     apply(BulkModulusForm(), eos::BirchMurnaghan4th, v::Real)
@@ -614,7 +614,8 @@ function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v::Real)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return b0 / 6 * (2f + 1)^(5 / 2) * ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
+    return b0 / 6 * (2f + 1)^(5 / 2) *
+           ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
 """
     apply(BulkModulusForm(), eos::PoirierTarantola2nd, v::Real)
@@ -650,7 +651,8 @@ function apply(::BulkModulusForm, eos::PoirierTarantola4th, v::Real)
     x = (v / v0)^(1 / 3)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
-    return -b0 / (6x) * ((h + 3bp0 + 3) * xi^3 - 3xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
+    return -b0 / (6x) *
+           ((h + 3bp0 + 3) * xi^3 - 3 * xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
 end
 """
     apply(BulkModulusForm(), eos::Vinet, v::Real)
@@ -662,7 +664,7 @@ function apply(::BulkModulusForm, eos::Vinet, v::Real)
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
-    return -b0 / (2x^2) * (3x * (x - 1) * (bp0 - 1) + 2(x - 2)) * exp(-xi * (x - 1))
+    return -b0 / (2 * x^2) * (3x * (x - 1) * (bp0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
 """
     apply(BulkModulusForm(), eos::AntonSchmidt, v::Real)

@@ -37,7 +37,7 @@ using EquationsOfState.FindVolume
         54.3808371612,
         55.8775030703,
         57.4014349722,
-        58.9526328669
+        58.9526328669,
     ]
     energies = [
         -7.63622156576,
@@ -67,19 +67,24 @@ using EquationsOfState.FindVolume
         -10.1197772808,
         -9.99504030111,
         -9.86535084973,
-        -9.73155247952
+        -9.73155247952,
     ]
     @test isapprox(
         map(
             e -> findvolume(
                 EnergyForm(),
-                BirchMurnaghan3rd(40.98926572528106, 0.5369258245417454, 4.178644235500821, -10.842803908240892),
+                BirchMurnaghan3rd(
+                    40.98926572528106,
+                    0.5369258245417454,
+                    4.178644235500821,
+                    -10.842803908240892,
+                ),
                 e,
                 (25, 60),
-                Order16()
+                Order16(),
             ),
-            energies
+            energies,
         ),
-        results
+        results,
     )
 end

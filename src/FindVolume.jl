@@ -36,7 +36,7 @@ function findvolume(
     eos::EquationOfState,
     y::Real,
     domain::Union{AbstractVector,Tuple},
-    method::AbstractBracketing
+    method::AbstractBracketing,
 )
     f(v) = apply(form, eos, v) - y
     return find_zero(f, (minimum(domain), maximum(domain)), method)
@@ -46,7 +46,7 @@ function findvolume(
     eos::EquationOfState,
     y::Real,
     domain::Union{AbstractVector,Tuple},
-    method::Union{AbstractNonBracketing,AbstractHalleyLikeMethod,AbstractNewtonLikeMethod}
+    method::Union{AbstractNonBracketing,AbstractHalleyLikeMethod,AbstractNewtonLikeMethod},
 )
     f(v) = apply(form, eos, v) - y
     return find_zero(f, median(domain), method)
@@ -55,14 +55,14 @@ function findvolume(
     form::EquationOfStateForm,
     eos::EquationOfState,
     y::Real,
-    domain::Union{AbstractVector,Tuple}
+    domain::Union{AbstractVector,Tuple},
 )
     for T in [
-        subtypes(AbstractAlefeldPotraShi);
-        subtypes(AbstractBisection);
-        Brent;
-        subtypes(AbstractHalleyLikeMethod);
-        Newton;
+        subtypes(AbstractAlefeldPotraShi)
+        subtypes(AbstractBisection)
+        Brent
+        subtypes(AbstractHalleyLikeMethod)
+        Newton
         subtypes(AbstractSecant)
     ]
         @info("Using method \"$T\"...")
