@@ -13,15 +13,13 @@ module Collections
 
 using InteractiveUtils
 using Parameters
-using StaticArrays: FieldVector, Size
-import StaticArrays
 
 using EquationsOfState
 
 export apply,
        EquationOfState,
        FiniteStrainEquationOfState,
-       PolynomialEquationOfState,
+    #    PolynomialEquationOfState,
        Murnaghan,
        BirchMurnaghan2nd,
        BirchMurnaghan3rd,
@@ -37,36 +35,30 @@ export apply,
 #                                     Types                                    #
 # ============================================================================ #
 """
-    EquationOfState{T,N} <: FieldVector{N,T}
+    EquationOfState{T}
 
-An abstraction of equations of state, where `T` specifies the elements' type,
-and `N` specifies the number of fields.
-
-`EquationOfState{T,N}` is the abstraction of all equations of state. Subtype it with your
-customized `T` and `N`. It is also a subtype of
-[`FieldVector`](https://juliaarrays.github.io/StaticArrays.jl/latest/pages/api/#StaticArrays.FieldVector)
-from package [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl).
+An abstraction of equations of state, where `T` specifies the elements' type.
 """
-abstract type EquationOfState{T,N} <: FieldVector{N,T} end
+abstract type EquationOfState{T} end
 
 """
-    FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N}
+    FiniteStrainEquationOfState{T} <: EquationOfState{T}
 
 An abstraction of finite strain equations of state.
 """
-abstract type FiniteStrainEquationOfState{T,N} <: EquationOfState{T,N} end
+abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
-struct PolynomialEquationOfState{T<:Real,N} <: EquationOfState{T,N}
-    data::NTuple{N,T}
-    function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T,N}
-        @assert N ≤ 10
-        new(args)
-    end
-end
-function PolynomialEquationOfState(args...)
-    T = Base.promote_typeof(args...)
-    PolynomialEquationOfState{T,length(args)}(args)
-end
+# struct PolynomialEquationOfState{T<:Real,N} <: EquationOfState{T,N}
+#     data::NTuple{N,T}
+#     function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T,N}
+#         @assert N ≤ 10
+#         new(args)
+#     end
+# end
+# function PolynomialEquationOfState(args...)
+#     T = Base.promote_typeof(args...)
+#     PolynomialEquationOfState{T,length(args)}(args)
+# end
 
 """
     Murnaghan(v0, b0, bp0, e0=0)
@@ -79,7 +71,7 @@ Create a Murnaghan equation of state. The elements' type will be handled automat
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct Murnaghan{T<:Real} <: EquationOfState{T,4}
+@with_kw struct Murnaghan{T<:Real} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
@@ -101,7 +93,7 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
+@with_kw struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     e0::T = 0
@@ -123,7 +115,7 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
@@ -147,7 +139,7 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
+@with_kw struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
@@ -170,7 +162,7 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T,3}
+@with_kw struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     e0::T = 0
@@ -192,7 +184,7 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T,4}
+@with_kw struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
@@ -216,7 +208,7 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T,5}
+@with_kw struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
@@ -240,7 +232,7 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct Vinet{T<:Real} <: EquationOfState{T,4}
+@with_kw struct Vinet{T<:Real} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
@@ -252,7 +244,7 @@ function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Vinet(v0, b0, bp0) = Vinet(v0, b0, bp0, 0)
 
-@with_kw struct AntonSchmidt{T<:Real} <: EquationOfState{T,4}
+@with_kw struct AntonSchmidt{T<:Real} <: EquationOfState{T}
     v0::T
     β::T
     n::T
@@ -264,7 +256,7 @@ function AntonSchmidt(v0::Real, β::Real, n::Real, e∞::Real)
 end
 AntonSchmidt(v0, β, n) = AntonSchmidt(v0, β, n, 0)
 
-@with_kw struct BreenanStacey{T<:Real} <: EquationOfState{T,4}
+@with_kw struct BreenanStacey{T<:Real} <: EquationOfState{T}
     v0::T
     b0::T
     γ0::T
@@ -701,11 +693,11 @@ nonabstract(T::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(T))
 
 for E in nonabstract(EquationOfState)
     eval(quote
-        StaticArrays.similar_type(::Type{A}, ::Type{T}, size::Size{(fieldcount($E),)}) where {A<:$E,T} = $E{T}
+        similar_type(::Type{A}, ::Type{T}) where {A<:$E,T} = $E{T}
     end)
 end
 
-Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
+# Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 # =============================== Miscellaneous ============================== #
 
 end
