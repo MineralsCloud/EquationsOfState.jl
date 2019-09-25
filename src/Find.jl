@@ -1,5 +1,5 @@
 """
-# module FindVolume
+# module Find
 
 
 
@@ -9,7 +9,7 @@
 julia>
 ```
 """
-module FindVolume
+module Find
 
 using InteractiveUtils: subtypes
 using Statistics: median

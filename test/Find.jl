@@ -4,7 +4,7 @@ using Roots
 
 using EquationsOfState
 using EquationsOfState.Collections
-using EquationsOfState.FindVolume
+using EquationsOfState.Find
 
 # Data in the following tests are from
 # https://github.com/materialsproject/pymatgen/blob/1f0957b8525ddc7d12ea348a19caecebe6c7ff34/pymatgen/analysis/tests/test_eos.py
