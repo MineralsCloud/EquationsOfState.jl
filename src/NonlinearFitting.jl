@@ -19,17 +19,6 @@ using ..Collections
 
 export lsqfit
 
-function lsqfit(
-    form::EquationOfStateForm,
-    eos::E,
-    xdata::Vector{T},
-    ydata::Vector{T};
-    debug::Bool = false, kwargs...
-) where {T<:AbstractFloat,E<:EquationOfState{T}}
-    model(x, p) = map(apply(form, E(p)), x)
-    fitted = curve_fit(model, xdata, ydata, collect(fieldvalues(eos)); kwargs...)
-    debug ? fitted : E(fitted.param)
-end  # function lsqfit
 """
     lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
 
@@ -48,11 +37,14 @@ function lsqfit(
     eos::E,
     xdata::X,
     ydata::Y;
+    debug = false,
     kwargs...
 ) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    promoted_eos = Collections.similar_type(E, T)(fieldvalues(eos)...)
-    lsqfit(form, promoted_eos, convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
+    P = Collections.similar_type(E, T)
+    model(x, p) = map(apply(form, P(p...)), x)
+    fitted = curve_fit(model, convert(Vector{T}, xdata), convert(Vector{T}, ydata), T.(fieldvalues(eos)); kwargs...)
+    return debug ? fitted : P(fitted.param...)
 end  # function lsqfit
 
 end
