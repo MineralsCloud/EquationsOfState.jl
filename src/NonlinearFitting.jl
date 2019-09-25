@@ -12,24 +12,12 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
-using StaticArrays: similar_type
 
 import ..EquationOfStateForm
 using ..Collections
 
 export lsqfit
 
-function lsqfit(
-    form::EquationOfStateForm,
-    eos::E,
-    xdata::Vector{T},
-    ydata::Vector{T};
-    debug::Bool = false, kwargs...
-) where {T<:AbstractFloat,E<:EquationOfState{T}}
-    model(x, p) = map(apply(form, E(p)), x)
-    fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
-    debug ? fitted : E(fitted.param)
-end  # function lsqfit
 """
     lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
 
@@ -46,12 +34,16 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 function lsqfit(
     form::EquationOfStateForm,
     eos::E,
-    xdata::X,
-    ydata::Y;
+    xdata::AbstractVector,
+    ydata::AbstractVector;
+    debug = false,
     kwargs...
-) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
+) where {E<:EquationOfState}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    lsqfit(form, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
+    P = Collections.similar_type(E, T)
+    model(x, p) = map(apply(form, P(p...)), x)
+    fitted = curve_fit(model, T.(xdata), T.(ydata), T.(collect(eos)); kwargs...)
+    return debug ? fitted : P(fitted.param...)
 end  # function lsqfit
 
 end
