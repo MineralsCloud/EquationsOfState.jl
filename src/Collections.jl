@@ -71,11 +71,11 @@ Create a Murnaghan equation of state. The elements' type will be handled automat
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct Murnaghan{T<:Real} <: EquationOfState{T}
+struct Murnaghan{T<:Real} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
-    e0::T = 0
+    e0::T
 end
 function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
@@ -93,10 +93,10 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
-    e0::T = 0
+    e0::T
 end
 function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, e0)
@@ -115,11 +115,11 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
-    e0::T = 0
+    e0::T
 end
 function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
@@ -139,12 +139,12 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
     bpp0::T
-    e0::T = 0
+    e0::T
 end
 function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
@@ -162,10 +162,10 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
-    e0::T = 0
+    e0::T
 end
 function PoirierTarantola2nd(v0::Real, b0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, e0)
@@ -184,11 +184,11 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
-    e0::T = 0
+    e0::T
 end
 function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
@@ -208,12 +208,12 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
     bp0::T
     bpp0::T
-    e0::T = 0
+    e0::T
 end
 function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
@@ -232,11 +232,11 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-@with_kw struct Vinet{T<:Real} <: EquationOfState{T}
+struct Vinet{T<:Real} <: EquationOfState{T}
     v0::T
     b0::T
     bp0::T
-    e0::T = 0
+    e0::T
 end
 function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, bp0, e0)
@@ -244,11 +244,11 @@ function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
 end
 Vinet(v0, b0, bp0) = Vinet(v0, b0, bp0, 0)
 
-@with_kw struct AntonSchmidt{T<:Real} <: EquationOfState{T}
+struct AntonSchmidt{T<:Real} <: EquationOfState{T}
     v0::T
     β::T
     n::T
-    e∞::T = 0
+    e∞::T
 end
 function AntonSchmidt(v0::Real, β::Real, n::Real, e∞::Real)
     T = Base.promote_typeof(v0, β, n, e∞)
@@ -256,11 +256,11 @@ function AntonSchmidt(v0::Real, β::Real, n::Real, e∞::Real)
 end
 AntonSchmidt(v0, β, n) = AntonSchmidt(v0, β, n, 0)
 
-@with_kw struct BreenanStacey{T<:Real} <: EquationOfState{T}
+struct BreenanStacey{T<:Real} <: EquationOfState{T}
     v0::T
     b0::T
     γ0::T
-    e0::T = 0
+    e0::T
 end
 function BreenanStacey(v0::Real, b0::Real, γ0::Real, e0::Real)
     T = Base.promote_typeof(v0, b0, γ0, e0)
