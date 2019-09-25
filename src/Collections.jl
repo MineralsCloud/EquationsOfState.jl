@@ -698,10 +698,10 @@ for E in nonabstract(EquationOfState)
     end)
 end
 
-Base.iterate(eos::EquationOfState) = (getfield(eos, 1), 2)
+Base.iterate(eos::EquationOfState) = getfield(eos, 1), 2
 function Base.iterate(eos::EquationOfState, state::Integer)
     state > length(eos) && return nothing
-    return (getfield(eos, state), state + 1)
+    return getfield(eos, state), state + 1
 end # function Base.iterate
 Base.length(eos::EquationOfState) = nfields(eos)
 Base.size(eos::EquationOfState) = (length(eos),)
