@@ -11,8 +11,8 @@ julia>
 """
 module NonlinearFitting
 
+using IterTools: fieldvalues
 using LsqFit: curve_fit
-using StaticArrays: similar_type
 
 import ..EquationOfStateForm
 using ..Collections
@@ -27,7 +27,7 @@ function lsqfit(
     debug::Bool = false, kwargs...
 ) where {T<:AbstractFloat,E<:EquationOfState{T}}
     model(x, p) = map(apply(form, E(p)), x)
-    fitted = curve_fit(model, xdata, ydata, collect(eos); kwargs...)
+    fitted = curve_fit(model, xdata, ydata, collect(fieldvalues(eos)); kwargs...)
     debug ? fitted : E(fitted.param)
 end  # function lsqfit
 """
@@ -51,7 +51,8 @@ function lsqfit(
     kwargs...
 ) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    lsqfit(form, convert(similar_type(E, T), eos), convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
+    promoted_eos = Collections.similar_type(E, T)(fieldvalues(eos)...)
+    lsqfit(form, promoted_eos, convert(Vector{T}, xdata), convert(Vector{T}, ydata); kwargs...)
 end  # function lsqfit
 
 end
