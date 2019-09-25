@@ -43,7 +43,7 @@ function lsqfit(
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
     P = Collections.similar_type(E, T)
     model(x, p) = map(apply(form, P(p...)), x)
-    fitted = curve_fit(model, convert(Vector{T}, xdata), convert(Vector{T}, ydata), T.(fieldvalues(eos)); kwargs...)
+    fitted = curve_fit(model, T.(xdata), T.(ydata), T.(fieldvalues(eos)); kwargs...)
     return debug ? fitted : P(fitted.param...)
 end  # function lsqfit
 
