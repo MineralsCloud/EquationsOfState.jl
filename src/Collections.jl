@@ -304,7 +304,7 @@ apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
 Return the energy of a `Murnaghan` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::Murnaghan, v::Real)
-    v0, b0, bp0, e0 = collect(eos)
+    v0, b0, bp0, e0 = fieldvalues(eos)
 
     x = bp0 - 1
     y = (v0 / v)^bp0
@@ -316,7 +316,7 @@ end
 Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::BirchMurnaghan2nd, v::Real)
-    v0, b0, e0 = collect(eos)
+    v0, b0, e0 = fieldvalues(eos)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
@@ -327,7 +327,7 @@ end
 Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
-    v0, b0, bp0, e0 = collect(eos)
+    v0, b0, bp0, e0 = fieldvalues(eos)
 
     eta = cbrt(v0 / v)
     xi = eta^2 - 1
@@ -339,7 +339,7 @@ end
 Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
-    v0, b0, bp0, bpp0, e0 = collect(eos)
+    v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
@@ -351,7 +351,7 @@ end
 Return the energy of a `PoirierTarantola2nd` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::PoirierTarantola2nd, v::Real)
-    v0, b0, e0 = collect(eos)
+    v0, b0, e0 = fieldvalues(eos)
 
     return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
 end
@@ -361,7 +361,7 @@ end
 Return the energy of a `PoirierTarantola3rd` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
-    v0, b0, bp0, e0 = collect(eos)
+    v0, b0, bp0, e0 = fieldvalues(eos)
 
     x = cbrt(v / v0)
     xi = -3 * log(x)
@@ -373,7 +373,7 @@ end
 Return the energy of a `PoirierTarantola4th` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
-    v0, b0, bp0, bpp0, e0 = collect(eos)
+    v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
 
     x = cbrt(v / v0)
     xi = log(x)
@@ -386,7 +386,7 @@ end
 Return the energy of a `Vinet` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::Vinet, v::Real)
-    v0, b0, bp0, e0 = collect(eos)
+    v0, b0, bp0, e0 = fieldvalues(eos)
 
     x = cbrt(v / v0)
     xi = 3 / 2 * (bp0 - 1)
@@ -398,7 +398,7 @@ end
 Return the energy of a `AntonSchmidt` equation of state on volume `v`.
 """
 function apply(::EnergyForm, eos::AntonSchmidt, v::Real)
-    v0, β, n, e∞ = collect(eos)
+    v0, β, n, e∞ = fieldvalues(eos)
 
     x = v / v0
     η = n + 1
@@ -442,7 +442,7 @@ apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
 Return the pressure of a `Murnaghan` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::Murnaghan, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     return b0 / bp0 * ((v0 / v)^bp0 - 1)
 end
@@ -452,7 +452,7 @@ end
 Return the pressure of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::BirchMurnaghan2nd, v::Real)
-    v0, b0 = collect(eos)
+    v0, b0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
@@ -463,7 +463,7 @@ end
 Return the pressure of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::BirchMurnaghan3rd, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     eta = (v0 / v)^(1 / 3)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
@@ -474,7 +474,7 @@ end
 Return the pressure of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::BirchMurnaghan4th, v::Real)
-    v0, b0, bp0, bpp0 = collect(eos)
+    v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
@@ -486,7 +486,7 @@ end
 Return the pressure of a `PoirierTarantola2nd` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::PoirierTarantola2nd, v::Real)
-    v0, b0 = collect(eos)
+    v0, b0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     return -b0 / x * log(x)
@@ -497,7 +497,7 @@ end
 Return the pressure of a `PoirierTarantola3rd` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::PoirierTarantola3rd, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     x = v / v0
     xi = log(x)
@@ -509,7 +509,7 @@ end
 Return the pressure of a `PoirierTarantola4th` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::PoirierTarantola4th, v::Real)
-    v0, b0, bp0, bpp0 = collect(eos)
+    v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     xi = log(x)
@@ -522,7 +522,7 @@ end
 Return the pressure of a `Vinet` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::Vinet, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
@@ -534,7 +534,7 @@ end
 Return the pressure of a `AntonSchmidt` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::AntonSchmidt, v::Real)
-    v0, β, n = collect(eos)
+    v0, β, n = fieldvalues(eos)
 
     x = v / v0
     return -β * x^n * log(x)
@@ -545,7 +545,7 @@ end
 Return the pressure of a `BreenanStacey` equation of state on volume `v`.
 """
 function apply(::PressureForm, eos::BreenanStacey, v::Real)
-    v0, b0, γ0 = collect(eos)
+    v0, b0, γ0 = fieldvalues(eos)
 
     x = v0 / v
     return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
@@ -588,7 +588,7 @@ apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), e
 Return the bulk modulus of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v::Real)
-    v0, b0 = collect(eos)
+    v0, b0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
@@ -599,7 +599,7 @@ end
 Return the bulk modulus of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
@@ -610,7 +610,7 @@ end
 Return the bulk modulus of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v::Real)
-    v0, b0, bp0, bpp0 = collect(eos)
+    v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
@@ -623,7 +623,7 @@ end
 Return the bulk modulus of a `PoirierTarantola2nd` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v::Real)
-    v0, b0 = collect(eos)
+    v0, b0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     return b0 / x * (1 - log(x))
@@ -634,7 +634,7 @@ end
 Return the bulk modulus of a `PoirierTarantola3rd` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     x = v / v0
     xi = log(x)
@@ -646,7 +646,7 @@ end
 Return the bulk modulus of a `PoirierTarantola4th` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::PoirierTarantola4th, v::Real)
-    v0, b0, bp0, bpp0 = collect(eos)
+    v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     xi = log(x)
@@ -660,7 +660,7 @@ end
 Return the bulk modulus of a `Vinet` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::Vinet, v::Real)
-    v0, b0, bp0 = collect(eos)
+    v0, b0, bp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     xi = 3 / 2 * (bp0 - 1)
@@ -672,7 +672,7 @@ end
 Return the bulk modulus of a `AntonSchmidt` equation of state on volume `v`.
 """
 function apply(::BulkModulusForm, eos::AntonSchmidt, v::Real)
-    v0, β, n = collect(eos)
+    v0, β, n = fieldvalues(eos)
 
     x = v / v0
     return β * x^n * (1 + n * log(x))
@@ -698,16 +698,10 @@ for E in nonabstract(EquationOfState)
     end)
 end
 
-Base.iterate(eos::EquationOfState) = getfield(eos, 1), 2
-function Base.iterate(eos::EquationOfState, state::Integer)
-    state > length(eos) && return nothing
-    return getfield(eos, state), state + 1
-end # function Base.iterate
-Base.length(eos::EquationOfState) = nfields(eos)
-Base.size(eos::EquationOfState) = (length(eos),)
-Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
+# This is a helper function and should not be exported.
+fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
-Base.isapprox(a::T, b::T; kwargs...) where {T<:EquationOfState} = isapprox(collect(a), collect(b); kwargs...)
+Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
 # Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 # =============================== Miscellaneous ============================== #
 
