@@ -698,7 +698,9 @@ for E in nonabstract(EquationOfState)
     end)
 end
 
+# This is a helper function and should not be exported.
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
+
 Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
 # Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 # =============================== Miscellaneous ============================== #
