@@ -702,6 +702,7 @@ end
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
 Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
+Base.length(eos::EquationOfState) = nfields(eos)
 # Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 # =============================== Miscellaneous ============================== #
 
