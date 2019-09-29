@@ -67,12 +67,6 @@ struct Murnaghan{A,B,C,D} <: EquationOfState
 end
 Murnaghan(v0::Real, b0::Real, bp0::Real) = Murnaghan(v0, b0, bp0, 0)
 Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = Murnaghan(v0, b0, bp0, 0u"eV")
-Unitful.upreferred(eos::Murnaghan) = Murnaghan(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(NoUnits, eos.bp0),
-    uconvert(u"eV", eos.e0)
-)
 
 """
     BirchMurnaghan2nd(v0, b0, e0=0)
@@ -91,11 +85,6 @@ struct BirchMurnaghan2nd{A,B,C} <: FiniteStrainEquationOfState
 end
 BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
 BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) = BirchMurnaghan2nd(v0, b0, 0u"eV")
-Unitful.upreferred(eos::BirchMurnaghan2nd) = BirchMurnaghan2nd(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(u"eV", eos.e0)
-)
 
 """
     BirchMurnaghan3rd(v0, b0, bp0, e0=0)
@@ -116,12 +105,6 @@ struct BirchMurnaghan3rd{A,B,C,D} <: FiniteStrainEquationOfState
 end
 BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real) = BirchMurnaghan3rd(v0, b0, bp0, 0)
 BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = BirchMurnaghan3rd(v0, b0, bp0, 0u"eV")
-Unitful.upreferred(eos::BirchMurnaghan3rd) = BirchMurnaghan3rd(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(NoUnits, eos.bp0),
-    uconvert(u"eV", eos.e0)
-)
 
 """
     BirchMurnaghan4th(v0, b0, bp0, bpp0, e0=0)
@@ -144,13 +127,6 @@ struct BirchMurnaghan4th{A,B,C,D,E} <: FiniteStrainEquationOfState
 end
 BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
 BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity, bpp0::AbstractQuantity) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0u"eV")
-Unitful.upreferred(eos::BirchMurnaghan3rd) = BirchMurnaghan3rd(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(NoUnits, eos.bp0),
-    uconvert(u"angstrom^3/eV", eos.bpp0)
-    uconvert(u"eV", eos.e0)
-)
 
 """
     PoirierTarantola2nd(v0, b0, e0=0)
@@ -169,11 +145,6 @@ struct PoirierTarantola2nd{A,B,C} <: FiniteStrainEquationOfState
 end
 PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
 PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) = PoirierTarantola2nd(v0, b0, 0u"eV")
-Unitful.upreferred(eos::PoirierTarantola2nd) = PoirierTarantola2nd(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(u"eV", eos.e0)
-)
 
 """
     PoirierTarantola3rd(v0, b0, bp0, e0=0)
@@ -194,12 +165,6 @@ struct PoirierTarantola3rd{A,B,C,D} <: FiniteStrainEquationOfState
 end
 PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real) = PoirierTarantola3rd(v0, b0, bp0, 0)
 PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = PoirierTarantola3rd(v0, b0, bp0, 0u"eV")
-Unitful.upreferred(eos::PoirierTarantola3rd) = PoirierTarantola3rd(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(NoUnits, eos.bp0),
-    uconvert(u"eV", eos.e0)
-)
 
 """
     PoirierTarantola4th(v0, b0, bp0, bpp0, e0=0)
@@ -222,13 +187,6 @@ struct PoirierTarantola4th{A,B,C,D,E} <: FiniteStrainEquationOfState
 end
 PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
 PoirierTarantola4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity, bpp0::AbstractQuantity) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0u"eV")
-Unitful.upreferred(eos::BirchMurnaghan3rd) = BirchMurnaghan3rd(
-    uconvert(u"angstrom^3", eos.v0),
-    uconvert(u"eV/angstrom^3", eos.b0),
-    uconvert(NoUnits, eos.bp0),
-    uconvert(u"angstrom^3/eV", eos.bpp0)
-    uconvert(u"eV", eos.e0)
-)
 
 """
     Vinet(v0, b0, bp0, e0=0)
@@ -689,6 +647,55 @@ Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUnits} = u"eV"
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
+
+Unitful.upreferred(eos::Murnaghan{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = Murnaghan(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::BirchMurnaghan2nd{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = BirchMurnaghan2nd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::BirchMurnaghan3rd{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = BirchMurnaghan3rd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::BirchMurnaghan4th{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = BirchMurnaghan4th(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"angstrom^3/eV", eos.bpp0)
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::PoirierTarantola2nd{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = PoirierTarantola2nd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::PoirierTarantola3rd{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = PoirierTarantola3rd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::PoirierTarantola4th{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = PoirierTarantola4th(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"angstrom^3/eV", eos.bpp0)
+    uconvert(u"eV", eos.e0)
+)
+Unitful.upreferred(eos::Vinet{<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity,<:AbstractQuantity}) = Vinet(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
 # =============================== Miscellaneous ============================== #
 
 end
