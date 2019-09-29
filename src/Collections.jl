@@ -643,21 +643,6 @@ end
 # ============================================================================ #
 #                                 Miscellaneous                                #
 # ============================================================================ #
-function allsubtypes(T::Type, types = Type[])::Vector{Type}
-    for S in subtypes(T)
-        types = allsubtypes(S, push!(types, S))
-    end
-    types
-end
-
-nonabstract(T::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(T))
-
-for E in nonabstract(EquationOfState)
-    eval(quote
-        similar_type(::Type{A}, ::Type{T}) where {A<:$E,T} = $E{T}
-    end)
-end
-
 # This is a helper function and should not be exported.
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
