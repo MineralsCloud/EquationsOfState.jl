@@ -39,7 +39,7 @@ function lsqfit(
     xdata::AbstractVector,
     ydata::AbstractVector;
     debug = false,
-    kwargs...
+    kwargs...,
 ) where {E<:EquationOfState}
 
     # T = promote_type(eltype(eos), eltype(xdata), eltype(ydata))
@@ -54,8 +54,8 @@ function lsqfit(
     xdata::AbstractVector{A},
     ydata::AbstractVector{B};
     debug = false,
-    kwargs...
-) where {T<:Real,A<:AbstractQuantity{T,𝐋^3},B<:AbstractQuantity{T,𝐋^2*𝐌*𝐓^-2}}
+    kwargs...,
+) where {T<:Real,A<:AbstractQuantity{T,𝐋^3},B<:AbstractQuantity{T,𝐋^2 * 𝐌 * 𝐓^-2}}
     @assert(eltype(eos) <: AbstractQuantity, "The equation of state must have units!")
     xdata, ydata = uconvert.(u"angstrom^3", xdata), uconvert.(u"eV", ydata)
     E = typeof(eos).name.wrapper
@@ -68,7 +68,7 @@ function lsqfit(
     ydata::AbstractVector{B},
     trial_params::AbstractVector{B};
     debug = false,
-    kwargs...
+    kwargs...,
 ) where {A<:AbstractFloat,B<:AbstractFloat}
     fitted = curve_fit(model, xdata, ydata, trial_params; kwargs...)
     return debug ? fitted : fitted.param
