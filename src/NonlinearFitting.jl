@@ -12,6 +12,8 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
+using Unitful
+import Unitful: AbstractQuantity, 𝐋, 𝐌, 𝐓
 
 import ..EquationForm
 using ..Collections
@@ -39,11 +41,37 @@ function lsqfit(
     debug = false,
     kwargs...
 ) where {E<:EquationOfState}
-    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
+
+    # T = promote_type(eltype(eos), eltype(xdata), eltype(ydata))
+    # T <: 
     P = Collections.similar_type(E, T)
     model(x, p) = map(apply(form, P(p...)), x)
-    fitted = curve_fit(model, T.(xdata), T.(ydata), T.(Collections.fieldvalues(eos)); kwargs...)
-    return debug ? fitted : P(fitted.param...)
+    return lsqfit(model, xdata, ydata, debug = debug, kwargs...)
+end  # function lsqfit
+function lsqfit(
+    form::EnergyForm,
+    eos::EquationOfState,
+    xdata::AbstractVector{A},
+    ydata::AbstractVector{B};
+    debug = false,
+    kwargs...
+) where {T<:Real,A<:AbstractQuantity{T,𝐋^3},B<:AbstractQuantity{T,𝐋^2*𝐌*𝐓^-2}}
+    @assert(eltype(eos) <: AbstractQuantity, "The equation of state must have units!")
+    xdata, ydata = uconvert.(u"angstrom^3", xdata), uconvert.(u"eV", ydata)
+    E = typeof(eos).name.wrapper
+    model(x, p) = map(apply(form, E(p...)), x)
+    return lsqfit(model, xdata, ydata, debug = debug, kwargs...)
+end  # function lsqfit
+function lsqfit(
+    model::Function,
+    xdata::AbstractVector{A},
+    ydata::AbstractVector{B},
+    trial_params::AbstractVector{B};
+    debug = false,
+    kwargs...
+) where {A<:AbstractFloat,B<:AbstractFloat}
+    fitted = curve_fit(model, xdata, ydata, trial_params; kwargs...)
+    return debug ? fitted : fitted.param
 end  # function lsqfit
 
 end

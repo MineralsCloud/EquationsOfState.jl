@@ -12,6 +12,8 @@ julia>
 module Collections
 
 using InteractiveUtils
+using Unitful: AbstractQuantity, @u_str
+import Unitful
 
 using EquationsOfState
 
@@ -76,7 +78,14 @@ struct Murnaghan{A,B,C,D} <: EquationOfState
     bp0::C
     e0::D
 end
-Murnaghan(v0, b0, bp0) = Murnaghan(v0, b0, bp0, 0)
+Murnaghan(v0::Real, b0::Real, bp0::Real) = Murnaghan(v0, b0, bp0, 0)
+Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = Murnaghan(v0, b0, bp0, 0u"eV")
+Unitful.upreferred(eos::Murnaghan) = Murnaghan(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
 
 """
     BirchMurnaghan2nd(v0, b0, e0=0)
@@ -93,7 +102,13 @@ struct BirchMurnaghan2nd{A,B,C} <: FiniteStrainEquationOfState
     b0::B
     e0::C
 end
-BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(v0, b0, 0)
+BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
+BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) = BirchMurnaghan2nd(v0, b0, 0u"eV")
+Unitful.upreferred(eos::BirchMurnaghan2nd) = BirchMurnaghan2nd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(u"eV", eos.e0)
+)
 
 """
     BirchMurnaghan3rd(v0, b0, bp0, e0=0)
@@ -112,7 +127,14 @@ struct BirchMurnaghan3rd{A,B,C,D} <: FiniteStrainEquationOfState
     bp0::C
     e0::D
 end
-BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(v0, b0, bp0, 0)
+BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real) = BirchMurnaghan3rd(v0, b0, bp0, 0)
+BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = BirchMurnaghan3rd(v0, b0, bp0, 0u"eV")
+Unitful.upreferred(eos::BirchMurnaghan3rd) = BirchMurnaghan3rd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
 
 """
     BirchMurnaghan4th(v0, b0, bp0, bpp0, e0=0)
@@ -133,7 +155,15 @@ struct BirchMurnaghan4th{A,B,C,D,E} <: FiniteStrainEquationOfState
     bpp0::D
     e0::E
 end
-BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
+BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
+BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity, bpp0::AbstractQuantity) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0u"eV")
+Unitful.upreferred(eos::BirchMurnaghan3rd) = BirchMurnaghan3rd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"angstrom^3/eV", eos.bpp0)
+    uconvert(u"eV", eos.e0)
+)
 
 """
     PoirierTarantola2nd(v0, b0, e0=0)
@@ -150,7 +180,13 @@ struct PoirierTarantola2nd{A,B,C} <: FiniteStrainEquationOfState
     b0::B
     e0::C
 end
-PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(v0, b0, 0)
+PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
+PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) = PoirierTarantola2nd(v0, b0, 0u"eV")
+Unitful.upreferred(eos::PoirierTarantola2nd) = PoirierTarantola2nd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(u"eV", eos.e0)
+)
 
 """
     PoirierTarantola3rd(v0, b0, bp0, e0=0)
@@ -169,7 +205,14 @@ struct PoirierTarantola3rd{A,B,C,D} <: FiniteStrainEquationOfState
     bp0::C
     e0::D
 end
-PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(v0, b0, bp0, 0)
+PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real) = PoirierTarantola3rd(v0, b0, bp0, 0)
+PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = PoirierTarantola3rd(v0, b0, bp0, 0u"eV")
+Unitful.upreferred(eos::PoirierTarantola3rd) = PoirierTarantola3rd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"eV", eos.e0)
+)
 
 """
     PoirierTarantola4th(v0, b0, bp0, bpp0, e0=0)
@@ -190,7 +233,15 @@ struct PoirierTarantola4th{A,B,C,D,E} <: FiniteStrainEquationOfState
     bpp0::D
     e0::E
 end
-PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
+PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
+PoirierTarantola4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity, bpp0::AbstractQuantity) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0u"eV")
+Unitful.upreferred(eos::BirchMurnaghan3rd) = BirchMurnaghan3rd(
+    uconvert(u"angstrom^3", eos.v0),
+    uconvert(u"eV/angstrom^3", eos.b0),
+    uconvert(NoUnits, eos.bp0),
+    uconvert(u"angstrom^3/eV", eos.bpp0)
+    uconvert(u"eV", eos.e0)
+)
 
 """
     Vinet(v0, b0, bp0, e0=0)
@@ -209,7 +260,8 @@ struct Vinet{A,B,C,D} <: EquationOfState
     bp0::C
     e0::D
 end
-Vinet(v0, b0, bp0) = Vinet(v0, b0, bp0, 0)
+Vinet(v0::Real, b0::Real, bp0::Real) = Vinet(v0, b0, bp0, 0)
+Vinet(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) = Vinet(v0, b0, bp0, 0u"eV")
 
 struct AntonSchmidt{A,B,C,D} <: EquationOfState
     v0::A
@@ -217,7 +269,7 @@ struct AntonSchmidt{A,B,C,D} <: EquationOfState
     n::C
     e∞::D
 end
-AntonSchmidt(v0, β, n) = AntonSchmidt(v0, β, n, 0)
+AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
 struct BreenanStacey{A,B,C,D} <: EquationOfState
     v0::A
@@ -225,7 +277,7 @@ struct BreenanStacey{A,B,C,D} <: EquationOfState
     γ0::C
     e0::D
 end
-BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
+BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 # =================================== Types ================================== #
 
 
@@ -648,6 +700,9 @@ fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
 Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 # Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
+
+Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUnits} = u"eV"
+Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
 # =============================== Miscellaneous ============================== #
 
 end
