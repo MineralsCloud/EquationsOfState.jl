@@ -20,7 +20,6 @@ using EquationsOfState
 export apply,
        EquationOfState,
        FiniteStrainEquationOfState,
-    #    PolynomialEquationOfState,
        Murnaghan,
        BirchMurnaghan2nd,
        BirchMurnaghan3rd,
@@ -48,18 +47,6 @@ abstract type EquationOfState end
 An abstraction of finite strain equations of state.
 """
 abstract type FiniteStrainEquationOfState <: EquationOfState end
-
-# struct PolynomialEquationOfState{T<:Real,N} <: EquationOfState{T,N}
-#     data::NTuple{N,T}
-#     function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T,N}
-#         @assert N ≤ 10
-#         new(args)
-#     end
-# end
-# function PolynomialEquationOfState(args...)
-#     T = Base.promote_typeof(args...)
-#     PolynomialEquationOfState{T,length(args)}(args)
-# end
 
 """
     Murnaghan(v0, b0, bp0, e0=0)
@@ -699,7 +686,6 @@ end
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
 Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
-# Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
 
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUnits} = u"eV"
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
