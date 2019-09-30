@@ -12,7 +12,7 @@ julia>
 module Collections
 
 using InteractiveUtils
-using Unitful: AbstractQuantity, @u_str
+using Unitful: AbstractQuantity, @u_str, uconvert, NoUnits, 𝐋, 𝐌, 𝐓, Dimension, Dimensions
 import Unitful
 
 using EquationsOfState
@@ -667,6 +667,9 @@ Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUn
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.PressureUnits,T<:Unitful.PressureUnits} = u"eV/angstrom^3"
 
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(2//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV"
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(3//1),)}) = u"angstrom^3"
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(-1//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV/angstrom^3"
 Unitful.upreferred(eos::Murnaghan{
     <:AbstractQuantity,
     <:AbstractQuantity,

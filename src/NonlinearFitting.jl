@@ -71,13 +71,12 @@ function lsqfit(
     xdata::AbstractVector,
     ydata::AbstractVector,
     trait::Type{HasUnit};
-    debug = false,
     kwargs...,
 )
     E = typeof(eos).name.wrapper
     trial_params = map(ustrip, Collections.fieldvalues(upreferred(eos)))
-    xdata, ydata = ustrip.(promote(xdata...)), ustrip.(promote(ydata...))
-    return lsqfit(form, E(trial_params...), xdata, ydata, debug = debug, kwargs...)
+    xdata, ydata = map(ustrip ∘ upreferred, xdata), map(ustrip ∘ upreferred, ydata)
+    return lsqfit(form, E(trial_params...), xdata, ydata, kwargs...)
 end  # function lsqfit
 
 end
