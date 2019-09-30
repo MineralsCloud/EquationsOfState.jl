@@ -75,15 +75,17 @@ function lsqfit(
     kwargs...,
 )
     E = typeof(eos).name.wrapper
-    units = unit.(Collections.fieldvalues(eos))
-    trial_params = map(ustrip, Collections.fieldvalues(upreferred(eos)))
-    xdata, ydata = map(ustrip ∘ upreferred, xdata), map(ustrip ∘ upreferred, ydata)
+    values = Collections.fieldvalues(eos)
+    original_units = map(unit, values)
+    trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (values, xdata, ydata)]
     result = lsqfit(form, E(trial_params...), xdata, ydata, kwargs...)
     if result isa EquationOfState
-        E(
-            [uconvert(u, Collections.fieldvalues(result)[i] * upreferred(u)) for (i, u) in enumerate(units)]...
+        data = Collections.fieldvalues(result)
+        return E(
+            [uconvert(u, data[i] * upreferred(u)) for (i, u) in enumerate(original_units)]...
         )
     end
+    return result
 end  # function lsqfit
 
 end
