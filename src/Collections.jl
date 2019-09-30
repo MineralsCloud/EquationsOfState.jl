@@ -12,13 +12,14 @@ julia>
 module Collections
 
 using InteractiveUtils
+using Unitful: AbstractQuantity, @u_str, uconvert, NoUnits, 𝐋, 𝐌, 𝐓, Dimension, Dimensions
+import Unitful
 
 using EquationsOfState
 
 export apply,
        EquationOfState,
        FiniteStrainEquationOfState,
-    #    PolynomialEquationOfState,
        Murnaghan,
        BirchMurnaghan2nd,
        BirchMurnaghan3rd,
@@ -34,30 +35,18 @@ export apply,
 #                                     Types                                    #
 # ============================================================================ #
 """
-    EquationOfState{T}
+    EquationOfState
 
 An abstraction of equations of state, where `T` specifies the elements' type.
 """
-abstract type EquationOfState{T} end
+abstract type EquationOfState end
 
 """
-    FiniteStrainEquationOfState{T} <: EquationOfState{T}
+    FiniteStrainEquationOfState <: EquationOfState
 
 An abstraction of finite strain equations of state.
 """
-abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
-
-# struct PolynomialEquationOfState{T<:Real,N} <: EquationOfState{T,N}
-#     data::NTuple{N,T}
-#     function PolynomialEquationOfState{T,N}(args::NTuple{N,T}) where {T,N}
-#         @assert N ≤ 10
-#         new(args)
-#     end
-# end
-# function PolynomialEquationOfState(args...)
-#     T = Base.promote_typeof(args...)
-#     PolynomialEquationOfState{T,length(args)}(args)
-# end
+abstract type FiniteStrainEquationOfState <: EquationOfState end
 
 """
     Murnaghan(v0, b0, bp0, e0=0)
@@ -70,17 +59,15 @@ Create a Murnaghan equation of state. The elements' type will be handled automat
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct Murnaghan{T<:Real} <: EquationOfState{T}
-    v0::T
-    b0::T
-    bp0::T
-    e0::T
+struct Murnaghan{A,B,C,D} <: EquationOfState
+    v0::A
+    b0::B
+    bp0::C
+    e0::D
 end
-function Murnaghan(v0::Real, b0::Real, bp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    Murnaghan{T}(v0, b0, bp0, e0)
-end
-Murnaghan(v0, b0, bp0) = Murnaghan(v0, b0, bp0, 0)
+Murnaghan(v0::Real, b0::Real, bp0::Real) = Murnaghan(v0, b0, bp0, 0)
+Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
+    Murnaghan(v0, b0, bp0, 0 * u"eV")
 
 """
     BirchMurnaghan2nd(v0, b0, e0=0)
@@ -92,16 +79,14 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan2nd{T<:Real} <: FiniteStrainEquationOfState{T}
-    v0::T
-    b0::T
-    e0::T
+struct BirchMurnaghan2nd{A,B,C} <: FiniteStrainEquationOfState
+    v0::A
+    b0::B
+    e0::C
 end
-function BirchMurnaghan2nd(v0::Real, b0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, e0)
-    BirchMurnaghan2nd{T}(v0, b0, e0)
-end
-BirchMurnaghan2nd(v0, b0) = BirchMurnaghan2nd(v0, b0, 0)
+BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
+BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
+    BirchMurnaghan2nd(v0, b0, 0 * u"eV")
 
 """
     BirchMurnaghan3rd(v0, b0, bp0, e0=0)
@@ -114,17 +99,15 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan3rd{T<:Real} <: FiniteStrainEquationOfState{T}
-    v0::T
-    b0::T
-    bp0::T
-    e0::T
+struct BirchMurnaghan3rd{A,B,C,D} <: FiniteStrainEquationOfState
+    v0::A
+    b0::B
+    bp0::C
+    e0::D
 end
-function BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    BirchMurnaghan3rd{T}(v0, b0, bp0, e0)
-end
-BirchMurnaghan3rd(v0, b0, bp0) = BirchMurnaghan3rd(v0, b0, bp0, 0)
+BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real) = BirchMurnaghan3rd(v0, b0, bp0, 0)
+BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
+    BirchMurnaghan3rd(v0, b0, bp0, 0 * u"eV")
 
 """
     BirchMurnaghan4th(v0, b0, bp0, bpp0, e0=0)
@@ -138,18 +121,21 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan4th{T<:Real} <: FiniteStrainEquationOfState{T}
-    v0::T
-    b0::T
-    bp0::T
-    bpp0::T
-    e0::T
+struct BirchMurnaghan4th{A,B,C,D,E} <: FiniteStrainEquationOfState
+    v0::A
+    b0::B
+    bp0::C
+    bpp0::D
+    e0::E
 end
-function BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
-    BirchMurnaghan4th{T}(v0, b0, bp0, bpp0, e0)
-end
-BirchMurnaghan4th(v0, b0, bp0, bpp0) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
+BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
+    BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
+BirchMurnaghan4th(
+    v0::AbstractQuantity,
+    b0::AbstractQuantity,
+    bp0::AbstractQuantity,
+    bpp0::AbstractQuantity,
+) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * u"eV")
 
 """
     PoirierTarantola2nd(v0, b0, e0=0)
@@ -161,16 +147,14 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola2nd{T<:Real} <: FiniteStrainEquationOfState{T}
-    v0::T
-    b0::T
-    e0::T
+struct PoirierTarantola2nd{A,B,C} <: FiniteStrainEquationOfState
+    v0::A
+    b0::B
+    e0::C
 end
-function PoirierTarantola2nd(v0::Real, b0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, e0)
-    PoirierTarantola2nd{T}(v0, b0, e0)
-end
-PoirierTarantola2nd(v0, b0) = PoirierTarantola2nd(v0, b0, 0)
+PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
+PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
+    PoirierTarantola2nd(v0, b0, 0 * u"eV")
 
 """
     PoirierTarantola3rd(v0, b0, bp0, e0=0)
@@ -183,17 +167,15 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola3rd{T<:Real} <: FiniteStrainEquationOfState{T}
-    v0::T
-    b0::T
-    bp0::T
-    e0::T
+struct PoirierTarantola3rd{A,B,C,D} <: FiniteStrainEquationOfState
+    v0::A
+    b0::B
+    bp0::C
+    e0::D
 end
-function PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    PoirierTarantola3rd{T}(v0, b0, bp0, e0)
-end
-PoirierTarantola3rd(v0, b0, bp0) = PoirierTarantola3rd(v0, b0, bp0, 0)
+PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real) = PoirierTarantola3rd(v0, b0, bp0, 0)
+PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
+    PoirierTarantola3rd(v0, b0, bp0, 0 * u"eV")
 
 """
     PoirierTarantola4th(v0, b0, bp0, bpp0, e0=0)
@@ -207,18 +189,21 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola4th{T<:Real} <: FiniteStrainEquationOfState{T}
-    v0::T
-    b0::T
-    bp0::T
-    bpp0::T
-    e0::T
+struct PoirierTarantola4th{A,B,C,D,E} <: FiniteStrainEquationOfState
+    v0::A
+    b0::B
+    bp0::C
+    bpp0::D
+    e0::E
 end
-function PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
-    PoirierTarantola4th{T}(v0, b0, bp0, bpp0, e0)
-end
-PoirierTarantola4th(v0, b0, bp0, bpp0) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
+PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
+    PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
+PoirierTarantola4th(
+    v0::AbstractQuantity,
+    b0::AbstractQuantity,
+    bp0::AbstractQuantity,
+    bpp0::AbstractQuantity,
+) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0 * u"eV")
 
 """
     Vinet(v0, b0, bp0, e0=0)
@@ -231,41 +216,31 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct Vinet{T<:Real} <: EquationOfState{T}
-    v0::T
-    b0::T
-    bp0::T
-    e0::T
+struct Vinet{A,B,C,D} <: EquationOfState
+    v0::A
+    b0::B
+    bp0::C
+    e0::D
 end
-function Vinet(v0::Real, b0::Real, bp0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    Vinet{T}(v0, b0, bp0, e0)
-end
-Vinet(v0, b0, bp0) = Vinet(v0, b0, bp0, 0)
+Vinet(v0::Real, b0::Real, bp0::Real) = Vinet(v0, b0, bp0, 0)
+Vinet(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
+    Vinet(v0, b0, bp0, 0 * u"eV")
 
-struct AntonSchmidt{T<:Real} <: EquationOfState{T}
-    v0::T
-    β::T
-    n::T
-    e∞::T
+struct AntonSchmidt{A,B,C,D} <: EquationOfState
+    v0::A
+    β::B
+    n::C
+    e∞::D
 end
-function AntonSchmidt(v0::Real, β::Real, n::Real, e∞::Real)
-    T = Base.promote_typeof(v0, β, n, e∞)
-    AntonSchmidt{T}(v0, β, n, e∞)
-end
-AntonSchmidt(v0, β, n) = AntonSchmidt(v0, β, n, 0)
+AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
-struct BreenanStacey{T<:Real} <: EquationOfState{T}
-    v0::T
-    b0::T
-    γ0::T
-    e0::T
+struct BreenanStacey{A,B,C,D} <: EquationOfState
+    v0::A
+    b0::B
+    γ0::C
+    e0::D
 end
-function BreenanStacey(v0::Real, b0::Real, γ0::Real, e0::Real)
-    T = Base.promote_typeof(v0, b0, γ0, e0)
-    BreenanStacey{T}(v0, b0, γ0, e0)
-end
-BreenanStacey(v0, b0, γ0) = BreenanStacey(v0, b0, γ0, 0)
+BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 # =================================== Types ================================== #
 
 
@@ -299,11 +274,11 @@ julia> map(f, 1:1:10)
 """
 apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
 """
-    apply(EnergyForm(), eos::Murnaghan, v::Real)
+    apply(EnergyForm(), eos::Murnaghan, v)
 
 Return the energy of a `Murnaghan` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::Murnaghan, v::Real)
+function apply(::EnergyForm, eos::Murnaghan, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
 
     x = bp0 - 1
@@ -311,22 +286,22 @@ function apply(::EnergyForm, eos::Murnaghan, v::Real)
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
 """
-    apply(EnergyForm(), eos::BirchMurnaghan2nd, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan2nd, v)
 
 Return the energy of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::BirchMurnaghan2nd, v::Real)
+function apply(::EnergyForm, eos::BirchMurnaghan2nd, v)
     v0, b0, e0 = fieldvalues(eos)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 """
-    apply(EnergyForm(), eos::BirchMurnaghan3rd, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan3rd, v)
 
 Return the energy of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
+function apply(::EnergyForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
 
     eta = cbrt(v0 / v)
@@ -334,11 +309,11 @@ function apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
 end
 """
-    apply(EnergyForm(), eos::BirchMurnaghan4th, v::Real)
+    apply(EnergyForm(), eos::BirchMurnaghan4th, v)
 
 Return the energy of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
+function apply(::EnergyForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
@@ -346,21 +321,21 @@ function apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
 """
-    apply(EnergyForm(), eos::PoirierTarantola2nd, v::Real)
+    apply(EnergyForm(), eos::PoirierTarantola2nd, v)
 
 Return the energy of a `PoirierTarantola2nd` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::PoirierTarantola2nd, v::Real)
+function apply(::EnergyForm, eos::PoirierTarantola2nd, v)
     v0, b0, e0 = fieldvalues(eos)
 
     return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
 end
 """
-    apply(EnergyForm(), eos::PoirierTarantola3rd, v::Real)
+    apply(EnergyForm(), eos::PoirierTarantola3rd, v)
 
 Return the energy of a `PoirierTarantola3rd` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
+function apply(::EnergyForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
 
     x = cbrt(v / v0)
@@ -368,11 +343,11 @@ function apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
 """
-    apply(EnergyForm(), eos::PoirierTarantola4th, v::Real)
+    apply(EnergyForm(), eos::PoirierTarantola4th, v)
 
 Return the energy of a `PoirierTarantola4th` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
+function apply(::EnergyForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
 
     x = cbrt(v / v0)
@@ -381,11 +356,11 @@ function apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
     return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
 end
 """
-    apply(EnergyForm(), eos::Vinet, v::Real)
+    apply(EnergyForm(), eos::Vinet, v)
 
 Return the energy of a `Vinet` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::Vinet, v::Real)
+function apply(::EnergyForm, eos::Vinet, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
 
     x = cbrt(v / v0)
@@ -393,11 +368,11 @@ function apply(::EnergyForm, eos::Vinet, v::Real)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
 """
-    apply(EnergyForm(), eos::AntonSchmidt, v::Real)
+    apply(EnergyForm(), eos::AntonSchmidt, v)
 
 Return the energy of a `AntonSchmidt` equation of state on volume `v`.
 """
-function apply(::EnergyForm, eos::AntonSchmidt, v::Real)
+function apply(::EnergyForm, eos::AntonSchmidt, v)
     v0, β, n, e∞ = fieldvalues(eos)
 
     x = v / v0
@@ -437,43 +412,43 @@ julia> map(f, 1:1:10)
 """
 apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
 """
-    apply(PressureForm(), eos::Murnaghan, v::Real)
+    apply(PressureForm(), eos::Murnaghan, v)
 
 Return the pressure of a `Murnaghan` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::Murnaghan, v::Real)
+function apply(::PressureForm, eos::Murnaghan, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     return b0 / bp0 * ((v0 / v)^bp0 - 1)
 end
 """
-    apply(PressureForm(), eos::BirchMurnaghan2nd, v::Real)
+    apply(PressureForm(), eos::BirchMurnaghan2nd, v)
 
 Return the pressure of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::BirchMurnaghan2nd, v::Real)
+function apply(::PressureForm, eos::BirchMurnaghan2nd, v)
     v0, b0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
 """
-    apply(PressureForm(), eos::BirchMurnaghan3rd, v::Real)
+    apply(PressureForm(), eos::BirchMurnaghan3rd, v)
 
 Return the pressure of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::BirchMurnaghan3rd, v::Real)
+function apply(::PressureForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     eta = (v0 / v)^(1 / 3)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
 end
 """
-    apply(PressureForm(), eos::BirchMurnaghan4th, v::Real)
+    apply(PressureForm(), eos::BirchMurnaghan4th, v)
 
 Return the pressure of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::BirchMurnaghan4th, v::Real)
+function apply(::PressureForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -481,22 +456,22 @@ function apply(::PressureForm, eos::BirchMurnaghan4th, v::Real)
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
 end
 """
-    apply(PressureForm(), eos::PoirierTarantola2nd, v::Real)
+    apply(PressureForm(), eos::PoirierTarantola2nd, v)
 
 Return the pressure of a `PoirierTarantola2nd` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::PoirierTarantola2nd, v::Real)
+function apply(::PressureForm, eos::PoirierTarantola2nd, v)
     v0, b0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     return -b0 / x * log(x)
 end
 """
-    apply(PressureForm(), eos::PoirierTarantola3rd, v::Real)
+    apply(PressureForm(), eos::PoirierTarantola3rd, v)
 
 Return the pressure of a `PoirierTarantola3rd` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::PoirierTarantola3rd, v::Real)
+function apply(::PressureForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     x = v / v0
@@ -504,11 +479,11 @@ function apply(::PressureForm, eos::PoirierTarantola3rd, v::Real)
     return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
 end
 """
-    apply(PressureForm(), eos::PoirierTarantola4th, v::Real)
+    apply(PressureForm(), eos::PoirierTarantola4th, v)
 
 Return the pressure of a `PoirierTarantola4th` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::PoirierTarantola4th, v::Real)
+function apply(::PressureForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
@@ -517,11 +492,11 @@ function apply(::PressureForm, eos::PoirierTarantola4th, v::Real)
     return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
 end
 """
-    apply(PressureForm(), eos::Vinet, v::Real)
+    apply(PressureForm(), eos::Vinet, v)
 
 Return the pressure of a `Vinet` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::Vinet, v::Real)
+function apply(::PressureForm, eos::Vinet, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
@@ -529,22 +504,22 @@ function apply(::PressureForm, eos::Vinet, v::Real)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
 """
-    apply(PressureForm(), eos::AntonSchmidt, v::Real)
+    apply(PressureForm(), eos::AntonSchmidt, v)
 
 Return the pressure of a `AntonSchmidt` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::AntonSchmidt, v::Real)
+function apply(::PressureForm, eos::AntonSchmidt, v)
     v0, β, n = fieldvalues(eos)
 
     x = v / v0
     return -β * x^n * log(x)
 end
 """
-    apply(PressureForm(), eos::BreenanStacey, v::Real)
+    apply(PressureForm(), eos::BreenanStacey, v)
 
 Return the pressure of a `BreenanStacey` equation of state on volume `v`.
 """
-function apply(::PressureForm, eos::BreenanStacey, v::Real)
+function apply(::PressureForm, eos::BreenanStacey, v)
     v0, b0, γ0 = fieldvalues(eos)
 
     x = v0 / v
@@ -583,33 +558,33 @@ julia> map(f, 1:1:10)
 """
 apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
 """
-    apply(BulkModulusForm(), eos::BirchMurnaghan2nd, v::Real)
+    apply(BulkModulusForm(), eos::BirchMurnaghan2nd, v)
 
 Return the bulk modulus of a `BirchMurnaghan2nd` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v::Real)
+function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v)
     v0, b0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
 """
-    apply(BulkModulusForm(), eos::BirchMurnaghan3rd, v::Real)
+    apply(BulkModulusForm(), eos::BirchMurnaghan3rd, v)
 
 Return the bulk modulus of a `BirchMurnaghan3rd` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v::Real)
+function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
 """
-    apply(BulkModulusForm(), eos::BirchMurnaghan4th, v::Real)
+    apply(BulkModulusForm(), eos::BirchMurnaghan4th, v)
 
 Return the bulk modulus of a `BirchMurnaghan4th` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v::Real)
+function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
@@ -618,22 +593,22 @@ function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v::Real)
            ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
 """
-    apply(BulkModulusForm(), eos::PoirierTarantola2nd, v::Real)
+    apply(BulkModulusForm(), eos::PoirierTarantola2nd, v)
 
 Return the bulk modulus of a `PoirierTarantola2nd` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v::Real)
+function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v)
     v0, b0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
     return b0 / x * (1 - log(x))
 end
 """
-    apply(BulkModulusForm(), eos::PoirierTarantola3rd, v::Real)
+    apply(BulkModulusForm(), eos::PoirierTarantola3rd, v)
 
 Return the bulk modulus of a `PoirierTarantola3rd` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v::Real)
+function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     x = v / v0
@@ -641,11 +616,11 @@ function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v::Real)
     return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
 end
 """
-    apply(BulkModulusForm(), eos::PoirierTarantola4th, v::Real)
+    apply(BulkModulusForm(), eos::PoirierTarantola4th, v)
 
 Return the bulk modulus of a `PoirierTarantola4th` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::PoirierTarantola4th, v::Real)
+function apply(::BulkModulusForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
@@ -655,11 +630,11 @@ function apply(::BulkModulusForm, eos::PoirierTarantola4th, v::Real)
            ((h + 3bp0 + 3) * xi^3 - 3 * xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
 end
 """
-    apply(BulkModulusForm(), eos::Vinet, v::Real)
+    apply(BulkModulusForm(), eos::Vinet, v)
 
 Return the bulk modulus of a `Vinet` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::Vinet, v::Real)
+function apply(::BulkModulusForm, eos::Vinet, v)
     v0, b0, bp0 = fieldvalues(eos)
 
     x = (v / v0)^(1 / 3)
@@ -667,11 +642,11 @@ function apply(::BulkModulusForm, eos::Vinet, v::Real)
     return -b0 / (2 * x^2) * (3x * (x - 1) * (bp0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
 """
-    apply(BulkModulusForm(), eos::AntonSchmidt, v::Real)
+    apply(BulkModulusForm(), eos::AntonSchmidt, v)
 
 Return the bulk modulus of a `AntonSchmidt` equation of state on volume `v`.
 """
-function apply(::BulkModulusForm, eos::AntonSchmidt, v::Real)
+function apply(::BulkModulusForm, eos::AntonSchmidt, v)
     v0, β, n = fieldvalues(eos)
 
     x = v / v0
@@ -683,26 +658,112 @@ end
 # ============================================================================ #
 #                                 Miscellaneous                                #
 # ============================================================================ #
-function allsubtypes(T::Type, types = Type[])::Vector{Type}
-    for S in subtypes(T)
-        types = allsubtypes(S, push!(types, S))
-    end
-    types
-end
-
-nonabstract(T::Type)::Vector{Type} = filter(!isabstracttype, allsubtypes(T))
-
-for E in nonabstract(EquationOfState)
-    eval(quote
-        similar_type(::Type{A}, ::Type{T}) where {A<:$E,T} = $E{T}
-    end)
-end
-
 # This is a helper function and should not be exported.
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
-Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
-# Base.getindex(eos::PolynomialEquationOfState{T,N}, index::Int64) where {T,N} = getindex(eos.data, index)
+Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
+
+Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUnits} = u"eV"
+Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
+Unitful.promote_unit(::S, ::T) where {S<:Unitful.PressureUnits,T<:Unitful.PressureUnits} = u"eV/angstrom^3"
+
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(2//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV"
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(3//1),)}) = u"angstrom^3"
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(-1//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV/angstrom^3"
+Unitful.upreferred(eos::Murnaghan{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    Murnaghan(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(NoUnits, eos.bp0),
+        uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::BirchMurnaghan2nd{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    BirchMurnaghan2nd(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::BirchMurnaghan3rd{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    BirchMurnaghan3rd(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(NoUnits, eos.bp0),
+        uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::BirchMurnaghan4th{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    BirchMurnaghan4th(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(NoUnits, eos.bp0),
+        uconvert(u"angstrom^3/eV", eos.bpp0) * uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::PoirierTarantola2nd{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    PoirierTarantola2nd(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::PoirierTarantola3rd{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    PoirierTarantola3rd(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(NoUnits, eos.bp0),
+        uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::PoirierTarantola4th{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    PoirierTarantola4th(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(NoUnits, eos.bp0),
+        uconvert(u"angstrom^3/eV", eos.bpp0) * uconvert(u"eV", eos.e0),
+    )
+Unitful.upreferred(eos::Vinet{
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+    <:AbstractQuantity,
+}) =
+    Vinet(
+        uconvert(u"angstrom^3", eos.v0),
+        uconvert(u"eV/angstrom^3", eos.b0),
+        uconvert(NoUnits, eos.bp0),
+        uconvert(u"eV", eos.e0),
+    )
 # =============================== Miscellaneous ============================== #
 
 end

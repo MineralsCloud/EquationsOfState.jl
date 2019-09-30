@@ -12,11 +12,20 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
+using Unitful
+import Unitful: AbstractQuantity, 𝐋, 𝐌, 𝐓
 
 import ..EquationForm
 using ..Collections
 
 export lsqfit
+
+abstract type UnitTrait end
+struct NoUnit <: UnitTrait end
+struct HasUnit <: UnitTrait end
+
+_traitfn(T::Type{<:Number}) = NoUnit
+_traitfn(T::Type{<:AbstractQuantity}) = HasUnit
 
 """
     lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
@@ -33,17 +42,47 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 """
 function lsqfit(
     form::EquationForm,
-    eos::E,
+    eos::EquationOfState,
     xdata::AbstractVector,
     ydata::AbstractVector;
+    kwargs...,
+)
+    T = eltype(eos)
+    return lsqfit(form, eos, xdata, ydata, _traitfn(T), kwargs...)
+end # function lsqfit
+function lsqfit(
+    form::EquationForm,
+    eos::EquationOfState,
+    xdata::AbstractVector,
+    ydata::AbstractVector,
+    trait::Type{NoUnit};
     debug = false,
-    kwargs...
-) where {E<:EquationOfState}
+    kwargs...,
+)
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    P = Collections.similar_type(E, T)
-    model(x, p) = map(apply(form, P(p...)), x)
+    E = typeof(eos).name.wrapper
+    model(x, p) = map(apply(form, E(p...)), x)
     fitted = curve_fit(model, T.(xdata), T.(ydata), T.(Collections.fieldvalues(eos)); kwargs...)
-    return debug ? fitted : P(fitted.param...)
+    return debug ? fitted : E(fitted.param...)
+end  # function lsqfit
+function lsqfit(
+    form::EquationForm,
+    eos::EquationOfState,
+    xdata::AbstractVector,
+    ydata::AbstractVector,
+    trait::Type{HasUnit};
+    kwargs...,
+)
+    E = typeof(eos).name.wrapper
+    units = unit.(Collections.fieldvalues(eos))
+    trial_params = map(ustrip, Collections.fieldvalues(upreferred(eos)))
+    xdata, ydata = map(ustrip ∘ upreferred, xdata), map(ustrip ∘ upreferred, ydata)
+    result = lsqfit(form, E(trial_params...), xdata, ydata, kwargs...)
+    if result isa EquationOfState
+        E(
+            [uconvert(u, Collections.fieldvalues(result)[i] * upreferred(u)) for (i, u) in enumerate(units)]...
+        )
+    end
 end  # function lsqfit
 
 end
