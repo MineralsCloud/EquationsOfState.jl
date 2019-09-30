@@ -612,7 +612,7 @@ end
             -5322.693307704408,
             -323.4177113158418,
         ) |> Collections.fieldvalues;
-        atol = 1e-3,
+        rtol = 1e-3,
     )
     @test isapprox(
         lsqfit(EnergyForm(), Murnaghan(224, 0.006, 4, -323), volumes, energies) |> Collections.fieldvalues,
