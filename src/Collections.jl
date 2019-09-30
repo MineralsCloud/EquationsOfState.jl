@@ -319,7 +319,8 @@ function apply(::EnergyForm, eos::BirchMurnaghan4th, v)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+    return e0 +
+           3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
 """
     apply(EnergyForm(), eos::PoirierTarantola2nd, v)
@@ -664,9 +665,17 @@ fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
 Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(2//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV"
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(3//1),)}) = u"angstrom^3"
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(-1//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV/angstrom^3"
+Unitful.upreferred(::Dimensions{(
+    Dimension{:Length}(2 // 1),
+    Dimension{:Mass}(1 // 1),
+    Dimension{:Time}(-2 // 1),
+)}) = u"eV"
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(3 // 1),)}) = u"angstrom^3"
+Unitful.upreferred(::Dimensions{(
+    Dimension{:Length}(-1 // 1),
+    Dimension{:Mass}(1 // 1),
+    Dimension{:Time}(-2 // 1),
+)}) = u"eV/angstrom^3"
 # =============================== Miscellaneous ============================== #
 
 end
