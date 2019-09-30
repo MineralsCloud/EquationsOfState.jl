@@ -12,7 +12,7 @@ julia>
 module Collections
 
 using InteractiveUtils
-using Unitful: AbstractQuantity, @u_str, uconvert, NoUnits, 𝐋, 𝐌, 𝐓, Dimension, Dimensions
+using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions
 import Unitful
 using UnitfulAstro
 

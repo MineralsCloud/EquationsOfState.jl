@@ -12,8 +12,7 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
-using Unitful
-import Unitful: AbstractQuantity, 𝐋, 𝐌, 𝐓
+using Unitful: AbstractQuantity, upreferred, ustrip, unit, uconvert
 
 import ..EquationForm
 using ..Collections
