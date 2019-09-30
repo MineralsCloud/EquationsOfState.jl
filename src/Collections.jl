@@ -665,6 +665,7 @@ Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUnits} = u"eV"
 Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
+Unitful.promote_unit(::S, ::T) where {S<:Unitful.PressureUnits,T<:Unitful.PressureUnits} = u"eV/angstrom^3"
 
 Unitful.upreferred(eos::Murnaghan{
     <:AbstractQuantity,

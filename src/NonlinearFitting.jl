@@ -20,6 +20,13 @@ using ..Collections
 
 export lsqfit
 
+abstract type UnitTrait end
+struct NoUnit <: UnitTrait end
+struct HasUnit <: UnitTrait end
+
+_traitfn(T::Type{<:Number}) = NoUnit
+_traitfn(T::Type{<:AbstractQuantity}) = HasUnit
+
 """
     lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
 
@@ -35,43 +42,42 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 """
 function lsqfit(
     form::EquationForm,
-    eos::E,
+    eos::EquationOfState,
     xdata::AbstractVector,
     ydata::AbstractVector;
-    debug = false,
     kwargs...,
-) where {E<:EquationOfState}
-
-    # T = promote_type(eltype(eos), eltype(xdata), eltype(ydata))
-    # T <: 
-    P = Collections.similar_type(E, T)
-    model(x, p) = map(apply(form, P(p...)), x)
-    return lsqfit(model, xdata, ydata, debug = debug, kwargs...)
-end  # function lsqfit
+)
+    T = eltype(eos)
+    return lsqfit(form, eos, xdata, ydata, _traitfn(T), kwargs...)
+end # function lsqfit
 function lsqfit(
-    form::EnergyForm,
+    form::EquationForm,
     eos::EquationOfState,
-    xdata::AbstractVector{A},
-    ydata::AbstractVector{B};
+    xdata::AbstractVector,
+    ydata::AbstractVector,
+    trait::Type{NoUnit};
     debug = false,
     kwargs...,
-) where {T<:Real,A<:AbstractQuantity{T,𝐋^3},B<:AbstractQuantity{T,𝐋^2 * 𝐌 * 𝐓^-2}}
-    @assert(eltype(eos) <: AbstractQuantity, "The equation of state must have units!")
-    xdata, ydata = uconvert.(u"angstrom^3", xdata), uconvert.(u"eV", ydata)
+)
+    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
     E = typeof(eos).name.wrapper
     model(x, p) = map(apply(form, E(p...)), x)
-    return lsqfit(model, xdata, ydata, debug = debug, kwargs...)
+    fitted = curve_fit(model, T.(xdata), T.(ydata), T.(Collections.fieldvalues(eos)); kwargs...)
+    return debug ? fitted : E(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    model::Function,
-    xdata::AbstractVector{A},
-    ydata::AbstractVector{B},
-    trial_params::AbstractVector{B};
+    form::EquationForm,
+    eos::EquationOfState,
+    xdata::AbstractVector,
+    ydata::AbstractVector,
+    trait::Type{HasUnit};
     debug = false,
     kwargs...,
-) where {A<:AbstractFloat,B<:AbstractFloat}
-    fitted = curve_fit(model, xdata, ydata, trial_params; kwargs...)
-    return debug ? fitted : fitted.param
+)
+    E = typeof(eos).name.wrapper
+    trial_params = map(ustrip, Collections.fieldvalues(upreferred(eos)))
+    xdata, ydata = ustrip.(promote(xdata...)), ustrip.(promote(ydata...))
+    return lsqfit(form, E(trial_params...), xdata, ydata, debug = debug, kwargs...)
 end  # function lsqfit
 
 end
