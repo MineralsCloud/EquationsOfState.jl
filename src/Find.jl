@@ -46,7 +46,11 @@ function findvolume(
     eos::EquationOfState,
     y::Real,
     domain::Union{AbstractVector,Tuple},
-    method::Union{AbstractNonBracketing,AbstractHalleyLikeMethod,AbstractNewtonLikeMethod},
+    method::Union{
+        AbstractNonBracketing,
+        AbstractHalleyLikeMethod,
+        AbstractNewtonLikeMethod,
+    },
 )
     f(v) = apply(form, eos, v) - y
     return find_zero(f, median(domain), method)

@@ -12,7 +12,7 @@ julia>
 module Collections
 
 using InteractiveUtils
-using Unitful: AbstractQuantity, @u_str, uconvert, NoUnits, 𝐋, 𝐌, 𝐓, Dimension, Dimensions
+using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions
 import Unitful
 using UnitfulAstro
 
@@ -319,7 +319,8 @@ function apply(::EnergyForm, eos::BirchMurnaghan4th, v)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+    return e0 +
+           3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
 """
     apply(EnergyForm(), eos::PoirierTarantola2nd, v)
@@ -664,107 +665,17 @@ fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
 Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 
-Unitful.promote_unit(::S, ::T) where {S<:Unitful.EnergyUnits,T<:Unitful.EnergyUnits} = u"eV"
-Unitful.promote_unit(::S, ::T) where {S<:Unitful.LengthUnits,T<:Unitful.LengthUnits} = u"angstrom"
-Unitful.promote_unit(::S, ::T) where {S<:Unitful.PressureUnits,T<:Unitful.PressureUnits} = u"eV/angstrom^3"
-
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(2//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV"
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(3//1),)}) = u"angstrom^3"
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(-1//1),Dimension{:Mass}(1//1),Dimension{:Time}(-2//1))}) = u"eV/angstrom^3"
-Unitful.upreferred(eos::Murnaghan{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    Murnaghan(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(NoUnits, eos.bp0),
-        uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::BirchMurnaghan2nd{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    BirchMurnaghan2nd(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::BirchMurnaghan3rd{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    BirchMurnaghan3rd(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(NoUnits, eos.bp0),
-        uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::BirchMurnaghan4th{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    BirchMurnaghan4th(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(NoUnits, eos.bp0),
-        uconvert(u"angstrom^3/eV", eos.bpp0) * uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::PoirierTarantola2nd{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    PoirierTarantola2nd(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::PoirierTarantola3rd{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    PoirierTarantola3rd(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(NoUnits, eos.bp0),
-        uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::PoirierTarantola4th{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    PoirierTarantola4th(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(NoUnits, eos.bp0),
-        uconvert(u"angstrom^3/eV", eos.bpp0) * uconvert(u"eV", eos.e0),
-    )
-Unitful.upreferred(eos::Vinet{
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-    <:AbstractQuantity,
-}) =
-    Vinet(
-        uconvert(u"angstrom^3", eos.v0),
-        uconvert(u"eV/angstrom^3", eos.b0),
-        uconvert(NoUnits, eos.bp0),
-        uconvert(u"eV", eos.e0),
-    )
+Unitful.upreferred(::Dimensions{(
+    Dimension{:Length}(2 // 1),
+    Dimension{:Mass}(1 // 1),
+    Dimension{:Time}(-2 // 1),
+)}) = u"eV"
+Unitful.upreferred(::Dimensions{(Dimension{:Length}(3 // 1),)}) = u"angstrom^3"
+Unitful.upreferred(::Dimensions{(
+    Dimension{:Length}(-1 // 1),
+    Dimension{:Mass}(1 // 1),
+    Dimension{:Time}(-2 // 1),
+)}) = u"eV/angstrom^3"
 # =============================== Miscellaneous ============================== #
 
 end

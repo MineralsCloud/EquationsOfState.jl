@@ -12,20 +12,20 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
-using Unitful
-import Unitful: AbstractQuantity, 𝐋, 𝐌, 𝐓
+using Unitful: AbstractQuantity, upreferred, ustrip, unit, uconvert
 
 import ..EquationForm
 using ..Collections
 
 export lsqfit
 
-abstract type UnitTrait end
-struct NoUnit <: UnitTrait end
-struct HasUnit <: UnitTrait end
+# This idea is borrowed from [SimpleTraits.jl](https://github.com/mauro3/SimpleTraits.jl/blob/master/src/SimpleTraits.jl).
+abstract type Trait end
+abstract type Not{T<:Trait} <: Trait end
+struct HasUnit <: Trait end
 
-_traitfn(T::Type{<:Number}) = NoUnit
-_traitfn(T::Type{<:AbstractQuantity}) = HasUnit
+_unit_trait(T::Type{<:Real}) = Not{HasUnit}
+_unit_trait(T::Type{<:AbstractQuantity}) = HasUnit
 
 """
     lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
@@ -48,41 +48,49 @@ function lsqfit(
     kwargs...,
 )
     T = eltype(eos)
-    return lsqfit(form, eos, xdata, ydata, _traitfn(T), kwargs...)
+    return lsqfit(_unit_trait(T), form, eos, xdata, ydata, kwargs...)
 end # function lsqfit
 function lsqfit(
+    ::Type{Not{HasUnit}},
     form::EquationForm,
     eos::EquationOfState,
     xdata::AbstractVector,
-    ydata::AbstractVector,
-    trait::Type{NoUnit};
+    ydata::AbstractVector;
     debug = false,
     kwargs...,
 )
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
     E = typeof(eos).name.wrapper
-    model(x, p) = map(apply(form, E(p...)), x)
-    fitted = curve_fit(model, T.(xdata), T.(ydata), T.(Collections.fieldvalues(eos)); kwargs...)
+    model = (x, p) -> map(apply(form, E(p...)), x)
+    fitted = curve_fit(
+        model,
+        T.(xdata),
+        T.(ydata),
+        T.(Collections.fieldvalues(eos)),
+        kwargs...,
+    )
     return debug ? fitted : E(fitted.param...)
 end  # function lsqfit
 function lsqfit(
+    ::Type{HasUnit},
     form::EquationForm,
     eos::EquationOfState,
     xdata::AbstractVector,
-    ydata::AbstractVector,
-    trait::Type{HasUnit};
+    ydata::AbstractVector;
     kwargs...,
 )
     E = typeof(eos).name.wrapper
-    units = unit.(Collections.fieldvalues(eos))
-    trial_params = map(ustrip, Collections.fieldvalues(upreferred(eos)))
-    xdata, ydata = map(ustrip ∘ upreferred, xdata), map(ustrip ∘ upreferred, ydata)
+    values = Collections.fieldvalues(eos)
+    original_units = map(unit, values)
+    trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (values, xdata, ydata)]
     result = lsqfit(form, E(trial_params...), xdata, ydata, kwargs...)
     if result isa EquationOfState
-        E(
-            [uconvert(u, Collections.fieldvalues(result)[i] * upreferred(u)) for (i, u) in enumerate(units)]...
+        data = Collections.fieldvalues(result)
+        return E(
+            [uconvert(u, data[i] * upreferred(u)) for (i, u) in enumerate(original_units)]...
         )
     end
+    return result
 end  # function lsqfit
 
 end
