@@ -13,6 +13,7 @@ module Find
 
 using InteractiveUtils: subtypes
 using Statistics: median
+using Unitful: AbstractQuantity, ustrip
 
 using Roots: find_zero,
              AbstractBracketing,
@@ -31,6 +32,23 @@ using ..Collections: EquationOfState, apply
 
 export findvolume
 
+function _whose_zero(
+    form::EquationForm,
+    eos::EquationOfState,
+    y::AbstractQuantity,
+)
+    @assert(eltype(eos) <: AbstractQuantity, "The elements type mismatched!")
+    return v::AbstractQuantity -> ustrip(apply(form, eos, v) - y)
+end # function _whose_zero
+function _whose_zero(
+    form::EquationForm,
+    eos::EquationOfState,
+    y::Real,
+)
+    @assert(eltype(eos) <: Real, "The elements type mismatched!")
+    return v::Real -> apply(form, eos, v) - y
+end # function _whose_zero
+
 function _adapt_domain(domain::Union{AbstractVector,Tuple}, method::AbstractBracketing)
     return minimum(domain), maximum(domain)
 end # function _adapt_domain
@@ -48,17 +66,17 @@ end # function _adapt_domain
 function findvolume(
     form::EquationForm,
     eos::EquationOfState,
-    y::Real,
+    y,
     domain::Union{AbstractVector,Tuple},
     method,
 )
-    f(v) = apply(form, eos, v) - y
+    f = _whose_zero(form, eos, y)
     return find_zero(f, _adapt_domain(domain), method)
 end # function findvolume
 function findvolume(
     form::EquationForm,
     eos::EquationOfState,
-    y::Real,
+    y,
     domain::Union{AbstractVector,Tuple},
 )
     for T in [
