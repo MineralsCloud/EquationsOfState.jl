@@ -12,7 +12,6 @@ julia>
 module Find
 
 using InteractiveUtils: subtypes
-import Statistics
 using Unitful: AbstractQuantity, ustrip, upreferred
 
 using Roots: find_zero,
@@ -63,16 +62,5 @@ function findvolume(form::EquationForm, eos::EquationOfState, y, x0)
         end
     end
 end # function findvolume
-
-Statistics.middle(x::AbstractQuantity) = (x + zero(x)) / 1
-Statistics.middle(a::T, b::T) where {T<:AbstractQuantity} =
-    middle(ustrip(a), ustrip(b)) * unit(a)
-function Statistics.middle(a::AbstractQuantity, b::AbstractQuantity)
-    @assert(dimension(a) == dimension(b))
-    a0, b0 = promote(map(ustrip, (a, b))...)
-    a, b = a0 * unit(a), b0 * unit(b)
-    a, b = map(upreferred, a, b)
-    return middle(a, b)
-end # Statistics.middle
 
 end
