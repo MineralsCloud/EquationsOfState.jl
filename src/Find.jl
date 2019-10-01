@@ -49,35 +49,21 @@ function _whose_zero(
     return v::Real -> apply(form, eos, v) - y
 end # function _whose_zero
 
-function _adapt_domain(domain::Union{AbstractVector,Tuple}, method::AbstractBracketing)
-    return minimum(domain), maximum(domain)
-end # function _adapt_domain
-function _adapt_domain(
-    domain::Union{AbstractVector,Tuple},
-    method::Union{
-        AbstractNonBracketing,
-        AbstractHalleyLikeMethod,
-        AbstractNewtonLikeMethod,
-    },
-)
-    return Statistics.median(domain)
-end # function _adapt_domain
-
 function findvolume(
     form::EquationForm,
     eos::EquationOfState,
     y,
-    domain::Union{AbstractVector,Tuple},
+    x0,
     method,
 )
     f = _whose_zero(form, eos, y)
-    return find_zero(f, _adapt_domain(domain), method)
+    return find_zero(f, x0, method)
 end # function findvolume
 function findvolume(
     form::EquationForm,
     eos::EquationOfState,
     y,
-    domain::Union{AbstractVector,Tuple},
+    x0,
 )
     for T in [
         subtypes(AbstractAlefeldPotraShi)
@@ -89,7 +75,7 @@ function findvolume(
     ]
         @info("Using method \"$T\"...")
         try
-            return findvolume(form, eos, y, domain, T())
+            return findvolume(form, eos, y, x0, T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue
