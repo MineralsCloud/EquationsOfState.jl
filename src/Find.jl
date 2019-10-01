@@ -31,20 +31,10 @@ using ..Collections: EquationOfState, apply
 
 export findvolume
 
-function findvolume(
-    form::EquationForm,
-    eos::EquationOfState,
-    y::Real,
-    domain::Union{AbstractVector,Tuple},
-    method::AbstractBracketing,
-)
-    f(v) = apply(form, eos, v) - y
-    return find_zero(f, (minimum(domain), maximum(domain)), method)
-end # function findvolume
-function findvolume(
-    form::EquationForm,
-    eos::EquationOfState,
-    y::Real,
+function _adapt_domain(domain::Union{AbstractVector,Tuple}, method::AbstractBracketing)
+    return minimum(domain), maximum(domain)
+end # function _adapt_domain
+function _adapt_domain(
     domain::Union{AbstractVector,Tuple},
     method::Union{
         AbstractNonBracketing,
@@ -52,8 +42,18 @@ function findvolume(
         AbstractNewtonLikeMethod,
     },
 )
+    return median(domain)
+end # function _adapt_domain
+
+function findvolume(
+    form::EquationForm,
+    eos::EquationOfState,
+    y::Real,
+    domain::Union{AbstractVector,Tuple},
+    method,
+)
     f(v) = apply(form, eos, v) - y
-    return find_zero(f, median(domain), method)
+    return find_zero(f, _adapt_domain(domain), method)
 end # function findvolume
 function findvolume(
     form::EquationForm,
