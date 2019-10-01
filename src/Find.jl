@@ -12,7 +12,7 @@ julia>
 module Find
 
 using InteractiveUtils: subtypes
-using Unitful: AbstractQuantity, ustrip, upreferred
+using Unitful: AbstractQuantity, ustrip
 
 using Roots: find_zero,
              AbstractBracketing,
