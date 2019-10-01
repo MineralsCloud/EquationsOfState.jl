@@ -44,10 +44,17 @@ function findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
     f = _whose_zero(form, eos, y)
     return find_zero(f, x0, method)
 end # function findvolume
-function findvolume(form::EquationForm, eos::EquationOfState, y, x0)
+function findvolume(form::EquationForm, eos::EquationOfState, y, x0::Union{AbstractVector,Tuple})
+    for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
+        @info("Using method \"$T\"...")
+        try
+            return findvolume(form, eos, y, (minimum(x0), maximum(x0)), T())
+        catch e
+            @info("Method \"$T\" failed because of $e.")
+            continue
+        end
+    end
     for T in [
-        subtypes(AbstractAlefeldPotraShi)
-        subtypes(AbstractBisection)
         Brent
         subtypes(AbstractHalleyLikeMethod)
         Newton
@@ -55,7 +62,7 @@ function findvolume(form::EquationForm, eos::EquationOfState, y, x0)
     ]
         @info("Using method \"$T\"...")
         try
-            return findvolume(form, eos, y, x0, T())
+            return findvolume(form, eos, y, (minimum(x0) + maximum(x0)) / 2, T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue
