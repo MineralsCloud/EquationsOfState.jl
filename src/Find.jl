@@ -48,6 +48,7 @@ function findvolume(form::EquationForm, eos::EquationOfState, y, x0::Union{Abstr
     for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
         @info("Using method \"$T\"...")
         try
+            # `maximum` and `minimum` also works with `AbstractQuantity`s.
             return findvolume(form, eos, y, (minimum(x0), maximum(x0)), T())
         catch e
             @info("Method \"$T\" failed because of $e.")
