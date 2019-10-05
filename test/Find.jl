@@ -93,19 +93,14 @@ end
 
 @testset "Test `findvolume` with random unit" begin
     pressures = collect(0:20:200) .* u"GPa"
-    eos = BirchMurnaghan3rd(167 * u"angstrom^3", 2600 * u"kbar", 4.0 * u"1000mm/m")
+    eos = BirchMurnaghan3rd(167u"angstrom^3", 2600u"kbar", 4.0u"1000mm/m")
     volumes = map(
-        p -> findvolume(
-            PressureForm(),
-            eos,
-            p,
-            (eps() * u"bohr^3", eos.v0 * 1.3),
-        ),
+        p -> findvolume(PressureForm(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
         pressures,
     )
     @test isapprox(
         ustrip.(map(apply(PressureForm(), eos), volumes) - pressures),
         zeros(11),
-        atol = 1e-5
+        atol = 1e-5,
     )
 end # testset
