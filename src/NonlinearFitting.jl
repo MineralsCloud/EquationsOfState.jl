@@ -12,7 +12,7 @@ julia>
 module NonlinearFitting
 
 using LsqFit: curve_fit
-using Unitful: AbstractQuantity, upreferred, ustrip, unit, uconvert
+using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
 import ..EquationForm
 using ..Collections
@@ -87,7 +87,7 @@ function lsqfit(
     if result isa EquationOfState
         data = Collections.fieldvalues(result)
         return E(
-            [uconvert(u, data[i] * upreferred(u)) for (i, u) in enumerate(original_units)]...
+            [data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...
         )
     end
     return result
