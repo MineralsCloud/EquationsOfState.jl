@@ -264,6 +264,10 @@ struct AntonSchmidt{T} <: EquationOfState{T}
     n::T
     e∞::T
 end
+function AntonSchmidt(v0, β, n, e∞)
+    T = Base.promote_typeof(v0, β, n, e∞)
+    return AntonSchmidt{T}(convert.(T, [v0, β, n, e∞])...)
+end
 AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
 struct BreenanStacey{T} <: EquationOfState{T}
@@ -271,6 +275,10 @@ struct BreenanStacey{T} <: EquationOfState{T}
     b0::T
     γ0::T
     e0::T
+end
+function BreenanStacey(v0, b0, γ0, e0)
+    T = Base.promote_typeof(v0, b0, γ0, e0)
+    return BreenanStacey{T}(convert.(T, [v0, b0, γ0, e0])...)
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 # =================================== Types ================================== #
