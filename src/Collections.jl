@@ -13,7 +13,6 @@ module Collections
 
 using InteractiveUtils
 using Unitful: AbstractQuantity, @u_str, dimension, upreferred
-import Unitful
 
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
