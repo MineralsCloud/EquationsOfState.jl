@@ -14,7 +14,6 @@ module Collections
 using InteractiveUtils
 using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions
 import Unitful
-using UnitfulAstro
 
 using EquationsOfState
 

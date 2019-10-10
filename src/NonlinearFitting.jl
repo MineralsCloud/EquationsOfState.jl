@@ -11,6 +11,7 @@ julia>
 """
 module NonlinearFitting
 
+using ConstructionBase: constructorof
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
@@ -47,7 +48,7 @@ function lsqfit(
     ydata::AbstractVector;
     kwargs...,
 )
-    T = eltype(eos)
+    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata))
     return lsqfit(_unit_trait(T), form, eos, xdata, ydata, kwargs...)
 end # function lsqfit
 function lsqfit(
@@ -60,7 +61,7 @@ function lsqfit(
     kwargs...,
 )
     T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    E = typeof(eos).name.wrapper
+    E = constructorof(typeof(eos))
     model = (x, p) -> map(apply(form, E(p...)), x)
     fitted = curve_fit(
         model,
@@ -79,7 +80,7 @@ function lsqfit(
     ydata::AbstractVector;
     kwargs...,
 )
-    E = typeof(eos).name.wrapper
+    E = constructorof(typeof(eos))
     values = Collections.fieldvalues(eos)
     original_units = map(unit, values)
     trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (values, xdata, ydata)]
