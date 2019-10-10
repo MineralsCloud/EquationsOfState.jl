@@ -20,14 +20,6 @@ using ..Collections
 
 export lsqfit
 
-# This idea is borrowed from [SimpleTraits.jl](https://github.com/mauro3/SimpleTraits.jl/blob/master/src/SimpleTraits.jl).
-abstract type Trait end
-abstract type Not{T<:Trait} <: Trait end
-struct HasUnit <: Trait end
-
-_unit_trait(T::Type{<:Real}) = Not{HasUnit}
-_unit_trait(T::Type{<:AbstractQuantity}) = HasUnit
-
 """
     lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
 
@@ -43,20 +35,9 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 """
 function lsqfit(
     form::EquationForm,
-    eos::EquationOfState,
-    xdata::AbstractVector,
-    ydata::AbstractVector;
-    kwargs...,
-)
-    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata))
-    return lsqfit(_unit_trait(T), form, eos, xdata, ydata, kwargs...)
-end # function lsqfit
-function lsqfit(
-    ::Type{Not{HasUnit}},
-    form::EquationForm,
-    eos::EquationOfState,
-    xdata::AbstractVector,
-    ydata::AbstractVector;
+    eos::EquationOfState{<:Real},
+    xdata::AbstractVector{<:Real},
+    ydata::AbstractVector{<:Real};
     debug = false,
     kwargs...,
 )
@@ -73,11 +54,10 @@ function lsqfit(
     return debug ? fitted : E(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    ::Type{HasUnit},
     form::EquationForm,
-    eos::EquationOfState,
-    xdata::AbstractVector,
-    ydata::AbstractVector;
+    eos::EquationOfState{<:AbstractQuantity},
+    xdata::AbstractVector{<:AbstractQuantity},
+    ydata::AbstractVector{<:AbstractQuantity};
     kwargs...,
 )
     E = constructorof(typeof(eos))
