@@ -11,7 +11,6 @@ MLStyle = "d8e11817-5142-5d16-987a-aa16d5891078"
 Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
 Roots = "f2b01f46-fcfa-551c-844a-d8ac1e96c665"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
-UnitfulAstro = "6112ee07-acf9-5e0f-b108-d242c714bf9f"
 
 [compat]
 julia = "1"
