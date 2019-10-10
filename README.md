@@ -38,7 +38,7 @@ This package also includes linear and nonlinear fitting methods, also referenced
 ## Compatibility
 
 - Julia version: `v1.0.0` and above
-- Dependencies: see [`Project.toml`]([Project.toml](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/Project.toml))
+- Dependencies: see [`Project.toml`](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/Project.toml)
 - OS versions: `macOS`, `Linux`, and `Windows`
 
 ## Installation
@@ -73,7 +73,6 @@ This package also includes linear and nonlinear fitting methods, also referenced
 ## Related packages
 
 1. [CommandLineEquationsOfState.jl](https://github.com/MineralsCloud/CommandLineEquationsOfState.jl)
-2. [ExtendedEquationsOfState.jl](https://github.com/MineralsCloud/ExtendedEquationsOfState.jl)
 
 ## References
 
