@@ -42,7 +42,7 @@ from Ref. 1.
 - Julia version: `v1.0.0` and above
 - Dependencies: see
   [`Project.toml`](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/Project.toml)
-- OS versions: `macOS`, `Linux`, and `Windows`
+- OS versions: macOS, Linux, and Windows
 
 ## Installation
 
