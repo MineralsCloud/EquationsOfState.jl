@@ -12,7 +12,7 @@ julia>
 module Find
 
 using InteractiveUtils: subtypes
-using Statistics: median
+using Unitful: AbstractQuantity, ustrip
 
 using Roots: find_zero,
              AbstractBracketing,
@@ -31,35 +31,22 @@ using ..Collections: EquationOfState, apply
 
 export findvolume
 
-function findvolume(
-    form::EquationForm,
-    eos::EquationOfState,
-    y::Real,
-    domain::Union{AbstractVector,Tuple},
-    method::AbstractBracketing,
-)
-    f(v) = apply(form, eos, v) - y
-    return find_zero(f, (minimum(domain), maximum(domain)), method)
+function findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
+    f = v -> apply(form, eos, v) - y
+    return find_zero(f, x0, method)
 end # function findvolume
-function findvolume(
-    form::EquationForm,
-    eos::EquationOfState,
-    y::Real,
-    domain::Union{AbstractVector,Tuple},
-    method::Union{AbstractNonBracketing,AbstractHalleyLikeMethod,AbstractNewtonLikeMethod},
-)
-    f(v) = apply(form, eos, v) - y
-    return find_zero(f, median(domain), method)
-end # function findvolume
-function findvolume(
-    form::EquationForm,
-    eos::EquationOfState,
-    y::Real,
-    domain::Union{AbstractVector,Tuple},
-)
+function findvolume(form::EquationForm, eos::EquationOfState, y, x0::Union{AbstractVector,Tuple})
+    for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
+        @info("Using method \"$T\"...")
+        try
+            # `maximum` and `minimum` also works with `AbstractQuantity`s.
+            return findvolume(form, eos, y, (minimum(x0), maximum(x0)), T())
+        catch e
+            @info("Method \"$T\" failed because of $e.")
+            continue
+        end
+    end
     for T in [
-        subtypes(AbstractAlefeldPotraShi)
-        subtypes(AbstractBisection)
         Brent
         subtypes(AbstractHalleyLikeMethod)
         Newton
@@ -67,7 +54,7 @@ function findvolume(
     ]
         @info("Using method \"$T\"...")
         try
-            return findvolume(form, eos, y, domain, T())
+            return findvolume(form, eos, y, (minimum(x0) + maximum(x0)) / 2, T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue

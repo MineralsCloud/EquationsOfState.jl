@@ -11,7 +11,9 @@ julia>
 """
 module NonlinearFitting
 
+using ConstructionBase: constructorof
 using LsqFit: curve_fit
+using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
 import ..EquationForm
 using ..Collections
@@ -33,17 +35,43 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 """
 function lsqfit(
     form::EquationForm,
-    eos::E,
-    xdata::AbstractVector,
-    ydata::AbstractVector;
+    eos::EquationOfState{<:Real},
+    xdata::AbstractVector{<:Real},
+    ydata::AbstractVector{<:Real};
     debug = false,
-    kwargs...
-) where {E<:EquationOfState}
-    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
-    P = Collections.similar_type(E, T)
-    model(x, p) = map(apply(form, P(p...)), x)
-    fitted = curve_fit(model, T.(xdata), T.(ydata), T.(collect(eos)); kwargs...)
-    return debug ? fitted : P(fitted.param...)
+    kwargs...,
+)
+    T = promote_type(eltype(xdata), eltype(ydata), Float64)
+    E = constructorof(typeof(eos))
+    model = (x, p) -> map(apply(form, E(p...)), x)
+    fitted = curve_fit(
+        model,
+        T.(xdata),
+        T.(ydata),
+        T.(Collections.fieldvalues(eos)),
+        kwargs...,
+    )
+    return debug ? fitted : E(fitted.param...)
+end  # function lsqfit
+function lsqfit(
+    form::EquationForm,
+    eos::EquationOfState{<:AbstractQuantity},
+    xdata::AbstractVector{<:AbstractQuantity},
+    ydata::AbstractVector{<:AbstractQuantity};
+    kwargs...,
+)
+    E = constructorof(typeof(eos))
+    values = Collections.fieldvalues(eos)
+    original_units = map(unit, values)
+    trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (values, xdata, ydata)]
+    result = lsqfit(form, E(trial_params...), xdata, ydata; kwargs...)
+    if result isa EquationOfState
+        data = Collections.fieldvalues(result)
+        return E(
+            [data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...
+        )
+    end
+    return result
 end  # function lsqfit
 
 end

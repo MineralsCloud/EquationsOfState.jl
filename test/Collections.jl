@@ -1,5 +1,7 @@
 using Test
 
+using Unitful
+
 using EquationsOfState.Collections
 
 @testset "Test EOS promotion" begin
@@ -13,6 +15,10 @@ using EquationsOfState.Collections
     @test typeof(PoirierTarantola4th(1, 2, 3, 4, 0)) == PoirierTarantola4th{Int}
     @test typeof(AntonSchmidt(1, 2, 3.0, 0)) == AntonSchmidt{Float64}
     @test typeof(BreenanStacey(1, 2, 3.0, 0)) == BreenanStacey{Float64}
+    @test Murnaghan(1, Int32(2), Int8(3), 0) == Murnaghan{Int64}(1, 2, 3, 0)
+    @test Murnaghan(1, 2//1, Int8(3), 0) == Murnaghan{Rational{Int64}}(1//1, 2//1, 3//1, 0//1)
+    @test typeof(Murnaghan(1u"angstrom^3", 2u"eV/angstrom^3", 3.0, 4u"eV")) == Murnaghan{Quantity{Float64}}
+    @test typeof(Murnaghan(1u"angstrom^3", 2u"eV/angstrom^3", 3//2, 4u"eV")) == Murnaghan{Quantity{Rational{Int64}}}
 end
 
 @testset "Test default EOS parameter `e0` and promotion" begin
@@ -26,4 +32,7 @@ end
     @test PoirierTarantola4th(1, 2, 3, 4) == PoirierTarantola4th(1, 2, 3, 4, 0)
     @test AntonSchmidt(1, 2, 3.0) == AntonSchmidt(1.0, 2.0, 3.0, 0.0)
     @test BreenanStacey(1, 2, 3.0) == BreenanStacey(1.0, 2.0, 3.0, 0.0)
+    @test typeof(Murnaghan(1u"angstrom^3", 2u"eV/angstrom^3", 3)) == Murnaghan{Quantity{Int64}}
+    @test typeof(Murnaghan(1u"angstrom^3", 2u"eV/angstrom^3", 3.0)) == Murnaghan{Quantity{Float64}}
+    @test typeof(Murnaghan(1.0u"angstrom^3", 2u"eV/angstrom^3", 3.0)) == Murnaghan{Quantity{Float64}}
 end

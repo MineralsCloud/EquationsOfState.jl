@@ -1,6 +1,8 @@
 using Test
 
 using Roots
+using Unitful
+using UnitfulAtomic
 
 using EquationsOfState
 using EquationsOfState.Collections
@@ -38,7 +40,7 @@ using EquationsOfState.Find
         55.8775030703,
         57.4014349722,
         58.9526328669,
-    ]
+    ] .* u"angstrom^3"
     energies = [
         -7.63622156576,
         -8.16831294894,
@@ -68,23 +70,36 @@ using EquationsOfState.Find
         -9.99504030111,
         -9.86535084973,
         -9.73155247952,
-    ]
-    @test isapprox(
+    ] .* u"eV"
+    isapprox(
         map(
             e -> findvolume(
                 EnergyForm(),
                 BirchMurnaghan3rd(
-                    40.98926572528106,
-                    0.5369258245417454,
-                    4.178644235500821,
-                    -10.842803908240892,
+                    40.98926572528106u"angstrom^3",
+                    0.5369258245417454u"eV/angstrom^3",
+                    4.178644235500821u"1000mm/m",
+                    -10.842803908240892u"eV",
                 ),
                 e,
-                (25, 60),
-                Order16(),
+                (eps(), 100) .* u"angstrom^3",
             ),
             energies,
         ),
         results,
     )
 end
+
+@testset "Test `findvolume` with random unit" begin
+    pressures = collect(0:20:200) .* u"GPa"
+    eos = BirchMurnaghan3rd(167u"angstrom^3", 2600u"kbar", 4.0u"1000mm/m")
+    volumes = map(
+        p -> findvolume(PressureForm(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
+        pressures,
+    )
+    @test isapprox(
+        ustrip.(map(apply(PressureForm(), eos), volumes) - pressures),
+        zeros(11),
+        atol = 1e-5,
+    )
+end # testset
