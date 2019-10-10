@@ -41,7 +41,7 @@ function lsqfit(
     debug = false,
     kwargs...,
 )
-    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata), Float64)
+    T = promote_type(eltype(xdata), eltype(ydata), Float64)
     E = constructorof(typeof(eos))
     model = (x, p) -> map(apply(form, E(p...)), x)
     fitted = curve_fit(
