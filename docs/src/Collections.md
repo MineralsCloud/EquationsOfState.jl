@@ -18,7 +18,6 @@ EquationOfState
 │  ├─ PoirierTarantola3rd
 │  └─ PoirierTarantola4th
 ├─ Murnaghan
-├─ PolynomialEquationOfState
 └─ Vinet
 ```
 
