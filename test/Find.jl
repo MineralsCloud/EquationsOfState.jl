@@ -2,7 +2,6 @@ using Test
 
 using Roots
 using Unitful
-using UnitfulAstro
 using UnitfulAtomic
 
 using EquationsOfState
