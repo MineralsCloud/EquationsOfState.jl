@@ -15,6 +15,7 @@
 [![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
 [![GitHub license](https://img.shields.io/github/license/MineralsCloud/EquationsOfState.jl)](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/LICENSE)
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/MineralsCloud/EquationsOfState.jl?include_prereleases)
+[![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 
 This package implements some _equations of state_ (EOS) of solids which are useful in research. It currently includes:
 
