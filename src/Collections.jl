@@ -67,7 +67,7 @@ struct Murnaghan{T} <: EquationOfState{T}
 end
 function Murnaghan(v0, b0, bp0, e0)
     T = Base.promote_typeof(v0, b0, bp0, e0)
-    return Murnaghan{T}(map(x -> convert(T, x), (v0, b0, bp0, e0))...)
+    return Murnaghan{T}(convert.(T, [v0, b0, bp0, e0])...)
 end
 Murnaghan(v0::Real, b0::Real, bp0::Real) =
     Murnaghan(v0, b0, bp0, zero(Base.promote_typeof(v0, b0, bp0)))
@@ -666,8 +666,6 @@ end
 # ============================================================================ #
 # This is a helper function and should not be exported.
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
-
-Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 
 Unitful.upreferred(::Dimensions{(
     Dimension{:Length}(2 // 1),
