@@ -35,18 +35,18 @@ export apply,
 #                                     Types                                    #
 # ============================================================================ #
 """
-    EquationOfState
+    EquationOfState{T}
 
 An abstraction of equations of state, where `T` specifies the elements' type.
 """
-abstract type EquationOfState end
+abstract type EquationOfState{T} end
 
 """
-    FiniteStrainEquationOfState <: EquationOfState
+    FiniteStrainEquationOfState{T} <: EquationOfState{T}
 
 An abstraction of finite strain equations of state.
 """
-abstract type FiniteStrainEquationOfState <: EquationOfState end
+abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
 """
     Murnaghan(v0, b0, bp0, e0=0)
@@ -59,15 +59,20 @@ Create a Murnaghan equation of state. The elements' type will be handled automat
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct Murnaghan{A,B,C,D} <: EquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct Murnaghan{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
 end
-Murnaghan(v0::Real, b0::Real, bp0::Real) = Murnaghan(v0, b0, bp0, 0)
-Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
-    Murnaghan(v0, b0, bp0, 0 * u"eV")
+function Murnaghan(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return Murnaghan{T}(map(x -> convert(T, x), (v0, b0, bp0, e0))...)
+end
+Murnaghan(v0::Real, b0::Real, bp0::Real) =
+    Murnaghan(v0, b0, bp0, zero(Base.promote_typeof(v0, b0, bp0)))
+Murnaghan(v0::AbstractQuantity{A}, b0::AbstractQuantity{B}, bp0::AbstractQuantity{C}) where {A,B,C} =
+    Murnaghan(v0, b0, bp0, zero(promote_type(A, B, C)) * u"eV")
 
 """
     BirchMurnaghan2nd(v0, b0, e0=0)
@@ -79,10 +84,10 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan2nd{A,B,C} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    e0::C
+struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    e0::T
 end
 BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
 BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
@@ -99,11 +104,11 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan3rd{A,B,C,D} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
 end
 BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real) = BirchMurnaghan3rd(v0, b0, bp0, 0)
 BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
@@ -121,12 +126,12 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan4th{A,B,C,D,E} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    bpp0::D
-    e0::E
+struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    bpp0::T
+    e0::T
 end
 BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
     BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
@@ -147,10 +152,10 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola2nd{A,B,C} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    e0::C
+struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    e0::T
 end
 PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
 PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
@@ -167,11 +172,11 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola3rd{A,B,C,D} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
 end
 PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real) = PoirierTarantola3rd(v0, b0, bp0, 0)
 PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
@@ -189,12 +194,12 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola4th{A,B,C,D,E} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    bpp0::D
-    e0::E
+struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    bpp0::T
+    e0::T
 end
 PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
     PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
@@ -216,29 +221,29 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct Vinet{A,B,C,D} <: EquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct Vinet{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
 end
 Vinet(v0::Real, b0::Real, bp0::Real) = Vinet(v0, b0, bp0, 0)
 Vinet(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
     Vinet(v0, b0, bp0, 0 * u"eV")
 
-struct AntonSchmidt{A,B,C,D} <: EquationOfState
-    v0::A
-    β::B
-    n::C
-    e∞::D
+struct AntonSchmidt{T} <: EquationOfState{T}
+    v0::T
+    β::T
+    n::T
+    e∞::T
 end
 AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
-struct BreenanStacey{A,B,C,D} <: EquationOfState
-    v0::A
-    b0::B
-    γ0::C
-    e0::D
+struct BreenanStacey{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    γ0::T
+    e0::T
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 # =================================== Types ================================== #
