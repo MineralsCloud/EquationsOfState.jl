@@ -92,7 +92,7 @@ julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), (:b0, 10))
   4.0
 ```
 
-Users can access `BirchMurnaghan3rd`'s element by either "dot notation" or indexing:
+Users can access `BirchMurnaghan3rd`'s element by either "dot notation":
 
 ```julia
 julia> b = BirchMurnaghan3rd(1, 2, 3, 4.0)
@@ -103,9 +103,6 @@ julia> b = BirchMurnaghan3rd(1, 2, 3, 4.0)
  4.0
 
 julia> b.v0
-1.0
-
-julia> b[1]
 1.0
 ```
 
