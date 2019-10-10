@@ -12,10 +12,10 @@ julia>
 module Collections
 
 using InteractiveUtils
-using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions
+using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions, upreferred
 import Unitful
 
-using EquationsOfState
+using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
 export apply,
        EquationOfState,
@@ -35,18 +35,18 @@ export apply,
 #                                     Types                                    #
 # ============================================================================ #
 """
-    EquationOfState
+    EquationOfState{T}
 
 An abstraction of equations of state, where `T` specifies the elements' type.
 """
-abstract type EquationOfState end
+abstract type EquationOfState{T} end
 
 """
-    FiniteStrainEquationOfState <: EquationOfState
+    FiniteStrainEquationOfState{T} <: EquationOfState{T}
 
 An abstraction of finite strain equations of state.
 """
-abstract type FiniteStrainEquationOfState <: EquationOfState end
+abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
 """
     Murnaghan(v0, b0, bp0, e0=0)
@@ -59,15 +59,19 @@ Create a Murnaghan equation of state. The elements' type will be handled automat
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct Murnaghan{A,B,C,D} <: EquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct Murnaghan{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
+end
+function Murnaghan(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return Murnaghan{T}(convert.(T, [v0, b0, bp0, e0])...)
 end
 Murnaghan(v0::Real, b0::Real, bp0::Real) = Murnaghan(v0, b0, bp0, 0)
-Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
-    Murnaghan(v0, b0, bp0, 0 * u"eV")
+Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
+    Murnaghan(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
 """
     BirchMurnaghan2nd(v0, b0, e0=0)
@@ -79,14 +83,18 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan2nd{A,B,C} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    e0::C
+struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    e0::T
+end
+function BirchMurnaghan2nd(v0, b0, e0)
+    T = Base.promote_typeof(v0, b0, e0)
+    return BirchMurnaghan2nd{T}(convert.(T, [v0, b0, e0])...)
 end
 BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
 BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
-    BirchMurnaghan2nd(v0, b0, 0 * u"eV")
+    BirchMurnaghan2nd(v0, b0, 0 * upreferred(Unitful.J))
 
 """
     BirchMurnaghan3rd(v0, b0, bp0, e0=0)
@@ -99,15 +107,19 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan3rd{A,B,C,D} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
+end
+function BirchMurnaghan3rd(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return BirchMurnaghan3rd{T}(convert.(T, [v0, b0, bp0, e0])...)
 end
 BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real) = BirchMurnaghan3rd(v0, b0, bp0, 0)
-BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
-    BirchMurnaghan3rd(v0, b0, bp0, 0 * u"eV")
+BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
+    BirchMurnaghan3rd(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
 """
     BirchMurnaghan4th(v0, b0, bp0, bpp0, e0=0)
@@ -121,21 +133,25 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct BirchMurnaghan4th{A,B,C,D,E} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    bpp0::D
-    e0::E
+struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    bpp0::T
+    e0::T
+end
+function BirchMurnaghan4th(v0, b0, bp0, bpp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
+    return BirchMurnaghan4th{T}(convert.(T, [v0, b0, bp0, bpp0, e0])...)
 end
 BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
     BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
 BirchMurnaghan4th(
     v0::AbstractQuantity,
     b0::AbstractQuantity,
-    bp0::AbstractQuantity,
+    bp0,
     bpp0::AbstractQuantity,
-) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * u"eV")
+) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
 
 """
     PoirierTarantola2nd(v0, b0, e0=0)
@@ -147,14 +163,18 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 - `b0`: the bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola2nd{A,B,C} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    e0::C
+struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    e0::T
+end
+function PoirierTarantola2nd(v0, b0, e0)
+    T = Base.promote_typeof(v0, b0, e0)
+    return PoirierTarantola2nd{T}(convert.(T, [v0, b0, e0])...)
 end
 PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
 PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
-    PoirierTarantola2nd(v0, b0, 0 * u"eV")
+    PoirierTarantola2nd(v0, b0, 0 * upreferred(Unitful.J))
 
 """
     PoirierTarantola3rd(v0, b0, bp0, e0=0)
@@ -167,15 +187,19 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola3rd{A,B,C,D} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
+end
+function PoirierTarantola3rd(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return PoirierTarantola3rd{T}(convert.(T, [v0, b0, bp0, e0])...)
 end
 PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real) = PoirierTarantola3rd(v0, b0, bp0, 0)
-PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
-    PoirierTarantola3rd(v0, b0, bp0, 0 * u"eV")
+PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
+    PoirierTarantola3rd(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
 """
     PoirierTarantola4th(v0, b0, bp0, bpp0, e0=0)
@@ -189,21 +213,25 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct PoirierTarantola4th{A,B,C,D,E} <: FiniteStrainEquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    bpp0::D
-    e0::E
+struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    bpp0::T
+    e0::T
+end
+function PoirierTarantola4th(v0, b0, bp0, bpp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
+    return PoirierTarantola4th{T}(convert.(T, [v0, b0, bp0, bpp0, e0])...)
 end
 PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
     PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
 PoirierTarantola4th(
     v0::AbstractQuantity,
     b0::AbstractQuantity,
-    bp0::AbstractQuantity,
+    bp0,
     bpp0::AbstractQuantity,
-) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0 * u"eV")
+) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
 
 """
     Vinet(v0, b0, bp0, e0=0)
@@ -216,29 +244,41 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
 """
-struct Vinet{A,B,C,D} <: EquationOfState
-    v0::A
-    b0::B
-    bp0::C
-    e0::D
+struct Vinet{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
+end
+function Vinet(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return Vinet{T}(convert.(T, [v0, b0, bp0, e0])...)
 end
 Vinet(v0::Real, b0::Real, bp0::Real) = Vinet(v0, b0, bp0, 0)
-Vinet(v0::AbstractQuantity, b0::AbstractQuantity, bp0::AbstractQuantity) =
-    Vinet(v0, b0, bp0, 0 * u"eV")
+Vinet(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
+    Vinet(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
-struct AntonSchmidt{A,B,C,D} <: EquationOfState
-    v0::A
-    β::B
-    n::C
-    e∞::D
+struct AntonSchmidt{T} <: EquationOfState{T}
+    v0::T
+    β::T
+    n::T
+    e∞::T
+end
+function AntonSchmidt(v0, β, n, e∞)
+    T = Base.promote_typeof(v0, β, n, e∞)
+    return AntonSchmidt{T}(convert.(T, [v0, β, n, e∞])...)
 end
 AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
-struct BreenanStacey{A,B,C,D} <: EquationOfState
-    v0::A
-    b0::B
-    γ0::C
-    e0::D
+struct BreenanStacey{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    γ0::T
+    e0::T
+end
+function BreenanStacey(v0, b0, γ0, e0)
+    T = Base.promote_typeof(v0, b0, γ0, e0)
+    return BreenanStacey{T}(convert.(T, [v0, b0, γ0, e0])...)
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 # =================================== Types ================================== #
@@ -661,8 +701,6 @@ end
 # ============================================================================ #
 # This is a helper function and should not be exported.
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
-
-Base.eltype(T::Type{<:EquationOfState}) = promote_type(T.types...)
 
 Unitful.upreferred(::Dimensions{(
     Dimension{:Length}(2 // 1),
