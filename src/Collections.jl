@@ -15,7 +15,7 @@ using InteractiveUtils
 using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions, upreferred
 import Unitful
 
-using EquationsOfState
+using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
 export apply,
        EquationOfState,
