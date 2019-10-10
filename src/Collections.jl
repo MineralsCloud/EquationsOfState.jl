@@ -52,11 +52,26 @@ abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
 Create a Murnaghan equation of state. The elements' type will be handled automatically.
 
+This equation of state can have units. The units are specified in [`Unitful.jl`](https://github.com/PainterQubits/Unitful.jl)'s
+`@u_str` style. The default parameter of `e0` is `0u"eV"`.
+
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0=0`: the energy of solid at zero pressure. By default is `0`.
+
+# Examples
+```jldoctest
+julia> Murnaghan(1, 2, 3.0)
+Murnaghan{Float64}(1.0, 2.0, 3.0, 0.0)
+
+julia> Murnaghan(Int8(1), 2//1, 3.0, 4)
+Murnaghan{Float64}(1.0, 2.0, 3.0, 4.0)
+
+julia> BirchMurnaghan3rd(1u"nm^3",2u"GPa",3,3u"eV")
+BirchMurnaghan3rd{Quantity{Int64,D,U} where U where D}(1 nm^3, 2 GPa, 3, 3 eV)
+```
 """
 struct Murnaghan{T} <: EquationOfState{T}
     v0::T
