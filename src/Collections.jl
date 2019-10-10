@@ -12,7 +12,7 @@ julia>
 module Collections
 
 using InteractiveUtils
-using Unitful: AbstractQuantity, @u_str, Dimension, Dimensions, upreferred
+using Unitful: AbstractQuantity, @u_str, dimension, upreferred
 import Unitful
 
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
@@ -702,17 +702,9 @@ end
 # This is a helper function and should not be exported.
 fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 
-Unitful.upreferred(::Dimensions{(
-    Dimension{:Length}(2 // 1),
-    Dimension{:Mass}(1 // 1),
-    Dimension{:Time}(-2 // 1),
-)}) = u"eV"
-Unitful.upreferred(::Dimensions{(Dimension{:Length}(3 // 1),)}) = u"angstrom^3"
-Unitful.upreferred(::Dimensions{(
-    Dimension{:Length}(-1 // 1),
-    Dimension{:Mass}(1 // 1),
-    Dimension{:Time}(-2 // 1),
-)}) = u"eV/angstrom^3"
+Unitful.upreferred(::typeof(dimension(u"J"))) = u"eV"
+Unitful.upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
+Unitful.upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
 # =============================== Miscellaneous ============================== #
 
 end
