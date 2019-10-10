@@ -11,8 +11,8 @@ julia>
 """
 module Collections
 
-using InteractiveUtils
-using Unitful: AbstractQuantity, @u_str, dimension, upreferred
+using Unitful
+using Unitful: AbstractQuantity
 
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
