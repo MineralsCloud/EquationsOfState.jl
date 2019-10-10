@@ -48,7 +48,7 @@ function lsqfit(
     ydata::AbstractVector;
     kwargs...,
 )
-    T = eltype(eos)
+    T = promote_type(eltype(eos), eltype(xdata), eltype(ydata))
     return lsqfit(_unit_trait(T), form, eos, xdata, ydata, kwargs...)
 end # function lsqfit
 function lsqfit(
