@@ -47,28 +47,6 @@ An abstraction of finite strain equations of state.
 """
 abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
-
-"""
-Create several types of equation of state. 
-    EquationOfState
-    ├─ AntonSchmidt
-    ├─ BreenanStacey
-    ├─ FiniteStrainEquationOfState
-    │  ├─ BirchMurnaghan2nd
-    │  ├─ BirchMurnaghan3rd
-    │  ├─ BirchMurnaghan4th
-    │  ├─ PoirierTarantola2nd
-    │  ├─ PoirierTarantola3rd
-    │  └─ PoirierTarantola4th
-    ├─ Murnaghan
-    └─ Vinet
-
-The elements' type will be handled automatically.
-
-These equation of states can have units. The units are specified in [`Unitful.jl`](https://github.com/PainterQubits/Unitful.jl)'s
-`@u_str` style.
-"""
-
 """
     Murnaghan(v0, b0, bp0, e0)
 
