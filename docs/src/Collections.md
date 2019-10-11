@@ -21,21 +21,6 @@ EquationOfState
 └─ Vinet
 ```
 
-## Types
-
-```@docs
-EquationOfState
-FiniteStrainEquationOfState
-Murnaghan
-BirchMurnaghan2nd
-BirchMurnaghan3rd
-BirchMurnaghan4th
-PoirierTarantola2nd
-PoirierTarantola3rd
-PoirierTarantola4th
-Vinet
-```
-
 ## Usage
 
 ### Construct an `EquationOfState`
@@ -228,7 +213,7 @@ The $B(V)$ relation of equations of state are listed as below:
 2. `BirchMurnaghan3rd`:
 
    ```math
-   B(V) = \frac{B_{0}}{8 \chi^{10 / 3}}\left\{x^{5 / 3}\left(15 B_{0}^{\prime}-80\right)-x\left(42 B_{0}^{\prime}-196\right)\right.\left.+27 x^{1 / 3}\left(B_{0}^{\prime}-4\right)\right\}.
+   B(V) = \frac{B_{0}}{8 x^{10 / 3}}\left\{x^{5 / 3}\left(15 B_{0}^{\prime}-80\right)-x\left(42 B_{0}^{\prime}-196\right)\right.\left.+27 x^{1 / 3}\left(B_{0}^{\prime}-4\right)\right\}.
    ```
 
 3. `BirchMurnaghan4th`:
@@ -267,6 +252,20 @@ The $B(V)$ relation of equations of state are listed as below:
    B(V) = \beta\left(\frac{V}{V_{0}}\right)^{n}\left[1+n \ln \frac{V}{V_{0}}\right].
    ```
 
+## Types
+
+```@docs
+EquationOfState
+FiniteStrainEquationOfState
+Murnaghan
+BirchMurnaghan2nd
+BirchMurnaghan3rd
+BirchMurnaghan4th
+PoirierTarantola2nd
+PoirierTarantola3rd
+PoirierTarantola4th
+Vinet
+```
 
 ## Public interfaces
 
