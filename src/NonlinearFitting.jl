@@ -31,8 +31,8 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 - `xdata::AbstractVector`: a vector of volumes, with(out) units.
 - `ydata::AbstractVector`: a vector of energies, pressures, or bulk moduli, with(out) units. It must be consistent with `form`.
 - `debug::Bool=false`: if `true`, then an `LsqFit.LsqFitResult` is returned, containing estimated Jacobian, residuals, etc.; if `false`, a fitted `EquationOfState` is returned. The default value is `false`.
-- `kwargs`: the rest keyword arguments that will be sent to `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md).
-```
+- `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md)
+    and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(
     form::EquationForm,
