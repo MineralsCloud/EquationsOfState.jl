@@ -388,7 +388,7 @@ BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 """
     apply(EnergyForm(), eos::EquationOfState)
 
-Return a function that can take a volume as an independent variable, suitable for batch-applying.
+Return a function that takes a volume as a variable, suitable for mapping onto an array.
 
 # Examples
 ```jldoctest
@@ -408,6 +408,36 @@ julia> map(f, 1:1:10)
  1.6017034530570884
  1.6679539823686644
  1.7203642945516917
+
+julia> g = apply(PressureForm(), Vinet(1, 2, 3));
+
+julia> map(g, 1:1:10)
+10-element Array{Float64,1}:
+  0.0
+ -0.45046308428750254
+ -0.3384840350043251
+ -0.24010297221667418
+ -0.17314062272722755
+ -0.12795492664586872
+ -0.09677154467733216
+ -0.07468060255179591
+ -0.05864401631176751
+ -0.04674768462396211
+
+julia> h = apply(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3));
+
+julia> map(h, 1:1:10)
+10-element Array{Float64,1}:
+ 2.0
+ 0.9216086833346415
+ 0.444903691617472
+ 0.2540009203153288
+ 0.16193296566524193
+ 0.11130584492987289
+ 0.08076305569984538
+ 0.06103515625
+ 0.047609811583958425
+ 0.03808959181078831
 ```
 """
 apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
@@ -523,31 +553,6 @@ end
 # ============================================================================ #
 #                              Pressure evaluation                             #
 # ============================================================================ #
-"""
-    apply(PressureForm(), eos::EquationOfState)
-
-Return a function that can take a volume as a parameter, suitable for batch-applying.
-
-# Examples
-```jldoctest
-julia> using EquationsOfState, EquationsOfState.Collections
-
-julia> f = apply(PressureForm(), Vinet(1, 2, 3));
-
-julia> map(f, 1:1:10)
-10-element Array{Float64,1}:
-  0.0
- -0.45046308428750254
- -0.3384840350043251
- -0.24010297221667418
- -0.17314062272722755
- -0.12795492664586872
- -0.09677154467733216
- -0.07468060255179591
- -0.05864401631176751
- -0.04674768462396211
-```
-"""
 apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
 """
     apply(PressureForm(), eos::Murnaghan, v)
@@ -669,31 +674,6 @@ end
 # ============================================================================ #
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
-"""
-    apply(BulkModulusForm(), eos::EquationOfState)
-
-Return a function that can take a volume as a parameter, suitable for batch-applying.
-
-# Examples
-```jldoctest
-julia> using EquationsOfState, EquationsOfState.Collections
-
-julia> f = apply(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3));
-
-julia> map(f, 1:1:10)
-10-element Array{Float64,1}:
- 2.0
- 0.9216086833346415
- 0.444903691617472
- 0.2540009203153288
- 0.16193296566524193
- 0.11130584492987289
- 0.08076305569984538
- 0.06103515625
- 0.047609811583958425
- 0.03808959181078831
-```
-"""
 apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
 """
     apply(BulkModulusForm(), eos::BirchMurnaghan2nd, v)
