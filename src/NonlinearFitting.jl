@@ -63,13 +63,15 @@ function lsqfit(
     E = constructorof(typeof(eos))
     values = Collections.fieldvalues(eos)
     original_units = map(unit, values)
-    trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (values, xdata, ydata)]
+    trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (
+        values,
+        xdata,
+        ydata,
+    )]
     result = lsqfit(form, E(trial_params...), xdata, ydata; kwargs...)
     if result isa EquationOfState
         data = Collections.fieldvalues(result)
-        return E(
-            [data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...
-        )
+        return E([data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...)
     end
     return result
 end  # function lsqfit

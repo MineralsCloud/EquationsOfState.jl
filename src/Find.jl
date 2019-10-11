@@ -35,7 +35,12 @@ function findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
     f = v -> apply(form, eos, v) - y
     return find_zero(f, x0, method)
 end # function findvolume
-function findvolume(form::EquationForm, eos::EquationOfState, y, x0::Union{AbstractVector,Tuple})
+function findvolume(
+    form::EquationForm,
+    eos::EquationOfState,
+    y,
+    x0::Union{AbstractVector,Tuple},
+)
     for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
         @info("Using method \"$T\"...")
         try

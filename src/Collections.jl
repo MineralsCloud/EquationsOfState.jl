@@ -456,8 +456,7 @@ function apply(::EnergyForm, eos::BirchMurnaghan4th, v)
 
     f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return e0 +
-           3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
 """
     apply(EnergyForm(), eos::PoirierTarantola2nd, v)
@@ -537,9 +536,9 @@ julia> f = apply(PressureForm(), Vinet(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
-  0.0                
+  0.0
  -0.45046308428750254
- -0.3384840350043251 
+ -0.3384840350043251
  -0.24010297221667418
  -0.17314062272722755
  -0.12795492664586872
@@ -683,16 +682,16 @@ julia> f = apply(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3));
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
- 2.0                 
- 0.9216086833346415  
- 0.444903691617472   
- 0.2540009203153288  
- 0.16193296566524193 
- 0.11130584492987289 
- 0.08076305569984538 
- 0.06103515625       
+ 2.0
+ 0.9216086833346415
+ 0.444903691617472
+ 0.2540009203153288
+ 0.16193296566524193
+ 0.11130584492987289
+ 0.08076305569984538
+ 0.06103515625
  0.047609811583958425
- 0.03808959181078831 
+ 0.03808959181078831
 ```
 """
 apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
