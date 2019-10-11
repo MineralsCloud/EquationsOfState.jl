@@ -36,14 +36,14 @@ export apply,
 """
     EquationOfState{T}
 
-An abstraction of equations of state, where `T` specifies the elements' type.
+An abstraction of equations of state, where `T` specifies the elements' common type.
 """
 abstract type EquationOfState{T} end
 
 """
     FiniteStrainEquationOfState{T} <: EquationOfState{T}
 
-An abstraction of finite strain equations of state.
+An abstraction of finite strain equations of state, where `T` specifies the elements' common type.
 """
 abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
