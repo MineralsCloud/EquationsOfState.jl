@@ -47,19 +47,41 @@ An abstraction of finite strain equations of state.
 """
 abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
+
 """
-    Murnaghan(v0, b0, bp0, e0=0)
+Create several types of equation of state. 
+    EquationOfState
+    ├─ AntonSchmidt
+    ├─ BreenanStacey
+    ├─ FiniteStrainEquationOfState
+    │  ├─ BirchMurnaghan2nd
+    │  ├─ BirchMurnaghan3rd
+    │  ├─ BirchMurnaghan4th
+    │  ├─ PoirierTarantola2nd
+    │  ├─ PoirierTarantola3rd
+    │  └─ PoirierTarantola4th
+    ├─ Murnaghan
+    └─ Vinet
+
+The elements' type will be handled automatically.
+
+These equation of states can have units. The units are specified in [`Unitful.jl`](https://github.com/PainterQubits/Unitful.jl)'s
+`@u_str` style.
+"""
+
+"""
+    Murnaghan(v0, b0, bp0, e0)
 
 Create a Murnaghan equation of state. The elements' type will be handled automatically.
 
 This equation of state can have units. The units are specified in [`Unitful.jl`](https://github.com/PainterQubits/Unitful.jl)'s
-`@u_str` style. The default parameter of `e0` is `0u"eV"`.
+`@u_str` style.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
 
 # Examples
 ```jldoctest
@@ -69,8 +91,8 @@ Murnaghan{Float64}(1.0, 2.0, 3.0, 0.0)
 julia> Murnaghan(Int8(1), 2//1, 3.0, 4)
 Murnaghan{Float64}(1.0, 2.0, 3.0, 4.0)
 
-julia> BirchMurnaghan3rd(1u"nm^3",2u"GPa",3,3u"eV")
-BirchMurnaghan3rd{Quantity{Int64,D,U} where U where D}(1 nm^3, 2 GPa, 3, 3 eV)
+julia> Murnaghan(1u"nm^3", 2u"GPa", 3, 3.0u"eV")
+Murnaghan{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 3.0 eV)
 ```
 """
 struct Murnaghan{T} <: EquationOfState{T}
@@ -88,14 +110,26 @@ Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
     Murnaghan(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
 """
-    BirchMurnaghan2nd(v0, b0, e0=0)
+    BirchMurnaghan2nd(v0, b0, e0)
 
 Create a Birch–Murnaghan 2nd order equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> BirchMurnaghan2nd(1, 2.0)
+BirchMurnaghan2nd{Float64}(1.0, 2.0, 0.0)
+
+julia> BirchMurnaghan2nd(Int8(1), 2//1, 0.0)
+BirchMurnaghan2nd{Float64}(1.0, 2.0, 0.0)
+
+julia> BirchMurnaghan2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
+BirchMurnaghan2nd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0 eV)
+```
 """
 struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -111,7 +145,7 @@ BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
     BirchMurnaghan2nd(v0, b0, 0 * upreferred(Unitful.J))
 
 """
-    BirchMurnaghan3rd(v0, b0, bp0, e0=0)
+    BirchMurnaghan3rd(v0, b0, bp0, e0)
 
 Create a Birch–Murnaghan 3rd order equation of state. The elements' type will be handled automatically.
 
@@ -119,7 +153,19 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> BirchMurnaghan3rd(1, 2.0, 3)
+BirchMurnaghan3rd{Float64}(1.0, 2.0, 3.0, 0.0)
+
+julia> BirchMurnaghan3rd(Int8(1), 2//1, 4, 0.0)
+BirchMurnaghan3rd{Float64}(1.0, 2.0, 4.0, 0.0)
+
+julia> BirchMurnaghan3rd(1u"nm^3", 2u"GPa", 4.0, 3u"eV")
+BirchMurnaghan3rd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 4.0, 3.0 eV)
+```
 """
 struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -136,7 +182,7 @@ BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
     BirchMurnaghan3rd(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
 """
-    BirchMurnaghan4th(v0, b0, bp0, bpp0, e0=0)
+    BirchMurnaghan4th(v0, b0, bp0, bpp0, e0)
 
 Create a Birch–Murnaghan 4th order equation of state. The elements' type will be handled automatically.
 
@@ -145,7 +191,19 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> BirchMurnaghan4th(1, 2.0, 3, 4)
+BirchMurnaghan4th{Float64}(1.0, 2.0, 3.0, 4.0, 0.0)
+
+julia> BirchMurnaghan4th(Int8(1), 2//1, 4, 5.0, Float16(6))
+BirchMurnaghan4th{Float64}(1.0, 2.0, 4.0, 5.0, 6.0)
+
+julia> BirchMurnaghan4th(1u"nm^3", 2u"GPa", 3.0, 4u"1/GPa", 5u"eV")
+BirchMurnaghan4th{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 GPa^-1, 5.0 eV)
+```
 """
 struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -168,14 +226,26 @@ BirchMurnaghan4th(
 ) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
 
 """
-    PoirierTarantola2nd(v0, b0, e0=0)
+    PoirierTarantola2nd(v0, b0, e0)
 
 Create a Poirier–Tarantola order equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> PoirierTarantola2nd(1, 2.0)
+PoirierTarantola2nd{Float64}(1.0, 2.0, 0.0)
+
+julia> PoirierTarantola2nd(Int8(1), 2//1, 3.0)
+PoirierTarantola2nd{Float64}(1.0, 2.0, 3.0)
+
+julia> PoirierTarantola2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
+PoirierTarantola2nd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0 eV)
+```
 """
 struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -191,7 +261,7 @@ PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
     PoirierTarantola2nd(v0, b0, 0 * upreferred(Unitful.J))
 
 """
-    PoirierTarantola3rd(v0, b0, bp0, e0=0)
+    PoirierTarantola3rd(v0, b0, bp0, e0)
 
 Create a Poirier–Tarantola 3rd order equation of state. The elements' type will be handled automatically.
 
@@ -199,7 +269,19 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> PoirierTarantola3rd(1, 2.0, 3)
+PoirierTarantola3rd{Float64}(1.0, 2.0, 3.0, 0.0)
+
+julia> PoirierTarantola3rd(Int8(1), 2//1, 3.0, Float16(4))
+PoirierTarantola3rd{Float64}(1.0, 2.0, 3.0, 4.0)
+
+julia> PoirierTarantola3rd(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
+PoirierTarantola3rd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 eV)
+```
 """
 struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -216,7 +298,7 @@ PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
     PoirierTarantola3rd(v0, b0, bp0, 0 * upreferred(Unitful.J))
 
 """
-    PoirierTarantola4th(v0, b0, bp0, bpp0, e0=0)
+    PoirierTarantola4th(v0, b0, bp0, bpp0, e0)
 
 Create a Birch–Murnaghan 4th order equation of state. The elements' type will be handled automatically.
 
@@ -225,7 +307,19 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> PoirierTarantola4th(1, 2.0, 3, 4)
+PoirierTarantola4th{Float64}(1.0, 2.0, 3.0, 4.0, 0.0)
+
+julia> PoirierTarantola4th(Int8(1), 2//1, 3.0, Float16(4), 5)
+PoirierTarantola4th{Float64}(1.0, 2.0, 3.0, 4.0, 5.0)
+
+julia> PoirierTarantola4th(1u"nm^3", 2u"GPa", 3, 4u"1/GPa", 5.0u"eV")
+PoirierTarantola4th{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 GPa^-1, 5.0 eV)
+```
 """
 struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
@@ -248,7 +342,7 @@ PoirierTarantola4th(
 ) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
 
 """
-    Vinet(v0, b0, bp0, e0=0)
+    Vinet(v0, b0, bp0, e0)
 
 Create a Vinet equation of state. The elements' type will be handled automatically.
 
@@ -256,7 +350,19 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0=0`: the energy of solid at zero pressure. By default is `0`.
+- `e0`: the energy of solid at zero pressure. The default value of parameter `e0` is `0` or `0u"eV"`, depends on whether input value have units or not.
+
+# Examples
+```jldoctest
+julia> Vinet(1, 2.0, 3)
+Vinet{Float64}(1.0, 2.0, 3.0, 0.0)
+
+julia> Vinet(Int8(1), 2//1, 3.0, Float16(4))
+Vinet{Float64}(1.0, 2.0, 3.0, 4.0)
+
+julia> Vinet(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
+Vinet{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 eV)
+```
 """
 struct Vinet{T} <: EquationOfState{T}
     v0::T
@@ -304,7 +410,7 @@ BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 """
     apply(EnergyForm(), eos::EquationOfState)
 
-Return a function that can take a volume as a parameter, suitable for batch-applying.
+Return a function that can take a volume as an independent variable, suitable for batch-applying.
 
 # Examples
 ```jldoctest
