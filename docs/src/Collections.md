@@ -41,67 +41,56 @@ Vinet
 ### Construct an `EquationOfState`
 We will use `BirchMurnaghan3rd` as an example.
 
-`BirchMurnaghan3rd` can be constructed from scratch:
+A `BirchMurnaghan3rd` can be constructed from scratch, as shown above.
+It can also be constructed from an existing `BirchMurnaghan3rd`, with [`Setfield.jl`](https://github.com/jw3126/Setfield.jl)
+[`@set!`](https://jw3126.github.io/Setfield.jl/stable/#Setfield.@set!-Tuple{Any}) macro:
 
 ```julia
-julia> BirchMurnaghan3rd(1, 2, 3)
-4-element BirchMurnaghan3rd{Int64}:
- 1
- 2
- 3
- 0
+julia> using Setfield
 
-julia> BirchMurnaghan3rd(1, 2, 3, 4)
-4-element BirchMurnaghan3rd{Int64}:
- 1
- 2
- 3
- 4
+julia> eos = Murnaghan(1, 2, 3.0)
+Murnaghan{Float64}(1.0, 2.0, 3.0, 0.0)
 
-julia> BirchMurnaghan3rd(1, 2, 3, 4.0)
-4-element BirchMurnaghan3rd{Float64}:
- 1.0
- 2.0
- 3.0
- 4.0
+julia> @set! eos.v0 = 4
+Murnaghan{Float64}(4.0, 2.0, 3.0, 0.0)
+
+julia> eos
+Murnaghan{Float64}(4.0, 2.0, 3.0, 0.0)
 ```
 
-It can also be constructed from an existing `BirchMurnaghan3rd`:
+To modify multiple fields (say, `:v0`, `:bp0`, `:bpp0`, `:e0`) at a time,
+use [`@batchlens`](https://tkf.github.io/Kaleido.jl/stable/#Kaleido.@batchlens)
+from [`Kaleido.jl`](https://github.com/tkf/Kaleido.jl):
 
 ```julia
-julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), b0=10, e0=5)
-4-element BirchMurnaghan3rd{Float64}:
-  1.0
- 10.0
-  3.0
-  5.0
+julia> using Setfield, Kaleido
 
-julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), Dict(:b0=>10, :e0=>5))
-4-element BirchMurnaghan3rd{Float64}:
-  1.0
- 10.0
-  3.0
-  5.0
+julia> lens = @batchlens(begin
+           _.v0
+           _.bp0
+           _.bpp0
+           _.e0
+       end)
+IndexBatchLens(:v0, :bp0, :bpp0, :e0)
 
-julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), (:b0, 10))
-4-element BirchMurnaghan3rd{Float64}:
-  1.0
- 10.0
-  3.0
-  4.0
+julia> eos = BirchMurnaghan4th(1, 2.0, 3, 4)
+BirchMurnaghan4th{Float64}(1.0, 2.0, 3.0, 4.0, 0.0)
+
+julia> set(eos, lens, (5, 6, 7, 8))
+BirchMurnaghan4th{Float64}(5.0, 2.0, 6.0, 7.0, 8.0)
 ```
 
-Users can access `BirchMurnaghan3rd`'s element by either "dot notation":
+Users can access `BirchMurnaghan3rd`'s elements by "dot notation":
 
 ```julia
-julia> b = BirchMurnaghan3rd(1, 2, 3, 4.0)
+julia> eos = BirchMurnaghan3rd(1, 2, 3, 4.0)
 4-element BirchMurnaghan3rd{Float64}:
  1.0
  2.0
  3.0
  4.0
 
-julia> b.v0
+julia> eos.v0
 1.0
 ```
 
@@ -110,6 +99,7 @@ julia> b.v0
 The $E(V)$ relation of equations of state are listed as below:
 
 1. `Murnaghan`:
+
    ```math
    E(V) = E_{0}+K_{0} V_{0}\left[\frac{1}{K_{0}^{\prime}\left(K_{0}^{\prime}-1\right)}\left(\frac{V}{V_{0}}\right)^{1-K_{0}^{\prime}}+\frac{1}{K_{0}^{\prime}} \frac{V}{V_{0}}-\frac{1}{K_{0}^{\prime}-1}\right].
    ```
