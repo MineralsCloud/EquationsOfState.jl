@@ -59,7 +59,7 @@ This equation of state can have units. The units are specified in [`Unitful.jl`]
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -95,7 +95,7 @@ Create a Birch–Murnaghan 2nd order equation of state. The elements' type will 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -131,7 +131,7 @@ Create a Birch–Murnaghan 3rd order equation of state. The elements' type will 
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -169,7 +169,7 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -211,7 +211,7 @@ Create a Poirier–Tarantola order equation of state. The elements' type will be
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -247,7 +247,7 @@ Create a Poirier–Tarantola 3rd order equation of state. The elements' type wil
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -285,7 +285,7 @@ Create a Birch–Murnaghan 4th order equation of state. The elements' type will 
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
@@ -328,7 +328,7 @@ Create a Vinet equation of state. The elements' type will be handled automatical
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
 - `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `e0`: the energy of solid at zero pressure. Its default value is `0` (`0u"eV"`), if other parameters have (not) units.
+- `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
 ```jldoctest
