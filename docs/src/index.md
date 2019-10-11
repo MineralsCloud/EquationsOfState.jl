@@ -20,7 +20,8 @@ See the [Index](@ref main-index) for the complete list of documented functions a
 ```@contents
 Pages = [
     "Collections.md",
-    "NonlinearFitting.md"
+    "NonlinearFitting.md",
+    "Find.md",
 ]
 Depth = 3
 ```

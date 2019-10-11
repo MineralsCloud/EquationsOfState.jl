@@ -11,7 +11,7 @@ monotonic function of volume. However, according to experience, ``P(V)`` relatio
 is usually a monotonic function. So we suggest using `PressureForm` to find the
 corresponding volume.
 
-An example is given below:
+## Usage
 
 ```julia
 julia> using EquationsOfState, EquationsOfState.Collections, EquationsOfState.Find, Unitful, UnitfulAtomic
@@ -52,6 +52,12 @@ julia> volumes = map(
 Here we let the algorithm choose the bisection root-finding method to find the
 `volumes` corresponding to `pressures`.
 
-A figure is plotted below to verify our results, it fits very well.
+A figure is plotted below to verify our results, and it fits very well.
 
 ![findvolume](assets/findvolume.png)
+
+## Public interfaces
+
+```@docs
+findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
+```
