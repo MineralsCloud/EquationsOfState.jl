@@ -22,6 +22,7 @@ jobs:
       script: julia --project=docs -e '
           using Pkg;
           Pkg.develop(PackageSpec(path=pwd()));
+          Pkg.add(PackageSpec(url="https://github.com/PainterQubits/Unitful.jl"));
           Pkg.instantiate();
           include("docs/make.jl");'
       after_success: skip
