@@ -37,8 +37,9 @@ platform to explain the following steps:
    ```
 
    and have fun!
-   
-4. While using, please keep this Julia session alive. Restarting may recompile the package and cost some time.
+
+4. While using, please keep this Julia session alive. Restarting may recompile
+   the package and cost some time.
 
 ## Reinstall
 
@@ -48,4 +49,5 @@ platform to explain the following steps:
    julia> Pkg.rm("EquationsOfState"); Pkg.gc()
    ```
 
-2. Press `ctrl+d` to quit the current session. Start a new Julia session and repeat the above steps.
+2. Press `ctrl+d` to quit the current session. Start a new Julia session and
+   repeat the above steps.

@@ -24,11 +24,14 @@ EquationOfState
 ## Usage
 
 ### Construct an `EquationOfState`
+
 We will use `BirchMurnaghan3rd` as an example.
 
-A `BirchMurnaghan3rd` can be constructed from scratch, as shown above.
-It can also be constructed from an existing `BirchMurnaghan3rd`, with [`Setfield.jl`](https://github.com/jw3126/Setfield.jl)
-[`@set!`](https://jw3126.github.io/Setfield.jl/stable/#Setfield.@set!-Tuple{Any}) macro:
+A `BirchMurnaghan3rd` can be constructed from scratch, as shown above. It can
+also be constructed from an existing `BirchMurnaghan3rd`, with
+[`Setfield.jl`](https://github.com/jw3126/Setfield.jl)
+[`@set!`](https://jw3126.github.io/Setfield.jl/stable/#Setfield.@set!-Tuple{Any})
+macro:
 
 ```julia
 julia> using Setfield
@@ -43,9 +46,9 @@ julia> eos
 Murnaghan{Float64}(4.0, 2.0, 3.0, 0.0)
 ```
 
-To modify multiple fields (say, `:v0`, `:bp0`, `:bpp0`, `:e0`) at a time,
-use [`@batchlens`](https://tkf.github.io/Kaleido.jl/stable/#Kaleido.@batchlens)
-from [`Kaleido.jl`](https://github.com/tkf/Kaleido.jl):
+To modify multiple fields (say, `:v0`, `:bp0`, `:bpp0`, `:e0`) at a time, use
+[`@batchlens`](https://tkf.github.io/Kaleido.jl/stable/#Kaleido.@batchlens) from
+[`Kaleido.jl`](https://github.com/tkf/Kaleido.jl):
 
 ```julia
 julia> using Setfield, Kaleido
@@ -101,7 +104,8 @@ The $E(V)$ relation of equations of state are listed as below:
    E(V) = E_{0}+\frac{9}{16} V_{0} B_{0} \frac{\left(x^{2 / 3}-1\right)^{2}}{x^{7 / 3}}\left\{x^{1 / 3}\left(B_{0}^{\prime}-4\right)-x\left(B_{0}^{\prime}-6\right)\right\}.
    ```
 
-   where ``x = V / V_0``, and ``f = \frac{ 1 }{ 2 } \bigg[ \bigg( \frac{ V_0 }{ V } \bigg)^{2/3} - 1 \bigg]``.
+   where `x = V / V_0`, and
+   `f = \frac{ 1 }{ 2 } \bigg[ \bigg( \frac{ V_0 }{ V } \bigg)^{2/3} - 1 \bigg]`.
 
 4. `BirchMurnaghan4th`:
 
@@ -109,7 +113,7 @@ The $E(V)$ relation of equations of state are listed as below:
    E(V) = E_{0}+\frac{3}{8} V_{0} B_{0} f^{2}\left[\left(9 H-63 B_{0}^{\prime}+143\right) f^{2}+12\left(B_{0}^{\prime}-4\right) f+12\right].
    ```
 
-   where ``H = B_0 B_0'' + (B_0')^2``.
+   where `H = B_0 B_0'' + (B_0')^2`.
 
 5. `PoirierTarantola2nd`:
 
@@ -128,7 +132,8 @@ The $E(V)$ relation of equations of state are listed as below:
    ```math
    E(V) = E_{0}+\frac{1}{24} B_{0} V_{0} \ln ^{2} x\left\{\left(H+3 B_{0}^{\prime}+3\right) \ln ^{2} x\right. \left.+4\left(B_{0}^{\prime}+2\right) \ln x+12\right\}.
    ```
-   where ``H = B_0 B_0'' + (B_0')^2``.
+
+   where `H = B_0 B_0'' + (B_0')^2`.
 
 8. `Vinet`:
 
