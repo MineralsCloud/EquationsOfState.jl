@@ -35,14 +35,13 @@ function lsqfit(
     debug = false,
     kwargs...,
 )
-    T = promote_type(eltype(xdata), eltype(ydata), Float64)
-    E = constructorof(typeof(eos))
+    E = constructorof(typeof(eos))  # Get the `UnionAll` type
     model = (x, p) -> map(apply(form, E(p...)), x)
     fitted = curve_fit(
         model,
-        T.(xdata),
-        T.(ydata),
-        T.(Collections.fieldvalues(eos)),
+        float(xdata),  # Convert `xdata` elements to floats
+        float(ydata),  # Convert `ydata` elements to floats
+        float(Collections.fieldvalues(eos)),
         kwargs...,
     )
     return debug ? fitted : E(fitted.param...)
@@ -54,17 +53,15 @@ function lsqfit(
     ydata::AbstractVector{<:AbstractQuantity};
     kwargs...,
 )
-    E = constructorof(typeof(eos))
+    E = constructorof(typeof(eos))  # Get the `UnionAll` type
     values = Collections.fieldvalues(eos)
-    original_units = map(unit, values)
-    trial_params, xdata, ydata = [map(ustrip ∘ upreferred, x) for x in (
-        values,
-        xdata,
-        ydata,
-    )]
-    result = lsqfit(form, E(trial_params...), xdata, ydata; kwargs...)
-    if result isa EquationOfState
+    original_units = unit.(values)  # Keep a record of `eos`'s units
+    f = x -> map(ustrip ∘ upreferred, x)  # Convert to preferred units and strip the unit
+    trial_params = f.(values)
+    result = lsqfit(form, E(trial_params...), f.(xdata), f.(ydata); kwargs...)
+    if result isa EquationOfState  # i.e., if `debug = false` and no error is thrown
         data = Collections.fieldvalues(result)
+        # Convert back to original `eos`'s units
         return E([data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...)
     end
     return result
