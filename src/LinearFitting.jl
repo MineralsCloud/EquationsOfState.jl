@@ -1,13 +1,5 @@
 """
-# module LinearFitting
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
+This module provides some linear fitting methods.
 """
 module LinearFitting
 
@@ -54,8 +46,7 @@ function energy_volume_expansion(
     highest_order::Int = degree(p),
 )
     # The zeroth order value plus values from the first to the ``highest_order`.
-    p(v) +
-    dot(
+    p(v) + dot(
         energy_volume_derivatives(s, v0, v, p, highest_order),
         getstrain(s, v0, v) .^ collect(1:highest_order),
     )
