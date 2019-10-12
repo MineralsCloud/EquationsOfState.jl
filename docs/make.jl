@@ -6,6 +6,7 @@ makedocs(;
     format=Documenter.HTML(),
     pages=[
         "Home" => "index.md",
+        "Installation" => "Installation.md",
         "Manual" => [
             "Collections" => "Collections.md",
             "Nonlinear fitting" => "NonlinearFitting.md",
