@@ -32,4 +32,41 @@ julia&gt; volumes = map(
  120.98257680606459 Å^3
  118.16962836248427 Å^3
  115.61284838696814 Å^3</code></pre><p>Here we let the algorithm choose the bisection root-finding method to find the <code>volumes</code> corresponding to <code>pressures</code>.</p><p>A figure is plotted below to verify our results, and it fits very well.</p><p><img src="../assets/findvolume.png" alt="findvolume"/></p><h2><a class="nav-anchor" id="Public-interfaces-1" href="#Public-interfaces-1">Public interfaces</a></h2><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="EquationsOfState.Find.findvolume-Tuple{EquationForm,EquationsOfState.Collections.EquationOfState,Any,Any,Any}" href="#EquationsOfState.Find.findvolume-Tuple{EquationForm,EquationsOfState.Collections.EquationOfState,Any,Any,Any}"><code>EquationsOfState.Find.findvolume</code></a> — <span class="docstring-category">Method</span>.</div><div><div><pre><code class="language-julia">findvolume(form, eos, y, x0, method)
-findvolume(form, eos, y, x0::Union{AbstractVector,Tuple})</code></pre><p>Find a volume which leads to the given pressure, energy, or bulk modulus based on an <code>eos</code>.</p><p><strong>Arguments</strong></p><ul><li><code>form::EquationForm</code>: an <code>EquationForm</code> instance.</li><li><code>eos::EquationOfState</code>: an equation of state. If it has units, <code>y</code> and <code>x0</code> must also have.</li><li><code>y</code>: a pressure, energy, or bulk modulus.</li><li><code>x0</code>: can be either a range of volumes (<code>Vector</code>, <code>Tuple</code>, etc.) or just a single volume.   Units can be provided if necessary.</li><li><code>method::Roots.AbstractUnivariateZeroMethod</code>: a method used to find the root of an equation.   If it is omitted, the algorithm will traverse all possible methods of    <a href="https://github.com/JuliaMath/Roots.jl">Roots.jl</a>. And the <code>x0</code> parameter must be   an array or a tuple, of which only the maximum and minimum values will be used in the   root-finding process.</li></ul></div></div><a class="source-link" target="_blank" href="https://github.com/MineralsCloud/EquationsOfState.jl/blob/81cfc18c2b64733cafea750fbeccf49c346dbad8/src/Find.jl#LL27-L44">source</a></section><footer><hr/><a class="previous" href="../NonlinearFitting/"><span class="direction">Previous</span><span class="title">Nonlinear fitting</span></a></footer></article></body></html>
+findvolume(form, eos, y, x0::Union{AbstractVector,Tuple})</code></pre><p>Find a volume which leads to the given pressure, energy, or bulk modulus based on an <code>eos</code>.</p><p><strong>Arguments</strong></p><ul><li><code>form::EquationForm</code>: an <code>EquationForm</code> instance.</li><li><code>eos::EquationOfState</code>: an equation of state. If it has units, <code>y</code> and <code>x0</code> must also have.</li><li><code>y</code>: a pressure, energy, or bulk modulus.</li><li><code>x0</code>: can be either a range of volumes (<code>Vector</code>, <code>Tuple</code>, etc.) or just a single volume.   Units can be provided if necessary.</li><li><code>method::Roots.AbstractUnivariateZeroMethod</code>: a method used to find the root of an equation.   If it is omitted, the algorithm will traverse all possible methods of    <a href="https://github.com/JuliaMath/Roots.jl">Roots.jl</a>. And the <code>x0</code> parameter must be   an array or a tuple, of which only the maximum and minimum values will be used in the   root-finding process.</li></ul></div></div><a class="source-link" target="_blank" href="https://github.com/MineralsCloud/EquationsOfState.jl/blob/bf20b6f8e9b7fdc08329f5b3c055d55b9da5b123/src/Find.jl#LL27-L44">source</a></section><p>All available <code>method</code>s are the leaves of the tree below (Remember to add a <code>Roots.</code> prefix):</p><pre><code class="language-none">AbstractUnivariateZeroMethod
+├─ AbstractBracketing
+│  ├─ AbstractAlefeldPotraShi
+│  │  ├─ A42
+│  │  └─ AlefeldPotraShi
+│  ├─ AbstractBisection
+│  │  ├─ Bisection
+│  │  ├─ FalsePosition
+│  │  └─ BisectionExact
+│  └─ Brent
+├─ AbstractHalleyLikeMethod
+│  ├─ Halley
+│  └─ Schroder
+├─ AbstractNewtonLikeMethod
+│  └─ Newton
+└─ AbstractNonBracketing
+   └─ AbstractSecant
+      ├─ Order0
+      ├─ Order16
+      ├─ Order2
+      ├─ Order5
+      ├─ Order8
+      ├─ Esser
+      ├─ King
+      ├─ KumarSinghAkanksha
+      ├─ Order1B
+      ├─ Order2B
+      ├─ Secant
+      ├─ Steffensen
+      ├─ Thukral16
+      └─ Thukral8</code></pre><p>The usage is like</p><pre><code class="language-julia">findvolume(form, eos, y, (3, 4))                     # Try all possible methods
+findvolume(form, eos, y, (3, 4), Order1())           # Specify two starting points for secant method
+findvolume(form, eos, y, 3.0, Order2())              # Use Steffensen method
+findvolume(form, eos, y, big(3.0), Order16())        # Rapid convergence
+findvolume(form, eos, y, (3, 4), Roots.A42())      # Fewer function calls than Bisection(), in this case
+findvolume(form, eos, y, (3, 4), FalsePosition(8))   # 1 of 12 possible algorithms for false position
+findvolume(form, eos, y, 3.0, Roots.Newton())        # Use Newton&#39;s method
+findvolume(form, eos, y, 3.0, Roots.Halley())        # Use Halley&#39;s method</code></pre><footer><hr/><a class="previous" href="../NonlinearFitting/"><span class="direction">Previous</span><span class="title">Nonlinear fitting</span></a></footer></article></body></html>
