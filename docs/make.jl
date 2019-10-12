@@ -1,6 +1,6 @@
 using Documenter, EquationsOfState
 
-DocMeta.setdocmeta!(EquationsOfState, :DocTestSetup, :(using EquationsOfState; using Unitful); recursive=true)
+DocMeta.setdocmeta!(EquationsOfState, :DocTestSetup, :(using EquationsOfState, EquationOfState.Collections, Unitful); recursive=true)
 makedocs(;
     modules=[EquationsOfState],
     format=Documenter.HTML(),
