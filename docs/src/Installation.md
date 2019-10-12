@@ -16,7 +16,7 @@ platform to explain the following steps:
 
 1. Open `Terminal.app`, and type `julia` to start a Julia session.
 
-2. run
+2. Run
 
    ```julia
    julia> using Pkg; Pkg.update()
@@ -30,7 +30,7 @@ platform to explain the following steps:
 
    and wait for its finish.
 
-3. run
+3. Run
 
    ```julia
    julia> using EquationsOfState, EquationsOfState.Collections, EquationsOfState.Find, EquationsOfState.NonlinearFitting, Unitful, UnitfulAtomic
