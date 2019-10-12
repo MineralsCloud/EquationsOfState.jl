@@ -1,5 +1,7 @@
 using Test
 
+using Unitful, UnitfulAtomic
+
 using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
@@ -103,7 +105,12 @@ end
 end
 
 @testset "Test fitting bulk modulus with different element types" begin
-    result = BirchMurnaghan3rd(7.218928431312577, 5.007900469653902, 4.06037725509478, 0.0) |> Collections.fieldvalues
+    result = BirchMurnaghan3rd(
+        7.218928431312577,
+        5.007900469653902,
+        4.06037725509478,
+        0.0,
+    ) |> Collections.fieldvalues
     @test isapprox(
         lsqfit(
             BulkModulusForm(),
@@ -597,7 +604,12 @@ end
         BirchMurnaghan3rd(224, 0.0006, 4, -323),
         volumes,
         energies,
-    ) |> Collections.fieldvalues ≈ BirchMurnaghan3rd(224.444565, 0.00062506191050572675, 3.740369, -323.417714) |> Collections.fieldvalues
+    ) |> Collections.fieldvalues ≈ BirchMurnaghan3rd(
+        224.444565,
+        0.00062506191050572675,
+        3.740369,
+        -323.417714,
+    ) |> Collections.fieldvalues
     @test isapprox(
         lsqfit(
             EnergyForm(),
@@ -630,4 +642,93 @@ end
         atol = 1e-5,
     )
     # @test lsqfit(EnergyForm(), PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
+end
+
+@testset "`Test w2k-lda-na.dat` from `Gibbs2` with units" begin
+    data = [
+        159.9086 -323.4078898
+        162.5738 -323.4089153
+        165.2389 -323.4098546
+        167.9041 -323.410722
+        170.5692 -323.4115195
+        173.2344 -323.4122481
+        175.8995 -323.4129189
+        178.5647 -323.413528
+        181.2298 -323.4140871
+        183.8949 -323.4145889
+        186.5601 -323.4150471
+        189.2252 -323.415459
+        191.8904 -323.4158302
+        194.5555 -323.4161579
+        197.2207 -323.4164498
+        199.8858 -323.4167071
+        202.551 -323.4169305
+        205.2161 -323.4171194
+        207.8812 -323.4172809
+        210.5464 -323.4174144
+        213.2115 -323.4175216
+        215.8767 -323.4176029
+        218.5418 -323.417661
+        221.207 -323.4176975
+        223.8721 -323.41771
+        226.5373 -323.4177051
+        229.2024 -323.417682
+        231.8675 -323.4176375
+        234.5327 -323.417579
+        237.1978 -323.4175048
+        239.863 -323.4174142
+        242.5281 -323.4173101
+        245.1933 -323.4171922
+        247.8584 -323.4170611
+        250.5236 -323.4169184
+        253.1887 -323.4167647
+        255.8538 -323.4166002
+        258.519 -323.4164244
+        261.1841 -323.4162386
+        263.8493 -323.4160446
+        266.5144 -323.4158421
+        269.1796 -323.4156312
+        271.8447 -323.4154125
+        274.5098 -323.4151861
+        277.175 -323.4149528
+        279.8401 -323.4147131
+        282.5053 -323.414467
+        285.1704 -323.414215
+        287.8356 -323.4139583
+        290.5007 -323.4136953
+        293.1659 -323.4134285
+        295.831 -323.4131559
+        298.4961 -323.4128797
+        301.1613 -323.4125984
+        303.8264 -323.4123147
+        306.4916 -323.4120269
+        309.1567 -323.411736
+        311.8219 -323.4114399
+        314.487 -323.4111421
+        317.1522 -323.4108418
+        319.8173 -323.4105393
+    ]
+    volumes = data[:, 1] .* u"bohr^3"
+    energies = data[:, 2] .* u"Ry"
+    fitted_eos = lsqfit(
+        EnergyForm(),
+        BirchMurnaghan3rd(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry"),
+        volumes,
+        energies,
+    )
+    @test ustrip.(fitted_eos |> Collections.fieldvalues) ≈
+    ustrip.(
+        BirchMurnaghan3rd(
+            224.444565 * u"bohr^3",
+            0.00062506191050572675 * u"Ry/bohr^3",
+            3.740369,
+            -323.417714 * u"Ry",
+        ) |> Collections.fieldvalues
+    )
+    @test ustrip.(
+        lsqfit(EnergyForm(), BirchMurnaghan3rd(224u"bohr^3", 10u"GPa", 3.75, -161u"hartree"), volumes, energies) |> Collections.fieldvalues
+    ) ≈
+    ustrip.(
+        BirchMurnaghan3rd(224.4445656763778u"bohr^3", 9.194980249913018u"GPa", 3.7403684211716297, -161.70885710742223u"hartree") |> Collections.fieldvalues
+    )
 end

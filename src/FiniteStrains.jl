@@ -1,13 +1,6 @@
 """
-# module FiniteStrains
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
+This module provides some `FiniteStrain` types and `getstrain` methods to
+calculate various strains.
 """
 module FiniteStrains
 

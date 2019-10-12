@@ -6,9 +6,24 @@ CurrentModule = EquationsOfState.NonlinearFitting
 
 From Ref. 1,
 
-> The equations of state depend nonlinearly of a collection of parameters, $E_0$, $V_0$, $B_0$, $B_0'$, ..., that represent physical properties of the solid at equilibrium and can, in principle, be obtained expermentally by independent methods. The use of a given analytical EOS may have significant influence on the results obtained, particularly because the parameters are far from being independent. The number of parameters has to be considered in comparing the goodness of fit of functional forms with different analytical flexibility. The possibility of using too many parameters, beyond what is physically justified by the information contained in the experimental data, is a serious aspect that deserves consideration.
+> The equations of state depend nonlinearly of a collection of parameters,
+> $E_0$, $V_0$, $B_0$, $B_0'$, ..., that represent physical properties of the
+> solid at equilibrium and can, in principle, be obtained expermentally by
+> independent methods. The use of a given analytical EOS may have significant
+> influence on the results obtained, particularly because the parameters are far
+> from being independent. The number of parameters has to be considered in
+> comparing the goodness of fit of functional forms with different analytical
+> flexibility. The possibility of using too many parameters, beyond what is
+> physically justified by the information contained in the experimental data, is
+> a serious aspect that deserves consideration.
 
-In [`EquationsOfState`](https://github.com/MineralsCloud/EquationsOfState.jl), the nonlinear fitting is currently implemented by [`LsqFit`](https://github.com/JuliaNLSolvers/LsqFit.jl), a small library that provides basic least-squares fitting in pure Julia. It only utilizes the *Levenberg-Marquardt algorithm* for non-linear fitting. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) for more information.
+In [`EquationsOfState`](https://github.com/MineralsCloud/EquationsOfState.jl),
+the nonlinear fitting is currently implemented by
+[`LsqFit`](https://github.com/JuliaNLSolvers/LsqFit.jl), a small library that
+provides basic least-squares fitting in pure Julia. It only utilizes the
+_Levenberg-Marquardt algorithm_ for non-linear fitting. See its
+[documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md)
+for more information.
 
 ## Usage
 
@@ -47,8 +62,8 @@ volumes = [
     54.3808371612,
     55.8775030703,
     57.4014349722,
-    58.9526328669
-]
+    58.9526328669,
+];
 energies = [
     -7.63622156576,
     -8.16831294894,
@@ -77,23 +92,30 @@ energies = [
     -10.1197772808,
     -9.99504030111,
     -9.86535084973,
-    -9.73155247952
-]
+    -9.73155247952,
+];
 
-lsqfit(EnergyForm(), BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies)
-lsqfit(EnergyForm(), Murnaghan(41, 0.5, 4, 0), volumes, energies)
-lsqfit(EnergyForm(), PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
-lsqfit(EnergyForm(), Vinet(41, 0.5, 4, 0), volumes, energies)
+julia> lsqfit(EnergyForm(), BirchMurnaghan3rd(40, 0.5, 4, 0), volumes, energies)
+BirchMurnaghan3rd{Float64}(40.989265727925826, 0.5369258245608038, 4.1786442319302015, -10.842803908298968)
+
+julia> lsqfit(EnergyForm(), Murnaghan(41, 0.5, 4, 0), volumes, energies)
+Murnaghan{Float64}(41.13757924894751, 0.5144967655882123, 3.912386317519504, -10.836794511015869)
+
+julia> lsqfit(EnergyForm(), PoirierTarantola3rd(41, 0.5, 4, 0), volumes, energies)
+PoirierTarantola3rd{Float64}(40.86770643567383, 0.5667729960008705, 4.331688934942696, -10.851486685029547)
+
+julia> lsqfit(EnergyForm(), Vinet(41, 0.5, 4, 0), volumes, energies)
+Vinet{Float64}(40.91687567368755, 0.5493839427734198, 4.30519294991197, -10.846160810968053)
 ```
+
 Then 4 different equations of state will be fitted.
 
 ## Public interfaces
 
 ```@docs
-lsqfit(::EquationForm, eos::E, xdata::X, ydata::Y; debug = false, kwargs...) where {E<:EquationOfState,X<:AbstractVector,Y<:AbstractVector}
+lsqfit(form::EquationForm, eos::EquationOfState{<:Real}, xdata::AbstractVector{<:Real}, ydata::AbstractVector{<:Real}; debug::Bool, kwargs...)
 ```
-
 
 ## References
 
-1. [A. Otero-De-La-Roza, V. Luaña, *Computer Physics Communications*. **182**, 1708–1720 (2011), doi:10.1016/j.cpc.2011.04.016.](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
+1. [A. Otero-De-La-Roza, V. Luaña, _Computer Physics Communications_. **182**, 1708–1720 (2011), doi:10.1016/j.cpc.2011.04.016.](https://www.sciencedirect.com/science/article/pii/S0010465511001470)

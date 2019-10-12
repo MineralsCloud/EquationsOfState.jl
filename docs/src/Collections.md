@@ -18,94 +18,67 @@ EquationOfState
 │  ├─ PoirierTarantola3rd
 │  └─ PoirierTarantola4th
 ├─ Murnaghan
-├─ PolynomialEquationOfState
 └─ Vinet
-```
-
-## Types
-
-```@docs
-EquationOfState
-FiniteStrainEquationOfState
-Murnaghan
-BirchMurnaghan2nd
-BirchMurnaghan3rd
-BirchMurnaghan4th
-PoirierTarantola2nd
-PoirierTarantola3rd
-PoirierTarantola4th
-Vinet
 ```
 
 ## Usage
 
 ### Construct an `EquationOfState`
+
 We will use `BirchMurnaghan3rd` as an example.
 
-`BirchMurnaghan3rd` can be constructed from scratch:
+A `BirchMurnaghan3rd` can be constructed from scratch, as shown above. It can
+also be constructed from an existing `BirchMurnaghan3rd`, with
+[`Setfield.jl`](https://github.com/jw3126/Setfield.jl)
+[`@set!`](https://jw3126.github.io/Setfield.jl/stable/#Setfield.@set!-Tuple{Any})
+macro:
 
 ```julia
-julia> BirchMurnaghan3rd(1, 2, 3)
-4-element BirchMurnaghan3rd{Int64}:
- 1
- 2
- 3
- 0
+julia> using Setfield
 
-julia> BirchMurnaghan3rd(1, 2, 3, 4)
-4-element BirchMurnaghan3rd{Int64}:
- 1
- 2
- 3
- 4
+julia> eos = Murnaghan(1, 2, 3.0)
+Murnaghan{Float64}(1.0, 2.0, 3.0, 0.0)
 
-julia> BirchMurnaghan3rd(1, 2, 3, 4.0)
-4-element BirchMurnaghan3rd{Float64}:
- 1.0
- 2.0
- 3.0
- 4.0
+julia> @set! eos.v0 = 4
+Murnaghan{Float64}(4.0, 2.0, 3.0, 0.0)
+
+julia> eos
+Murnaghan{Float64}(4.0, 2.0, 3.0, 0.0)
 ```
 
-It can also be constructed from an existing `BirchMurnaghan3rd`:
+To modify multiple fields (say, `:v0`, `:bp0`, `:bpp0`, `:e0`) at a time, use
+[`@batchlens`](https://tkf.github.io/Kaleido.jl/stable/#Kaleido.@batchlens) from
+[`Kaleido.jl`](https://github.com/tkf/Kaleido.jl):
 
 ```julia
-julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), b0=10, e0=5)
-4-element BirchMurnaghan3rd{Float64}:
-  1.0
- 10.0
-  3.0
-  5.0
+julia> using Setfield, Kaleido
 
-julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), Dict(:b0=>10, :e0=>5))
-4-element BirchMurnaghan3rd{Float64}:
-  1.0
- 10.0
-  3.0
-  5.0
+julia> lens = @batchlens(begin
+           _.v0
+           _.bp0
+           _.bpp0
+           _.e0
+       end)
+IndexBatchLens(:v0, :bp0, :bpp0, :e0)
 
-julia> BirchMurnaghan3rd(BirchMurnaghan3rd(1, 2, 3, 4.0), (:b0, 10))
-4-element BirchMurnaghan3rd{Float64}:
-  1.0
- 10.0
-  3.0
-  4.0
+julia> eos = BirchMurnaghan4th(1, 2.0, 3, 4)
+BirchMurnaghan4th{Float64}(1.0, 2.0, 3.0, 4.0, 0.0)
+
+julia> set(eos, lens, (5, 6, 7, 8))
+BirchMurnaghan4th{Float64}(5.0, 2.0, 6.0, 7.0, 8.0)
 ```
 
-Users can access `BirchMurnaghan3rd`'s element by either "dot notation" or indexing:
+Users can access `BirchMurnaghan3rd`'s elements by "dot notation":
 
 ```julia
-julia> b = BirchMurnaghan3rd(1, 2, 3, 4.0)
+julia> eos = BirchMurnaghan3rd(1, 2, 3, 4.0)
 4-element BirchMurnaghan3rd{Float64}:
  1.0
  2.0
  3.0
  4.0
 
-julia> b.v0
-1.0
-
-julia> b[1]
+julia> eos.v0
 1.0
 ```
 
@@ -114,6 +87,7 @@ julia> b[1]
 The $E(V)$ relation of equations of state are listed as below:
 
 1. `Murnaghan`:
+
    ```math
    E(V) = E_{0}+K_{0} V_{0}\left[\frac{1}{K_{0}^{\prime}\left(K_{0}^{\prime}-1\right)}\left(\frac{V}{V_{0}}\right)^{1-K_{0}^{\prime}}+\frac{1}{K_{0}^{\prime}} \frac{V}{V_{0}}-\frac{1}{K_{0}^{\prime}-1}\right].
    ```
@@ -130,7 +104,8 @@ The $E(V)$ relation of equations of state are listed as below:
    E(V) = E_{0}+\frac{9}{16} V_{0} B_{0} \frac{\left(x^{2 / 3}-1\right)^{2}}{x^{7 / 3}}\left\{x^{1 / 3}\left(B_{0}^{\prime}-4\right)-x\left(B_{0}^{\prime}-6\right)\right\}.
    ```
 
-   where ``x = V / V_0``, and ``f = \frac{ 1 }{ 2 } \bigg[ \bigg( \frac{ V_0 }{ V } \bigg)^{2/3} - 1 \bigg]``.
+   where ``x = V / V_0``, and
+   ``f = \frac{ 1 }{ 2 } \bigg[ \bigg( \frac{ V_0 }{ V } \bigg)^{2/3} - 1 \bigg]``.
 
 4. `BirchMurnaghan4th`:
 
@@ -157,6 +132,7 @@ The $E(V)$ relation of equations of state are listed as below:
    ```math
    E(V) = E_{0}+\frac{1}{24} B_{0} V_{0} \ln ^{2} x\left\{\left(H+3 B_{0}^{\prime}+3\right) \ln ^{2} x\right. \left.+4\left(B_{0}^{\prime}+2\right) \ln x+12\right\}.
    ```
+
    where ``H = B_0 B_0'' + (B_0')^2``.
 
 8. `Vinet`:
@@ -242,7 +218,7 @@ The $B(V)$ relation of equations of state are listed as below:
 2. `BirchMurnaghan3rd`:
 
    ```math
-   B(V) = \frac{B_{0}}{8 \chi^{10 / 3}}\left\{x^{5 / 3}\left(15 B_{0}^{\prime}-80\right)-x\left(42 B_{0}^{\prime}-196\right)\right.\left.+27 x^{1 / 3}\left(B_{0}^{\prime}-4\right)\right\}.
+   B(V) = \frac{B_{0}}{8 x^{10 / 3}}\left\{x^{5 / 3}\left(15 B_{0}^{\prime}-80\right)-x\left(42 B_{0}^{\prime}-196\right)\right.\left.+27 x^{1 / 3}\left(B_{0}^{\prime}-4\right)\right\}.
    ```
 
 3. `BirchMurnaghan4th`:
@@ -281,38 +257,26 @@ The $B(V)$ relation of equations of state are listed as below:
    B(V) = \beta\left(\frac{V}{V_{0}}\right)^{n}\left[1+n \ln \frac{V}{V_{0}}\right].
    ```
 
+## Types
+
+```@docs
+EquationOfState
+FiniteStrainEquationOfState
+Murnaghan
+BirchMurnaghan2nd
+BirchMurnaghan3rd
+BirchMurnaghan4th
+PoirierTarantola2nd
+PoirierTarantola3rd
+PoirierTarantola4th
+Vinet
+```
 
 ## Public interfaces
 
 ```@docs
 apply(::EnergyForm, eos::EquationOfState)
-apply(::EnergyForm, eos::Murnaghan, v::Real)
-apply(::EnergyForm, eos::BirchMurnaghan2nd, v::Real)
-apply(::EnergyForm, eos::BirchMurnaghan3rd, v::Real)
-apply(::EnergyForm, eos::BirchMurnaghan4th, v::Real)
-apply(::EnergyForm, eos::PoirierTarantola2nd, v::Real)
-apply(::EnergyForm, eos::PoirierTarantola3rd, v::Real)
-apply(::EnergyForm, eos::PoirierTarantola4th, v::Real)
-apply(::EnergyForm, eos::Vinet, v::Real)
-apply(::EnergyForm, eos::AntonSchmidt, v::Real)
-apply(::PressureForm, eos::EquationOfState)
-apply(::PressureForm, eos::Murnaghan, v::Real)
-apply(::PressureForm, eos::BirchMurnaghan2nd, v::Real)
-apply(::PressureForm, eos::BirchMurnaghan3rd, v::Real)
-apply(::PressureForm, eos::BirchMurnaghan4th, v::Real)
-apply(::PressureForm, eos::PoirierTarantola2nd, v::Real)
-apply(::PressureForm, eos::PoirierTarantola3rd, v::Real)
-apply(::PressureForm, eos::PoirierTarantola4th, v::Real)
-apply(::PressureForm, eos::Vinet, v::Real)
-apply(::PressureForm, eos::AntonSchmidt, v::Real)
-apply(::PressureForm, eos::BreenanStacey, v::Real)
-apply(::BulkModulusForm, eos::EquationOfState)
-apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v::Real)
-apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v::Real)
-apply(::BulkModulusForm, eos::BirchMurnaghan4th, v::Real)
-apply(::BulkModulusForm, eos::PoirierTarantola2nd, v::Real)
-apply(::BulkModulusForm, eos::PoirierTarantola3rd, v::Real)
-apply(::BulkModulusForm, eos::PoirierTarantola4th, v::Real)
-apply(::BulkModulusForm, eos::Vinet, v::Real)
-apply(::BulkModulusForm, eos::AntonSchmidt, v::Real)
+apply(::EnergyForm, eos::Murnaghan, v)
+apply(::PressureForm, eos::Murnaghan, v)
+apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v)
 ```
