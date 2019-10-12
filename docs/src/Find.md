@@ -4,12 +4,12 @@
 CurrentModule = EquationsOfState.Find
 ```
 
-This module contains a function `findvolume`, which is used to find an approximate
-volume at a given pressure, energy, or bulk modulus based on an equation of state.
-A result is not always guaranteed, especially when the equation of state is not a
-monotonic function of volume. However, according to experience, ``P(V)`` relation
-is usually a monotonic function. So we suggest using `PressureForm` to find the
-corresponding volume.
+This module contains a function `findvolume`, which is used to find an
+approximate volume at a given pressure, energy, or bulk modulus based on an
+equation of state. A result is not always guaranteed, especially when the
+equation of state is not a monotonic function of volume. However, according to
+experience, `P(V)` relation is usually a monotonic function. So we suggest using
+`PressureForm` to find the corresponding volume.
 
 ## Usage
 
