@@ -1,13 +1,6 @@
 """
-# module NonlinearFitting
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
+This module provides `lsqfit` methods for fitting an equation of state
+with(out) units.
 """
 module NonlinearFitting
 

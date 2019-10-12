@@ -1,3 +1,7 @@
+"""
+This module provides `findvolume` methods to find the volume at a given
+pressure, energy, or bulk modulus with(out) units.
+"""
 module Find
 
 using InteractiveUtils: subtypes

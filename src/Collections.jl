@@ -1,13 +1,7 @@
 """
-# module Collections
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
+This module provides `EquationOfState` types and `apply` methods to calculate
+energy, pressure, or bulk modulus of an `EquationOfState` on
+a (an) volume (array of volumes).
 """
 module Collections
 

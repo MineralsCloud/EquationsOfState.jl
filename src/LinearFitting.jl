@@ -1,13 +1,5 @@
 """
-# module LinearFitting
-
-
-
-# Examples
-
-```jldoctest
-julia>
-```
+This module provides some linear fitting methods.
 """
 module LinearFitting
 
