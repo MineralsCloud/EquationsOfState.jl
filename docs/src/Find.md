@@ -61,3 +61,52 @@ A figure is plotted below to verify our results, and it fits very well.
 ```@docs
 findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
 ```
+
+All available `method`s are the leaves of the tree below (Remember to add a `Roots.` prefix):
+
+```
+AbstractUnivariateZeroMethod
+├─ AbstractBracketing
+│  ├─ AbstractAlefeldPotraShi
+│  │  ├─ A42
+│  │  └─ AlefeldPotraShi
+│  ├─ AbstractBisection
+│  │  ├─ Bisection
+│  │  ├─ FalsePosition
+│  │  └─ BisectionExact
+│  └─ Brent
+├─ AbstractHalleyLikeMethod
+│  ├─ Halley
+│  └─ Schroder
+├─ AbstractNewtonLikeMethod
+│  └─ Newton
+└─ AbstractNonBracketing
+   └─ AbstractSecant
+      ├─ Order0
+      ├─ Order16
+      ├─ Order2
+      ├─ Order5
+      ├─ Order8
+      ├─ Esser
+      ├─ King
+      ├─ KumarSinghAkanksha
+      ├─ Order1B
+      ├─ Order2B
+      ├─ Secant
+      ├─ Steffensen
+      ├─ Thukral16
+      └─ Thukral8
+```
+
+The usage is like
+
+```julia
+findvolume(form, eos, y, (3, 4))                     # Try all possible methods
+findvolume(form, eos, y, (3, 4), Order1())           # Specify two starting points for secant method
+findvolume(form, eos, y, 3.0, Order2())              # Use Steffensen method
+findvolume(form, eos, y, big(3.0), Order16())        # Rapid convergence
+findvolume(form, eos, y, (3, 4), Roots.A42())      # Fewer function calls than Bisection(), in this case
+findvolume(form, eos, y, (3, 4), FalsePosition(8))   # 1 of 12 possible algorithms for false position
+findvolume(form, eos, y, 3.0, Roots.Newton())        # Use Newton's method
+findvolume(form, eos, y, 3.0, Roots.Halley())        # Use Halley's method
+```
