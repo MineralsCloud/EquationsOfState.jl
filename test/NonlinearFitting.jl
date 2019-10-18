@@ -810,9 +810,9 @@ end
         lsqfit(EnergyForm(), BirchMurnaghan4th(224u"bohr^3", 10u"GPa", 3.75, -0.371174u"1/GPa", -161u"hartree"), volumes, energies) |> Collections.fieldvalues
     ) ≈
     ustrip.(
-        BirchMurnaghan3rd(224.4575624821659u"bohr^3", 9.163737638313615u"GPa", 3.730991465899324, -5.797144599451044e10u"1/GPa", -161.70885565791983u"hartree") |> Collections.fieldvalues
+        BirchMurnaghan4th(224.4575624821659u"bohr^3", 9.163737638313615u"GPa", 3.730991465899324, -5.797144599451044e10u"1/GPa", -161.70885565791983u"hartree") |> Collections.fieldvalues
     )
-    Non-linear fitting: BM4: 4th order Birch-Murnaghan EOS
+    # Non-linear fitting: BM4: 4th order Birch-Murnaghan EOS
     # Parameters (5) start / converged
     # E0 (Hy)               -161.708856      -161.708856
     # V0 (bohr^3)            224.445371       224.457562
