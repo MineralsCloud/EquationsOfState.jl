@@ -1262,212 +1262,110 @@ end
         248.2837 -14.7992338
         251.9701 -14.7984082
     ]
-    volumes = data[:, 1]  # unit: bohr^3
-    energies = data[:, 2]  # unit: Rydberg
-    @test isapprox(
-        lsqfit(
-            EnergyForm(),
-            Murnaghan(132, 0.01, 3.68, -14),
-            volumes,
-            energies,
-        ) |> Collections.fieldvalues,
-        Murnaghan(
-            132.9174710492377,
-            0.000997071972650323,
-            2.6506133298092553,
-            -14.821067528760938
-        ) |> Collections.fieldvalues;
-        atol = 1e-3,
-    )
-    @test isapprox(
-        lsqfit(
-            EnergyForm(),
-            BirchMurnaghan2nd(132, 0.01, -14),
-            volumes,
-            energies,
-        ) |> Collections.fieldvalues,
-        BirchMurnaghan2nd(
-            130.7191505712864,
-            0.000706623449967504,
-            -14.817402887854884
-        ) |> Collections.fieldvalues;
-        atol = 1e-3,
-    )
-    @test isapprox(
-        lsqfit(
-            EnergyForm(),
-            BirchMurnaghan3rd(128, 0.03, 4, -14),
-            volumes,
-            energies,
-        ) |> Collections.fieldvalues,
-        BirchMurnaghan3rd(
-            126.49515516259525,
-            0.0010084167615290376,
-            3.679199350825455,
-            -14.820223865421232
-        ) |> Collections.fieldvalues;
-        atol = 1e-3,
-    )
-    @test isapprox(
-        lsqfit(
-            EnergyForm(),
-            BirchMurnaghan4th(128, 0.03, 4, -320, -14),
-            volumes,
-            energies,
-        ) |> Collections.fieldvalues,
-        BirchMurnaghan4th(
-            127.67097934611786,
-            0.001041910691949355,
-            3.463365305040609,
-            -3214.0364009441837,
-            -14.820651678910448
-        ) |> Collections.fieldvalues;
-        atol = 1e-3,
-    )
-    @test isapprox(
-        lsqfit(
-            EnergyForm(),
-            Vinet(128, 0.03, 4, -14),
-            volumes,
-            energies,
-        ) |> Collections.fieldvalues,
-        Vinet(
-            124.71725873851614,
-            0.001064866793589798,
-            3.905491499988182,
-            -14.820340399744088
-        ) |> Collections.fieldvalues;
-        atol = 1e-3,
-    )
-end
 
-@testset "`Test test01a.dat` from `Gibbs2` with units" begin
-    data = [
-        31.5176  -14.5664202
-        32.4533  -14.5804702
-        33.4073  -14.5938196
-        34.3799  -14.6065011
-        35.3711  -14.618562
-        36.3812  -14.6300054
-        37.4103  -14.640879
-        38.4587  -14.6512193
-        39.5265  -14.6610287
-        40.6139  -14.670344
-        41.721   -14.6792001
-        42.8481  -14.687601
-        43.9952  -14.695594
-        45.1627  -14.703158
-        46.3507  -14.7103533
-        47.5593  -14.717181
-        48.7887  -14.723658
-        50.0392  -14.7298098
-        51.3108  -14.7356349
-        52.6038  -14.7411619
-        53.9183  -14.7463919
-        55.2545  -14.7513556
-        56.6127  -14.7560566
-        57.9929  -14.7605144
-        59.3954  -14.7647283
-        60.8203  -14.7687083
-        62.2678  -14.7724766
-        63.7381  -14.7760428
-        65.2313  -14.7793983
-        66.7478  -14.7825746
-        68.2875  -14.7855695
-        69.8507  -14.7883851
-        71.4376  -14.7910427
-        73.0484  -14.7935382
-        74.6832  -14.7958923
-        76.3421  -14.7980946
-        78.0255  -14.8001569
-        79.7335  -14.8020929
-        81.4662  -14.8039003
-        83.2238  -14.8055857
-        85.0065  -14.8071605
-        86.8145  -14.8086231
-        88.648   -14.8099792
-        90.5071  -14.8112335
-        92.392   -14.8123882
-        94.3029  -14.8134524
-        96.2399  -14.8144362
-        98.2033  -14.8153196
-        100.1932 -14.8161318
-        102.2099 -14.8168626
-        104.2534 -14.8175204
-        106.3239 -14.8181053
-        108.4217 -14.8186225
-        110.547  -14.8190725
-        112.6998 -14.8194614
-        114.8803 -14.8197917
-        117.0889 -14.8200626
-        119.3255 -14.820278
-        121.5905 -14.8204398
-        123.8839 -14.8205529
-        126.206  -14.8206173
-        128.5569 -14.8206353
-        130.9369 -14.8206092
-        133.346  -14.8205405
-        135.7845 -14.8204307
-        138.2526 -14.820282
-        140.7504 -14.8200967
-        143.2781 -14.8198746
-        145.8358 -14.8196193
-        148.4239 -14.819331
-        151.0423 -14.8190113
-        153.6914 -14.818666
-        156.3713 -14.8182878
-        159.0822 -14.8178823
-        161.8242 -14.8174505
-        164.5975 -14.816994
-        167.4024 -14.8165098
-        170.2389 -14.8160064
-        173.1073 -14.8154811
-        176.0077 -14.8149353
-        178.9404 -14.8143691
-        181.9054 -14.8137844
-        184.903  -14.8131807
-        187.9334 -14.8125612
-        190.9967 -14.8119241
-        194.0931 -14.8112717
-        197.2228 -14.8106045
-        200.386  -14.8099231
-        203.5828 -14.8092275
-        206.8134 -14.8085189
-        210.078  -14.8077991
-        213.3768 -14.807068
-        216.71   -14.8063242
-        220.0777 -14.8055711
-        223.4801 -14.8048086
-        226.9174 -14.8040364
-        230.3897 -14.8032545
-        233.8973 -14.802466
-        237.4403 -14.8016672
-        241.0189 -14.8008634
-        244.6333 -14.8000517
-        248.2837 -14.7992338
-        251.9701 -14.7984082
-    ]
-    volumes = data[:, 1] .* u"bohr^3"
-    energies = data[:, 2] .* u"Ry"
-    fitted_eos = lsqfit(
-        EnergyForm(),
-        BirchMurnaghan3rd(128 * u"bohr^3", 0.03 * u"Ry/bohr^3", 4, -14 * u"Ry"),
-        volumes,
-        energies,
-    )
-    @test ustrip.(fitted_eos |> Collections.fieldvalues) ≈
-    ustrip.(
-        BirchMurnaghan3rd(
-            126.49515516270048 * u"bohr^3",
-            0.001008416761528213 * u"Ry/bohr^3",
-            3.6791993508231235,
-            -14.820223865421246 * u"Ry",
-        ) |> Collections.fieldvalues
-    )
-    @test ustrip.(
-        lsqfit(EnergyForm(), BirchMurnaghan3rd(128u"bohr^3", 44u"GPa", 4, -14u"hartree"), volumes, energies) |> Collections.fieldvalues
-    ) ≈
-    ustrip.(
-        BirchMurnaghan3rd(126.49515516262232u"bohr^3", 14.834322684855008u"GPa", 3.679199350823988, -7.410111932710624u"hartree") |> Collections.fieldvalues
-    )
+    @testset "without unit" begin
+        volumes = data[:, 1]  # unit: bohr^3
+        energies = data[:, 2]  # unit: Rydberg
+        @test isapprox(
+            lsqfit(
+                EnergyForm(),
+                Murnaghan(132, 0.01, 3.68, -14),
+                volumes,
+                energies,
+            ) |> Collections.fieldvalues,
+            Murnaghan(
+                132.9174710492377,
+                0.000997071972650323,
+                2.6506133298092553,
+                -14.821067528760938
+            ) |> Collections.fieldvalues;
+            atol = 1e-3,
+        )
+        @test isapprox(
+            lsqfit(
+                EnergyForm(),
+                BirchMurnaghan2nd(132, 0.01, -14),
+                volumes,
+                energies,
+            ) |> Collections.fieldvalues,
+            BirchMurnaghan2nd(
+                130.7191505712864,
+                0.000706623449967504,
+                -14.817402887854884
+            ) |> Collections.fieldvalues;
+            atol = 1e-3,
+        )
+        @test isapprox(
+            lsqfit(
+                EnergyForm(),
+                BirchMurnaghan3rd(128, 0.03, 4, -14),
+                volumes,
+                energies,
+            ) |> Collections.fieldvalues,
+            BirchMurnaghan3rd(
+                126.49515516259525,
+                0.0010084167615290376,
+                3.679199350825455,
+                -14.820223865421232
+            ) |> Collections.fieldvalues;
+            atol = 1e-3,
+        )
+        @test isapprox(
+            lsqfit(
+                EnergyForm(),
+                BirchMurnaghan4th(128, 0.03, 4, -320, -14),
+                volumes,
+                energies,
+            ) |> Collections.fieldvalues,
+            BirchMurnaghan4th(
+                127.67097934611786,
+                0.001041910691949355,
+                3.463365305040609,
+                -3214.0364009441837,
+                -14.820651678910448
+            ) |> Collections.fieldvalues;
+            atol = 1e-3,
+        )
+        @test isapprox(
+            lsqfit(
+                EnergyForm(),
+                Vinet(128, 0.03, 4, -14),
+                volumes,
+                energies,
+            ) |> Collections.fieldvalues,
+            Vinet(
+                124.71725873851614,
+                0.001064866793589798,
+                3.905491499988182,
+                -14.820340399744088
+            ) |> Collections.fieldvalues;
+            atol = 1e-3,
+        )
+    end # testset
+
+    @testset "with units" begin
+        volumes = data[:, 1] .* u"bohr^3"
+        energies = data[:, 2] .* u"Ry"
+        fitted_eos = lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(128 * u"bohr^3", 0.03 * u"Ry/bohr^3", 4, -14 * u"Ry"),
+            volumes,
+            energies,
+        )
+        @test ustrip.(fitted_eos |> Collections.fieldvalues) ≈
+        ustrip.(
+            BirchMurnaghan3rd(
+                126.49515516270048 * u"bohr^3",
+                0.001008416761528213 * u"Ry/bohr^3",
+                3.6791993508231235,
+                -14.820223865421246 * u"Ry",
+            ) |> Collections.fieldvalues
+        )
+        @test ustrip.(
+            lsqfit(EnergyForm(), BirchMurnaghan3rd(128u"bohr^3", 44u"GPa", 4, -14u"hartree"), volumes, energies) |> Collections.fieldvalues
+        ) ≈
+        ustrip.(
+            BirchMurnaghan3rd(126.49515516262232u"bohr^3", 14.834322684855008u"GPa", 3.679199350823988, -7.410111932710624u"hartree") |> Collections.fieldvalues
+        )
+    end
 end
