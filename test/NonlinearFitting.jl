@@ -132,6 +132,36 @@ end
         result;
         atol = 1e-6,
     )
+    @test isapprox(
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, big(3), 0),
+            [1, 2, 3, 4, 5],
+            BigInt[5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        result;
+        atol = 1e-6,
+    )
+    @test isapprox(
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, big(3.0), 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        result;
+        atol = 1e-6,
+    )
+    @test isapprox(
+        lsqfit(
+            PressureForm(),
+            BirchMurnaghan3rd(1, 2, big(3), 0),
+            [big(1), 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        result;
+        atol = 1e-6,
+    )
 end
 
 @testset "Test fitting bulk modulus with different element types" begin
