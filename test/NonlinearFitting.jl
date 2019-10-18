@@ -857,7 +857,7 @@ end
     @test isapprox(
         lsqfit(
             EnergyForm(),
-            BirchMurnaghan4th(432, 0.0003, 3.8, -5460, -1201),
+            BirchMurnaghan4th(432, 0.0003, 3.8, -11773, -1201),
             volumes,
             energies,
         ) |> Collections.fieldvalues,
@@ -868,7 +868,7 @@ end
             -11773.192574765615,
             -1201.2083912308235
         ) |> Collections.fieldvalues;
-        atol = 1e-3,
+        rtol = 1e-5,
     )
     @test isapprox(
         lsqfit(
