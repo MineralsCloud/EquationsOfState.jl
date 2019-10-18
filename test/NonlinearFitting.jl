@@ -53,6 +53,36 @@ using EquationsOfState.NonlinearFitting
         result;
         atol = 1e-5,
     )
+    @test isapprox(
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(big(1), 2, big(3), 0),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        big.(result);
+        atol = 1e-4,
+    )
+    @test isapprox(
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(big(1), 2, 3, 0),
+            BigFloat[1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        big.(result);
+        atol = 1e-4,
+    )
+    @test isapprox(
+        lsqfit(
+            EnergyForm(),
+            BirchMurnaghan3rd(big(1.0), 2, 3, 0),
+            [1, 2, 3, 4, 5],
+            BigInt[5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        big.(result);
+        atol = 1e-4,
+    )
 end
 
 @testset "Test fitting pressure with different element types" begin
