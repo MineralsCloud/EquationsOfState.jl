@@ -735,33 +735,15 @@ end
     ]
     volumes = data[:, 1] .* u"bohr^3"
     energies = data[:, 2] .* u"Ry"
-    fitted_eos = lsqfit(
-        EnergyForm(),
-        Murnaghan(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry"),
-        volumes,
-        energies,
+    @test isapprox(
+        ustrip.(  # Initial values are from `Gibbs2`, do not change.
+            lsqfit(EnergyForm(), Murnaghan(224.445371u"bohr^3", 9.164446u"GPa", 3.752432, -161.708856u"hartree"), volumes, energies) |> Collections.fieldvalues
+        ),
+        ustrip.(  # Results are from `Gibbs2`, do not change.
+            BirchMurnaghan3rd(224.501825u"bohr^3", 8.896845u"GPa", 3.723835, -161.708843u"hartree") |> Collections.fieldvalues
+        );
+        atol = 1e-5,
     )
-    @test ustrip.(fitted_eos |> Collections.fieldvalues) ≈
-    ustrip.(
-        Murnaghan(
-            224.50181783851502 * u"bohr^3",
-            0.0006047952702497151 * u"Ry/bohr^3",
-            3.7238386398687147,
-            -323.4176860627788 * u"Ry",
-        ) |> Collections.fieldvalues
-    )
-    @test ustrip.(
-        lsqfit(EnergyForm(), Murnaghan(224u"bohr^3", 10u"GPa", 3.75, -161u"hartree"), volumes, energies) |> Collections.fieldvalues
-    ) ≈
-    ustrip.(
-        BirchMurnaghan3rd(224.50181838519975u"bohr^3", 8.896845562522671u"GPa", 3.7238384417375605, -161.70884303139053u"hartree") |> Collections.fieldvalues
-    )
-    # Non-linear fitting: Murn: Murnaghan EOS
-    # Parameters (4) start / converged
-    # E0 (Hy)               -161.708856      -161.708843
-    # V0 (bohr^3)            224.445371       224.501825
-    # B0 (GPa)                 9.164446         8.896845
-    # B1p                      3.752432         3.723835
     fitted_eos = lsqfit(
         EnergyForm(),
         BirchMurnaghan3rd(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry"),
