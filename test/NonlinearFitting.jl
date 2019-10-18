@@ -211,6 +211,36 @@ end
         result;
         atol = 1e-5,
     )
+    @test isapprox(
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3, big(0)),
+            [1, 2, 3, 4, 5],
+            [5, 6, 9, 8, 7],
+        ) |> Collections.fieldvalues,
+        result;
+        atol = 1e-5,
+    )
+    @test isapprox(
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3, big(0)),
+            [1, 2, 3, big(4.0), 5],
+            [big(5), 6, 9, 8, 7.0],
+        ) |> Collections.fieldvalues,
+        result;
+        atol = 1e-5,
+    )
+    @test isapprox(
+        lsqfit(
+            BulkModulusForm(),
+            BirchMurnaghan3rd(1, 2, 3, big(0)),
+            [1, 2, 3, 4, 5],
+            [big(5), 6, 9, 8, 7.0],
+        ) |> Collections.fieldvalues,
+        result;
+        atol = 1e-5,
+    )
 end
 
 # Data in the following tests are from
