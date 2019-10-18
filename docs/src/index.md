@@ -27,6 +27,7 @@ Pages = [
     "NonlinearFitting.md",
     "Find.md",
     "Portability.md",
+    "FAQ.md",
 ]
 Depth = 3
 ```
