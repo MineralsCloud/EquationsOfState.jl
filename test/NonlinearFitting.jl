@@ -744,49 +744,11 @@ end
         );
         atol = 1e-5,
     )
-    fitted_eos = lsqfit(
-        EnergyForm(),
-        BirchMurnaghan3rd(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry"),
-        volumes,
-        energies,
-    )
-    @test ustrip.(fitted_eos |> Collections.fieldvalues) ≈
-    ustrip.(
-        BirchMurnaghan3rd(
-            224.444565 * u"bohr^3",
-            0.00062506191050572675 * u"Ry/bohr^3",
-            3.740369,
-            -323.417714 * u"Ry",
-        ) |> Collections.fieldvalues
-    )
     @test ustrip.(
-        lsqfit(EnergyForm(), BirchMurnaghan3rd(224u"bohr^3", 10u"GPa", 3.75, -161u"hartree"), volumes, energies) |> Collections.fieldvalues
+        lsqfit(EnergyForm(), BirchMurnaghan3rd(224.445371u"bohr^3", 9.164446u"GPa", 3.752432, -161.708856u"hartree"), volumes, energies) |> Collections.fieldvalues
     ) ≈
     ustrip.(
-        BirchMurnaghan3rd(224.4445656763778u"bohr^3", 9.194980249913018u"GPa", 3.7403684211716297, -161.70885710742223u"hartree") |> Collections.fieldvalues
-    )
-    # Non-linear fitting: BM3: 3rd order Birch-Murnaghan EOS
-    # Parameters (4) start / converged
-    # E0 (Hy)               -161.708856      -161.708857
-    # V0 (bohr^3)            224.445371       224.444565
-    # B0 (GPa)                 9.164446         9.194978
-    # B1p                      3.752432         3.740369
-
-    fitted_eos = lsqfit(
-        EnergyForm(),
-        BirchMurnaghan4th(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -5400*u"bohr^3/Ry",-323 * u"Ry"),
-        volumes,
-        energies,
-    )
-    @test ustrip.(fitted_eos |> Collections.fieldvalues) ≈
-    ustrip.(
-        BirchMurnaghan4th(
-            224.45756243702044 * u"bohr^3",
-            0.0006229382311402279 * u"Ry/bohr^3",
-            3.7309914973540663,
-            -8.527897169645291e14 * u"bohr^3/Ry",
-            -323.4177113158488 * u"Ry",
-        ) |> Collections.fieldvalues
+        BirchMurnaghan3rd(224.444565u"bohr^3", 9.194978u"GPa", 3.740369, -161.708857u"hartree") |> Collections.fieldvalues
     )
     @test ustrip.(
         lsqfit(EnergyForm(), BirchMurnaghan4th(224u"bohr^3", 10u"GPa", 3.75, -0.371174u"1/GPa", -161u"hartree"), volumes, energies) |> Collections.fieldvalues
