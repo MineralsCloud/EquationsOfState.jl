@@ -29,6 +29,11 @@ using EquationsOfState.Collections
         5 // 1,
         6 // 1,
     )
+    @test Murnaghan{Float32}(Int(1), 2 // 1, Int8(3), Float64(4)) === Murnaghan(Float32(1.0), Float32(2.0), Float32(3.0), Float32(4.0))
+    @test Murnaghan{BigFloat}(Int(1), 2 // 1, Int8(3), Float64(4)) == Murnaghan(BigFloat(1.0), BigFloat(2.0), BigFloat(3.0), BigFloat(4.0))
+    @test BirchMurnaghan4th(Int8(1), 2 // 1, big(4), Int16(5), 6) == BirchMurnaghan4th{Rational{BigInt}}(1//1, 2//1, 4//1, 5//1, 6//1)
+    @test BirchMurnaghan4th(Int8(1), 2 // 1, big(4.0), Int16(5), 6) == BirchMurnaghan4th{BigFloat}(1.0, 2.0, 4.0, 5.0, 6.0)
+    @test BirchMurnaghan4th(Int8(1), 2 // 1, big(4), Int16(5), 6.0) == BirchMurnaghan4th{BigFloat}(1.0, 2.0, 4.0, 5.0, 6.0)
     @test PoirierTarantola2nd(Int8(1), 2, 3) === PoirierTarantola2nd{Int}(1, 2, 3)
     @test PoirierTarantola2nd(Int8(1), 2 // 1, 3) === PoirierTarantola2nd{Rational{Int}}(1 // 1, 2 // 1, 3 // 1)
     @test PoirierTarantola3rd(Int8(1), 2, 3, Int16(4)) === PoirierTarantola3rd{Int}(1, 2, 3, 4)
