@@ -15,6 +15,7 @@
 - Fit an `EquationOfState` on a series of volumes linearly.
 - Find the corresponding volume of an `EquationOfState` given an (a) energy,
   pressure, and bulk modulus.
+- Handle unit conversion automatically in the above features, take any unit.
 
 See the [Index](@ref main-index) for the complete list of documented functions
 and types.
