@@ -12,6 +12,7 @@ makedocs(;
             "Nonlinear fitting" => "NonlinearFitting.md",
             "Find volume" => "Find.md",
             "Portability" => "Portability.md",
+            "Interoperability" => "Python.md",
         ],
         "FAQ" => "FAQ.md",
     ],
