@@ -41,7 +41,7 @@ function lsqfit(
         model,
         float(xdata),  # Convert `xdata` elements to floats
         float(ydata),  # Convert `ydata` elements to floats
-        float(Collections.fieldvalues(eos)),
+        float(Collections.fieldvalues(eos));  # TODO: What if these floats are different types?
         kwargs...,
     )
     return debug ? fitted : E(fitted.param...)

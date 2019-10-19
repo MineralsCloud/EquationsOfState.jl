@@ -10,8 +10,11 @@ makedocs(;
         "Manual" => [
             "Collections" => "Collections.md",
             "Nonlinear fitting" => "NonlinearFitting.md",
-            "Find volume" => "Find.md"
-        ]
+            "Find volume" => "Find.md",
+            "Portability" => "Portability.md",
+            "Interoperability" => "Python.md",
+        ],
+        "FAQ" => "FAQ.md",
     ],
     repo="https://github.com/MineralsCloud/EquationsOfState.jl/blob/{commit}{path}#L{line}",
     sitename="EquationsOfState.jl",

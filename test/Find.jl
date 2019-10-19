@@ -76,10 +76,10 @@ using EquationsOfState.Find
             e -> findvolume(
                 EnergyForm(),
                 BirchMurnaghan3rd(
-                    40.98926572528106u"angstrom^3",
-                    0.5369258245417454u"eV/angstrom^3",
-                    4.178644235500821u"1000mm/m",
-                    -10.842803908240892u"eV",
+                    40.98926572528106 * u"angstrom^3",
+                    0.5369258245417454 * u"eV/angstrom^3",
+                    4.178644235500821 * u"1000mm/m",
+                    -10.842803908240892 * u"eV",
                 ),
                 e,
                 (eps(), 100) .* u"angstrom^3",
@@ -92,7 +92,7 @@ end
 
 @testset "Test `findvolume` with random unit" begin
     pressures = collect(0:20:200) .* u"GPa"
-    eos = BirchMurnaghan3rd(167u"angstrom^3", 2600u"kbar", 4.0u"1000mm/m")
+    eos = BirchMurnaghan3rd(167 * u"angstrom^3", 2600 * u"kbar", 4.0 * u"1000mm/m")
     volumes = map(
         p -> findvolume(PressureForm(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
         pressures,
