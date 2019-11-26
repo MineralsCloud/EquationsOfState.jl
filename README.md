@@ -42,10 +42,10 @@ See [documentation](https://mineralscloud.github.io/EquationsOfState.jl/dev/).
 
 ## Compatibility
 
-- Julia version: `v1.0.0` and above
+- [Julia version: `v1.0.0` and above](https://julialang.org/downloads/)
 - Dependencies: see
   [`Project.toml`](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/Project.toml)
-- OS versions: macOS, Linux, and Windows
+- OS: macOS, Linux, and Windows
 
 ## TODOs
 
