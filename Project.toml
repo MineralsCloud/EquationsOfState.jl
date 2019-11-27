@@ -16,6 +16,7 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 [compat]
 ConstructionBase = "1.0"
 LsqFit = "0.8"
+Polynomials = "0.5.2"
 Rematch = "0.3"
 Roots = "0.8"
 Unitful = "0.18"
