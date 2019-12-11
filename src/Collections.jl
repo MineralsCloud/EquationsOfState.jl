@@ -606,7 +606,7 @@ end
 function apply(::PressureForm, eos::Shanker, v)
     v0, b0, bp0 = fieldvalues(eos)
 
-    x = v0 / v
+    x = v / v0
     y = 1 - x
     t = bp0 - 8 / 3
     return b0 / (x^(4 / 3) * t) *
