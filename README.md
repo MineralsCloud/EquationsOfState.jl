@@ -33,7 +33,7 @@ useful in research. It currently includes:
 5. `AntonSchmidt` EOS (experimental)
 6. `BreenanStacey` EOS (experimental)
 
-The formula are referenced from Ref. 1.
+The formulae are referenced from Ref. 1.
 
 This package also includes linear and nonlinear fitting methods, also referenced
 from Ref. 1.
