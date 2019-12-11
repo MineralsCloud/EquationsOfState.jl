@@ -496,7 +496,7 @@ end
 function apply(::EnergyForm, eos::PoirierTarantola2nd, v)
     v0, b0, e0 = fieldvalues(eos)
 
-    return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
+    return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
 end
 function apply(::EnergyForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
@@ -548,26 +548,26 @@ end
 function apply(::PressureForm, eos::BirchMurnaghan2nd, v)
     v0, b0 = fieldvalues(eos)
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
 function apply(::PressureForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
 
-    eta = (v0 / v)^(1 / 3)
+    eta = cbrt(v0 / v)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
 end
 function apply(::PressureForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
 end
 function apply(::PressureForm, eos::PoirierTarantola2nd, v)
     v0, b0 = fieldvalues(eos)
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     return -b0 / x * log(x)
 end
 function apply(::PressureForm, eos::PoirierTarantola3rd, v)
@@ -580,7 +580,7 @@ end
 function apply(::PressureForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
@@ -588,7 +588,7 @@ end
 function apply(::PressureForm, eos::Vinet, v)
     v0, b0, bp0 = fieldvalues(eos)
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = 3 / 2 * (bp0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
@@ -629,19 +629,19 @@ Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has unit
 function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v)
     v0, b0 = fieldvalues(eos)
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
 function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
 function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     h = b0 * bpp0 + bp0^2
     return b0 / 6 *
            (2f + 1)^(5 / 2) *
@@ -650,7 +650,7 @@ end
 function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v)
     v0, b0 = fieldvalues(eos)
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     return b0 / x * (1 - log(x))
 end
 function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v)
@@ -663,7 +663,7 @@ end
 function apply(::BulkModulusForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return -b0 / (6x) *
@@ -672,7 +672,7 @@ end
 function apply(::BulkModulusForm, eos::Vinet, v)
     v0, b0, bp0 = fieldvalues(eos)
 
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = 3 / 2 * (bp0 - 1)
     return -b0 / (2 * x^2) * (3x * (x - 1) * (bp0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
