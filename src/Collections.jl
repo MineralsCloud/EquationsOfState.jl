@@ -385,6 +385,20 @@ function BreenanStacey(v0, b0, γ0, e0)
     return BreenanStacey{T}(convert.(T, [v0, b0, γ0, e0])...)
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
+
+struct Shanker{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
+end
+function Shanker(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return Shanker{T}(convert.(T, [v0, b0, bp0, e0])...)
+end
+Shanker(v0::Real, b0::Real, bp0::Real) = Shanker(v0, b0, bp0, 0)
+Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
+    Shanker(v0, b0, bp0, 0 * upreferred(Unitful.J))
 # =================================== Types ================================== #
 
 
@@ -592,6 +606,15 @@ function apply(::PressureForm, eos::BreenanStacey, v)
 
     x = v0 / v
     return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
+end
+function apply(::PressureForm, eos::Shanker, v)
+    v0, b0, bp0 = fieldvalues(eos)
+
+    x = v0 / v
+    y = 1 - x
+    t = bp0 - 8 / 3
+    return b0 / (x^(4 / 3) * t) *
+           ((1 - 1 / t + 2 / t^2) * exp(t * y - 1) + y * (1 + y - 2 / t) * exp(t * y))
 end
 # ============================ Pressure evaluation =========================== #
 
