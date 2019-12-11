@@ -22,7 +22,8 @@ export apply,
     PoirierTarantola4th,
     Vinet,
     AntonSchmidt,
-    BreenanStacey
+    BreenanStacey,
+    Shanker
 
 # ============================================================================ #
 #                                     Types                                    #
