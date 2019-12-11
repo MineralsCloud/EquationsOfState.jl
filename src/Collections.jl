@@ -681,6 +681,14 @@ function apply(::BulkModulusForm, eos::AntonSchmidt, v)
     x = v / v0
     return β * x^n * (1 + n * log(x))
 end
+function apply(::BulkModulusForm, eos::Shanker, v)
+    v0, b0, bp0 = fieldvalues(eos)
+
+    x = v / v0
+    y = 1 - x
+    t = bp0 - 8 / 3
+    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * apply(PressureForm(), eos, v)
+end
 # ========================== Bulk modulus evaluation ========================= #
 
 
