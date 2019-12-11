@@ -11,18 +11,18 @@ using Unitful: AbstractQuantity
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
 export apply,
-       EquationOfState,
-       FiniteStrainEquationOfState,
-       Murnaghan,
-       BirchMurnaghan2nd,
-       BirchMurnaghan3rd,
-       BirchMurnaghan4th,
-       PoirierTarantola2nd,
-       PoirierTarantola3rd,
-       PoirierTarantola4th,
-       Vinet,
-       AntonSchmidt,
-       BreenanStacey
+    EquationOfState,
+    FiniteStrainEquationOfState,
+    Murnaghan,
+    BirchMurnaghan2nd,
+    BirchMurnaghan3rd,
+    BirchMurnaghan4th,
+    PoirierTarantola2nd,
+    PoirierTarantola3rd,
+    PoirierTarantola4th,
+    Vinet,
+    AntonSchmidt,
+    BreenanStacey
 
 # ============================================================================ #
 #                                     Types                                    #
@@ -196,12 +196,8 @@ function BirchMurnaghan4th(v0, b0, bp0, bpp0, e0)
 end
 BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
     BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
-BirchMurnaghan4th(
-    v0::AbstractQuantity,
-    b0::AbstractQuantity,
-    bp0,
-    bpp0::AbstractQuantity,
-) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
+BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0, bpp0::AbstractQuantity) =
+    BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
 
 """
     PoirierTarantola2nd(v0, b0, e0)
@@ -646,7 +642,8 @@ function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v)
 
     f = ((v0 / v)^(2 / 3) - 1) / 2
     h = b0 * bpp0 + bp0^2
-    return b0 / 6 * (2f + 1)^(5 / 2) *
+    return b0 / 6 *
+           (2f + 1)^(5 / 2) *
            ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
 function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v)
