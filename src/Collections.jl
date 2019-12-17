@@ -11,18 +11,19 @@ using Unitful: AbstractQuantity
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
 export apply,
-       EquationOfState,
-       FiniteStrainEquationOfState,
-       Murnaghan,
-       BirchMurnaghan2nd,
-       BirchMurnaghan3rd,
-       BirchMurnaghan4th,
-       PoirierTarantola2nd,
-       PoirierTarantola3rd,
-       PoirierTarantola4th,
-       Vinet,
-       AntonSchmidt,
-       BreenanStacey
+    EquationOfState,
+    FiniteStrainEquationOfState,
+    Murnaghan,
+    BirchMurnaghan2nd,
+    BirchMurnaghan3rd,
+    BirchMurnaghan4th,
+    PoirierTarantola2nd,
+    PoirierTarantola3rd,
+    PoirierTarantola4th,
+    Vinet,
+    AntonSchmidt,
+    BreenanStacey,
+    Shanker
 
 # ============================================================================ #
 #                                     Types                                    #
@@ -196,12 +197,8 @@ function BirchMurnaghan4th(v0, b0, bp0, bpp0, e0)
 end
 BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
     BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
-BirchMurnaghan4th(
-    v0::AbstractQuantity,
-    b0::AbstractQuantity,
-    bp0,
-    bpp0::AbstractQuantity,
-) = BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
+BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0, bpp0::AbstractQuantity) =
+    BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
 
 """
     PoirierTarantola2nd(v0, b0, e0)
@@ -385,6 +382,20 @@ function BreenanStacey(v0, b0, γ0, e0)
     return BreenanStacey{T}(convert.(T, [v0, b0, γ0, e0])...)
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
+
+struct Shanker{T} <: EquationOfState{T}
+    v0::T
+    b0::T
+    bp0::T
+    e0::T
+end
+function Shanker(v0, b0, bp0, e0)
+    T = Base.promote_typeof(v0, b0, bp0, e0)
+    return Shanker{T}(convert.(T, [v0, b0, bp0, e0])...)
+end
+Shanker(v0::Real, b0::Real, bp0::Real) = Shanker(v0, b0, bp0, 0)
+Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
+    Shanker(v0, b0, bp0, 0 * upreferred(Unitful.J))
 # =================================== Types ================================== #
 
 
@@ -447,6 +458,27 @@ julia> map(h, 1:1:10)
  0.047609811583958425
  0.03808959181078831
 ```
+
+However, these methods are preserved for special cases
+(see [#52](https://github.com/MineralsCloud/EquationsOfState.jl/issues/52#issuecomment-555856194)).
+In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/base/base/#do)
+is preferred:
+```jldoctest
+julia> map(1:1:10) do v
+           apply(EnergyForm(), eos, v)
+       end
+10-element Array{Float64,1}:
+ 0.0
+ 0.367905230584308
+ 0.7652477289745814
+ 1.0516459435179235
+ 1.2560420090256412
+ 1.405149833626178
+ 1.5165867441792138
+ 1.6017034530570884
+ 1.6679539823686644
+ 1.7203642945516917
+```
 """
 apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
 """
@@ -457,46 +489,37 @@ Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
 """
 function apply(::EnergyForm, eos::Murnaghan, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
-
-    x = bp0 - 1
-    y = (v0 / v)^bp0
+    x, y = bp0 - 1, (v0 / v)^bp0
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
 function apply(::EnergyForm, eos::BirchMurnaghan2nd, v)
     v0, b0, e0 = fieldvalues(eos)
-
     f = (cbrt(v0 / v)^2 - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 function apply(::EnergyForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
-
     eta = cbrt(v0 / v)
     xi = eta^2 - 1
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
 end
 function apply(::EnergyForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
-
-    f = (cbrt(v0 / v)^2 - 1) / 2
-    h = b0 * bpp0 + bp0^2
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
 function apply(::EnergyForm, eos::PoirierTarantola2nd, v)
     v0, b0, e0 = fieldvalues(eos)
-
-    return e0 + b0 / 2 * v0 * log(v / v0)^(2 / 3)
+    return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
 end
 function apply(::EnergyForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
-
     x = cbrt(v / v0)
     xi = -3 * log(x)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
 function apply(::EnergyForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
-
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
@@ -504,16 +527,12 @@ function apply(::EnergyForm, eos::PoirierTarantola4th, v)
 end
 function apply(::EnergyForm, eos::Vinet, v)
     v0, b0, bp0, e0 = fieldvalues(eos)
-
-    x = cbrt(v / v0)
-    xi = 3 / 2 * (bp0 - 1)
+    x, xi = cbrt(v / v0), 3 / 2 * (bp0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
 function apply(::EnergyForm, eos::AntonSchmidt, v)
     v0, β, n, e∞ = fieldvalues(eos)
-
-    x = v / v0
-    η = n + 1
+    x, η = v / v0, n + 1
     return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
 end
 # ============================= Energy evaluation ============================ #
@@ -531,67 +550,64 @@ Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 """
 function apply(::PressureForm, eos::Murnaghan, v)
     v0, b0, bp0 = fieldvalues(eos)
-
     return b0 / bp0 * ((v0 / v)^bp0 - 1)
 end
 function apply(::PressureForm, eos::BirchMurnaghan2nd, v)
     v0, b0 = fieldvalues(eos)
-
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
 function apply(::PressureForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
-
-    eta = (v0 / v)^(1 / 3)
+    eta = cbrt(v0 / v)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
 end
 function apply(::PressureForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
-
-    f = ((v0 / v)^(2 / 3) - 1) / 2
-    h = b0 * bpp0 + bp0^2
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
 end
 function apply(::PressureForm, eos::PoirierTarantola2nd, v)
     v0, b0 = fieldvalues(eos)
-
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     return -b0 / x * log(x)
 end
 function apply(::PressureForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
-
     x = v / v0
     xi = log(x)
     return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
 end
 function apply(::PressureForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
-
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
 end
 function apply(::PressureForm, eos::Vinet, v)
     v0, b0, bp0 = fieldvalues(eos)
-
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = 3 / 2 * (bp0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
 function apply(::PressureForm, eos::AntonSchmidt, v)
     v0, β, n = fieldvalues(eos)
-
     x = v / v0
     return -β * x^n * log(x)
 end
 function apply(::PressureForm, eos::BreenanStacey, v)
     v0, b0, γ0 = fieldvalues(eos)
-
     x = v0 / v
     return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
+end
+function apply(::PressureForm, eos::Shanker, v)
+    v0, b0, bp0 = fieldvalues(eos)
+    x = v / v0
+    y = 1 - x
+    t = bp0 - 8 / 3
+    return b0 / (x^(4 / 3) * t) *
+           ((1 - 1 / t + 2 / t^2) * exp(t * y - 1) + y * (1 + y - 2 / t) * exp(t * y))
 end
 # ============================ Pressure evaluation =========================== #
 
@@ -608,41 +624,35 @@ Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has unit
 """
 function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v)
     v0, b0 = fieldvalues(eos)
-
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
 function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
-
-    f = ((v0 / v)^(2 / 3) - 1) / 2
+    f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
 function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
-
-    f = ((v0 / v)^(2 / 3) - 1) / 2
-    h = b0 * bpp0 + bp0^2
-    return b0 / 6 * (2f + 1)^(5 / 2) *
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
+    return b0 / 6 *
+           (2f + 1)^(5 / 2) *
            ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
 function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v)
     v0, b0 = fieldvalues(eos)
-
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     return b0 / x * (1 - log(x))
 end
 function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v)
     v0, b0, bp0 = fieldvalues(eos)
-
     x = v / v0
     xi = log(x)
     return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
 end
 function apply(::BulkModulusForm, eos::PoirierTarantola4th, v)
     v0, b0, bp0, bpp0 = fieldvalues(eos)
-
-    x = (v / v0)^(1 / 3)
+    x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return -b0 / (6x) *
@@ -650,16 +660,20 @@ function apply(::BulkModulusForm, eos::PoirierTarantola4th, v)
 end
 function apply(::BulkModulusForm, eos::Vinet, v)
     v0, b0, bp0 = fieldvalues(eos)
-
-    x = (v / v0)^(1 / 3)
-    xi = 3 / 2 * (bp0 - 1)
+    x, xi = cbrt(v / v0), 3 / 2 * (bp0 - 1)
     return -b0 / (2 * x^2) * (3x * (x - 1) * (bp0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
 function apply(::BulkModulusForm, eos::AntonSchmidt, v)
     v0, β, n = fieldvalues(eos)
-
     x = v / v0
     return β * x^n * (1 + n * log(x))
+end
+function apply(::BulkModulusForm, eos::Shanker, v)
+    v0, b0, bp0 = fieldvalues(eos)
+    x = v / v0
+    y = 1 - x
+    t = bp0 - 8 / 3
+    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * apply(PressureForm(), eos, v)
 end
 # ========================== Bulk modulus evaluation ========================= #
 
