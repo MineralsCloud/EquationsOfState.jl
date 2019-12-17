@@ -458,6 +458,27 @@ julia> map(h, 1:1:10)
  0.047609811583958425
  0.03808959181078831
 ```
+
+However, these methods are preserved for special cases
+(see [#52](https://github.com/MineralsCloud/EquationsOfState.jl/issues/52#issuecomment-555856194)).
+In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/base/base/#do)
+is preferred:
+```jldoctest
+julia> map(1:1:10) do v
+           apply(EnergyForm(), eos, v)
+       end
+10-element Array{Float64,1}:
+ 0.0
+ 0.367905230584308
+ 0.7652477289745814
+ 1.0516459435179235
+ 1.2560420090256412
+ 1.405149833626178
+ 1.5165867441792138
+ 1.6017034530570884
+ 1.6679539823686644
+ 1.7203642945516917
+```
 """
 apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
 """
