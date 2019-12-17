@@ -21,11 +21,11 @@ platform to explain the following steps:
    ```julia
    julia> using Pkg; Pkg.update()
 
-   julia> Pkg.add(PackageSpec(url="https://github.com/PainterQubits/Unitful.jl"))
+   julia> Pkg.add("Unitful")
 
-   julia> Pkg.add(PackageSpec(url="https://github.com/sostock/UnitfulAtomic.jl"))
+   julia> Pkg.add("UnitfulAtomic")
 
-   julia> Pkg.add(PackageSpec(url="https://github.com/MineralsCloud/EquationsOfState.jl"))
+   julia> Pkg.add("EquationsOfState")
    ```
 
    and wait for its finish.
