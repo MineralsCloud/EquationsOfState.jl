@@ -36,14 +36,16 @@ The formulae are referenced from Ref. 1.
 This package also includes linear and nonlinear fitting methods, also referenced
 from Ref. 1.
 
-See its [documentation](https://mineralscloud.github.io/EquationsOfState.jl/dev/).
+See its
+[documentation](https://mineralscloud.github.io/EquationsOfState.jl/dev/).
 
 ## Compatibility
 
 - [Julia version: `v1.0.0` and above](https://julialang.org/downloads/)
 - Dependencies: see `Project.toml`
   [`deps` field](https://github.com/MineralsCloud/EquationsOfState.jl/blob/da3a6ea/Project.toml#L7-L14)
-  and [`compat` field](https://github.com/MineralsCloud/EquationsOfState.jl/blob/da3a6ea/Project.toml#L17-L23)
+  and
+  [`compat` field](https://github.com/MineralsCloud/EquationsOfState.jl/blob/da3a6ea/Project.toml#L17-L23)
 - OS: macOS, Linux, and Windows
 
 ## TODOs
