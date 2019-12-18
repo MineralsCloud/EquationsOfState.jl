@@ -2,8 +2,6 @@
   <img src="./docs/src/assets/logo.png" height="200"><br>
 </div>
 
----
-
 # EquationsOfState.jl
 
 [![Build Status](https://github.com/MineralsCloud/EquationsOfState.jl/workflows/CI/badge.svg)](https://github.com/MineralsCloud/EquationsOfState.jl/actions)
