@@ -5,10 +5,11 @@ a (an) volume (array of volumes).
 """
 module Collections
 
-using Unitful
 using Unitful: AbstractQuantity
 
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
+
+import Unitful
 
 export apply,
     EquationOfState,
