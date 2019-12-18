@@ -1,4 +1,8 @@
-# EquationsOfState.jl
+```@meta
+CurrentModule = EquationsOfState
+```
+
+# EquationsOfState
 
 !!! note
 
@@ -38,4 +42,8 @@ Depth = 3
 
 ```@index
 
+```
+
+```@autodocs
+Modules = [EquationsOfState]
 ```

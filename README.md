@@ -2,19 +2,17 @@
   <img src="./docs/src/assets/logo.png" height="200"><br>
 </div>
 
----
-
 # EquationsOfState.jl
 
+[![Build Status](https://github.com/MineralsCloud/EquationsOfState.jl/workflows/CI/badge.svg)](https://github.com/MineralsCloud/EquationsOfState.jl/actions)
+[![Build Status](https://travis-ci.com/MineralsCloud/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/MineralsCloud/EquationsOfState.jl)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/singularitti/EquationsOfState.jl?svg=true)](https://ci.appveyor.com/project/singularitti/EquationsOfState-jl)
+[![Build Status](https://cloud.drone.io/api/badges/MineralsCloud/EquationsOfState.jl/status.svg)](https://cloud.drone.io/MineralsCloud/EquationsOfState.jl)
+[![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
+[![Coverage](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
+[![Coverage](https://coveralls.io/repos/github/MineralsCloud/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/MineralsCloud/EquationsOfState.jl?branch=master)
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://MineralsCloud.github.io/EquationsOfState.jl/dev)
-[![Build Status](https://travis-ci.com/MineralsCloud/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/MineralsCloud/EquationsOfState.jl)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/MineralsCloud/EquationsOfState.jl?svg=true)](https://ci.appveyor.com/project/singularitti/EquationsOfState-jl)
-[![Codecov](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
-[![Coveralls](https://coveralls.io/repos/github/MineralsCloud/EquationsOfState.jl/badge.svg?branch=master)](https://coveralls.io/github/MineralsCloud/EquationsOfState.jl?branch=master)
-[![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
-[![GitHub license](https://img.shields.io/github/license/MineralsCloud/EquationsOfState.jl)](https://github.com/MineralsCloud/EquationsOfState.jl/blob/master/LICENSE)
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/MineralsCloud/EquationsOfState.jl?include_prereleases)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 
 This package implements some _equations of state_ (EOS) of solids which are

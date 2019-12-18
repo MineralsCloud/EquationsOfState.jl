@@ -1,9 +1,17 @@
-using Documenter, EquationsOfState
+using EquationsOfState
+using Documenter
 
 DocMeta.setdocmeta!(EquationsOfState, :DocTestSetup, :(using EquationsOfState, EquationOfState.Collections, Unitful); recursive=true)
 makedocs(;
     modules=[EquationsOfState],
-    format=Documenter.HTML(),
+    authors="Qi Zhang <singularitti@outlook.com>",
+    repo="https://github.com/MineralsCloud/EquationsOfState.jl/blob/{commit}{path}#L{line}",
+    sitename="EquationsOfState.jl",
+    format=Documenter.HTML(;
+        prettyurls=get(ENV, "CI", "false") == "true",
+        canonical="https://MineralsCloud.github.io/EquationsOfState.jl",
+        assets=String[],
+    ),
     pages=[
         "Home" => "index.md",
         "Installation" => "Installation.md",
@@ -16,12 +24,8 @@ makedocs(;
         ],
         "FAQ" => "FAQ.md",
     ],
-    repo="https://github.com/MineralsCloud/EquationsOfState.jl/blob/{commit}{path}#L{line}",
-    sitename="EquationsOfState.jl",
-    authors="Qi Zhang <singularitti@outlook.com>",
-    assets=String[],
 )
 
 deploydocs(;
-    repo="github.com/MineralsCloud/EquationsOfState.jl.git"
+    repo="github.com/MineralsCloud/EquationsOfState.jl",
 )
