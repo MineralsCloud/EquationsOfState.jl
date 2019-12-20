@@ -5,7 +5,7 @@ a (an) volume (array of volumes).
 """
 module Collections
 
-using Unitful: AbstractQuantity, dimension, @u_str
+using Unitful: AbstractQuantity, dimension, upreferred, @u_str
 
 using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
 
