@@ -1,6 +1,6 @@
 # This file plots the `findvolume.png` in docs
 using Unitful, UnitfulAtomic, Plots
-using EquationsOfState, EquationsOfState.Collections, EquationsOfState.Find
+using EquationsOfState.Collections, EquationsOfState.Find
 
 plotlyjs()
 
@@ -13,7 +13,7 @@ volumes = map(
 plot(ustrip.(volumes), ustrip.(pressures), label = "pressures")
 scatter!(
     ustrip.(volumes),
-    ustrip.(u"GPa", apply(PressureForm(), eos).(volumes)),
+    ustrip.(u"GPa", eos(PressureForm()).(volumes)),
     label = "P(V)",
     dpi = 400,
 )
