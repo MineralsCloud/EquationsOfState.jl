@@ -8,7 +8,7 @@ using ConstructionBase: constructorof
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
-using ..Collections: EquationForm, EquationOfState, apply, fieldvalues
+using ..Collections: EquationForm, EquationOfState, fieldvalues
 
 export lsqfit
 
@@ -35,7 +35,7 @@ function lsqfit(
     kwargs...,
 )
     E = constructorof(typeof(eos))  # Get the `UnionAll` type
-    model = (x, p) -> map(apply(form, E(p...)), x)
+    model = (x, p) -> map(E(p...)(form), x)
     fitted = curve_fit(
         model,
         float(xdata),  # Convert `xdata` elements to floats

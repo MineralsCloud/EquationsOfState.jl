@@ -9,8 +9,7 @@ using Unitful: AbstractQuantity, dimension, upreferred, @u_str
 
 import Unitful
 
-export apply,
-    EnergyForm,
+export EnergyForm,
     PressureForm,
     BulkModulusForm,
     EquationOfState,
@@ -403,6 +402,11 @@ end
 Shanker(v0::Real, b0::Real, bp0::Real) = Shanker(v0, b0, bp0, 0)
 Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
     Shanker(v0, b0, bp0, 0 * upreferred(Unitful.J))
+
+# This is a helper type and should be exported!
+struct EquationOfStateOnVolume{S<:EquationOfState,T<:EquationForm}
+    eos::S
+end
 # =================================== Types ================================== #
 
 
@@ -487,58 +491,58 @@ julia> map(1:1:10) do v
  1.7203642945516917
 ```
 """
-apply(form::EnergyForm, eos::EquationOfState) = v -> apply(form, eos, v)
+(eos::EquationOfState)(eq::EquationForm) = EquationOfStateOnVolume{typeof(eos),typeof(eq)}(eos)
 """
     apply(EnergyForm(), eos::EquationOfState, v)
 
 Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 """
-function apply(::EnergyForm, eos::Murnaghan, v)
-    v0, b0, bp0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Murnaghan,EnergyForm})(v)
+    v0, b0, bp0, e0 = fieldvalues(f.eos)
     x, y = bp0 - 1, (v0 / v)^bp0
     return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
 end
-function apply(::EnergyForm, eos::BirchMurnaghan2nd, v)
-    v0, b0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,EnergyForm})(v)
+    v0, b0, e0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
-function apply(::EnergyForm, eos::BirchMurnaghan3rd, v)
-    v0, b0, bp0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan3rd,EnergyForm})(v)
+    v0, b0, bp0, e0 = fieldvalues(f.eos)
     eta = cbrt(v0 / v)
     xi = eta^2 - 1
     return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
 end
-function apply(::EnergyForm, eos::BirchMurnaghan4th, v)
-    v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan4th,EnergyForm})(v)
+    v0, b0, bp0, bpp0, e0 = fieldvalues(f.eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
 end
-function apply(::EnergyForm, eos::PoirierTarantola2nd, v)
-    v0, b0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,EnergyForm})(v)
+    v0, b0, e0 = fieldvalues(f.eos)
     return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
 end
-function apply(::EnergyForm, eos::PoirierTarantola3rd, v)
-    v0, b0, bp0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola3rd,EnergyForm})(v)
+    v0, b0, bp0, e0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = -3 * log(x)
     return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
 end
-function apply(::EnergyForm, eos::PoirierTarantola4th, v)
-    v0, b0, bp0, bpp0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola4th,EnergyForm})(v)
+    v0, b0, bp0, bpp0, e0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
 end
-function apply(::EnergyForm, eos::Vinet, v)
-    v0, b0, bp0, e0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Vinet,EnergyForm})(v)
+    v0, b0, bp0, e0 = fieldvalues(f.eos)
     x, xi = cbrt(v / v0), 3 / 2 * (bp0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
-function apply(::EnergyForm, eos::AntonSchmidt, v)
-    v0, β, n, e∞ = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:AntonSchmidt,EnergyForm})(v)
+    v0, β, n, e∞ = fieldvalues(f.eos)
     x, η = v / v0, n + 1
     return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
 end
@@ -548,68 +552,67 @@ end
 # ============================================================================ #
 #                              Pressure evaluation                             #
 # ============================================================================ #
-apply(::PressureForm, eos::EquationOfState) = v -> apply(PressureForm(), eos, v)
 """
     apply(PressureForm(), eos::EquationOfState, v)
 
 Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 """
-function apply(::PressureForm, eos::Murnaghan, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Murnaghan,PressureForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     return b0 / bp0 * ((v0 / v)^bp0 - 1)
 end
-function apply(::PressureForm, eos::BirchMurnaghan2nd, v)
-    v0, b0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,PressureForm})(v)
+    v0, b0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
-function apply(::PressureForm, eos::BirchMurnaghan3rd, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan3rd,PressureForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     eta = cbrt(v0 / v)
     return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
 end
-function apply(::PressureForm, eos::BirchMurnaghan4th, v)
-    v0, b0, bp0, bpp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan4th,PressureForm})(v)
+    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
 end
-function apply(::PressureForm, eos::PoirierTarantola2nd, v)
-    v0, b0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,PressureForm})(v)
+    v0, b0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     return -b0 / x * log(x)
 end
-function apply(::PressureForm, eos::PoirierTarantola3rd, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola3rd,PressureForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     x = v / v0
     xi = log(x)
     return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
 end
-function apply(::PressureForm, eos::PoirierTarantola4th, v)
-    v0, b0, bp0, bpp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola4th,PressureForm})(v)
+    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
 end
-function apply(::PressureForm, eos::Vinet, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Vinet,PressureForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = 3 / 2 * (bp0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
-function apply(::PressureForm, eos::AntonSchmidt, v)
-    v0, β, n = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:AntonSchmidt,PressureForm})(v)
+    v0, β, n = fieldvalues(f.eos)
     x = v / v0
     return -β * x^n * log(x)
 end
-function apply(::PressureForm, eos::BreenanStacey, v)
-    v0, b0, γ0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BreenanStacey,PressureForm})(v)
+    v0, b0, γ0 = fieldvalues(f.eos)
     x = v0 / v
     return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
 end
-function apply(::PressureForm, eos::Shanker, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Shanker,PressureForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     x = v / v0
     y = 1 - x
     t = bp0 - 8 / 3
@@ -622,65 +625,64 @@ end
 # ============================================================================ #
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
-apply(::BulkModulusForm, eos::EquationOfState) = v -> apply(BulkModulusForm(), eos, v)
 """
     apply(BulkModulusForm(), eos::EquationOfState, v)
 
 Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 """
-function apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v)
-    v0, b0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
+    v0, b0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
-function apply(::BulkModulusForm, eos::BirchMurnaghan3rd, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan3rd,BulkModulusForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
 end
-function apply(::BulkModulusForm, eos::BirchMurnaghan4th, v)
-    v0, b0, bp0, bpp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:BirchMurnaghan4th,BulkModulusForm})(v)
+    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
     return b0 / 6 *
            (2f + 1)^(5 / 2) *
            ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
 end
-function apply(::BulkModulusForm, eos::PoirierTarantola2nd, v)
-    v0, b0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,BulkModulusForm})(v)
+    v0, b0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     return b0 / x * (1 - log(x))
 end
-function apply(::BulkModulusForm, eos::PoirierTarantola3rd, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola3rd,BulkModulusForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     x = v / v0
     xi = log(x)
     return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
 end
-function apply(::BulkModulusForm, eos::PoirierTarantola4th, v)
-    v0, b0, bp0, bpp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:PoirierTarantola4th,BulkModulusForm})(v)
+    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * bpp0 + bp0^2
     return -b0 / (6x) *
            ((h + 3bp0 + 3) * xi^3 - 3 * xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
 end
-function apply(::BulkModulusForm, eos::Vinet, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Vinet,BulkModulusForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     x, xi = cbrt(v / v0), 3 / 2 * (bp0 - 1)
     return -b0 / (2 * x^2) * (3x * (x - 1) * (bp0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
-function apply(::BulkModulusForm, eos::AntonSchmidt, v)
-    v0, β, n = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:AntonSchmidt,BulkModulusForm})(v)
+    v0, β, n = fieldvalues(f.eos)
     x = v / v0
     return β * x^n * (1 + n * log(x))
 end
-function apply(::BulkModulusForm, eos::Shanker, v)
-    v0, b0, bp0 = fieldvalues(eos)
+function (f::EquationOfStateOnVolume{<:Shanker,BulkModulusForm})(v)
+    v0, b0, bp0 = fieldvalues(f.eos)
     x = v / v0
     y = 1 - x
     t = bp0 - 8 / 3
-    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * apply(PressureForm(), eos, v)
+    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * eos(PressureForm())(v)
 end
 # ========================== Bulk modulus evaluation ========================= #
 

@@ -18,7 +18,7 @@ using Roots: find_zero,
              ConvergenceFailed
 using Unitful: AbstractQuantity, ustrip
 
-using ..Collections: EquationOfState, EquationForm, apply
+using ..Collections: EquationOfState, EquationForm
 
 export findvolume
 
@@ -41,7 +41,7 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     root-finding process.
 """
 function findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
-    f = v -> apply(form, eos, v) - y
+    f = v -> eos(form)(v) - y
     return find_zero(f, x0, method)
 end # function findvolume
 function findvolume(
