@@ -697,6 +697,16 @@ function Base.:(==)(x::T, y::T) where {T<:EquationOfState}
     return all(getfield(x, i) == getfield(y, i) for i in 1:fieldcount(T))
 end
 
+function Base.getproperty(eos::EquationOfState, name::Symbol)
+    if name ∈ (:bp0, :bd0)
+        return getfield(eos, :b′0)
+    elseif name ∈ (:bpp0, :bdd0)
+        return getfield(eos, :b′′0)
+    else
+        return getfield(eos, name)
+    end
+end
+
 Unitful.upreferred(::typeof(dimension(u"J"))) = u"eV"
 Unitful.upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
 Unitful.upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
