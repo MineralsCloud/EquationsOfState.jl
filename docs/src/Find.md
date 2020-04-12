@@ -14,7 +14,7 @@ experience, `P(V)` relation is usually a monotonic function. So we suggest using
 ## Usage
 
 ```julia
-julia> using EquationsOfState, EquationsOfState.Collections, EquationsOfState.Find, Unitful, UnitfulAtomic
+julia> using EquationsOfState.Collections, EquationsOfState.Find, Unitful, UnitfulAtomic
 
 julia> pressures = collect(0:20:200) .* u"GPa";
 

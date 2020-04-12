@@ -4,7 +4,6 @@ using Roots
 using Unitful
 using UnitfulAtomic
 
-using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.Find
 
@@ -98,7 +97,7 @@ end
         pressures,
     )
     @test isapprox(
-        ustrip.(map(apply(PressureForm(), eos), volumes) - pressures),
+        ustrip.(map(eos(PressureForm()), volumes) - pressures),
         zeros(11),
         atol = 1e-5,
     )

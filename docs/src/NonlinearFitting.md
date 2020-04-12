@@ -30,7 +30,6 @@ for more information.
 We provide API `lsqfit` currently.
 
 ```julia
-using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 

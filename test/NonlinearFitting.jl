@@ -2,7 +2,6 @@ using Test
 
 using Unitful, UnitfulAtomic
 
-using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 
@@ -441,7 +440,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        map(apply(EnergyForm(), fitted_eos), mp153_volumes),
+        map(fitted_eos(EnergyForm()), mp153_volumes),
         mp153_known_energies_vinet;
         atol = 1e-5,
     )
@@ -531,7 +530,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        map(apply(EnergyForm(), fitted_eos), mp149_volumes),
+        map(fitted_eos(EnergyForm()), mp149_volumes),
         mp149_known_energies_vinet;
         atol = 1e-5,
     )
@@ -621,7 +620,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        map(apply(EnergyForm(), fitted_eos), mp72_volumes),
+        map(fitted_eos(EnergyForm()), mp72_volumes),
         mp72_known_energies_vinet;
         atol = 1e-5,
     )

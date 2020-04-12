@@ -8,8 +8,7 @@ using ConstructionBase: constructorof
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
-import ..EquationForm
-using ..Collections
+using ..Collections: EquationForm, EquationOfState, fieldvalues
 
 export lsqfit
 
@@ -36,12 +35,12 @@ function lsqfit(
     kwargs...,
 )
     E = constructorof(typeof(eos))  # Get the `UnionAll` type
-    model = (x, p) -> map(apply(form, E(p...)), x)
+    model = (x, p) -> map(E(p...)(form), x)
     fitted = curve_fit(
         model,
         float(xdata),  # Convert `xdata` elements to floats
         float(ydata),  # Convert `ydata` elements to floats
-        float(Collections.fieldvalues(eos));  # TODO: What if these floats are different types?
+        float(fieldvalues(eos));  # TODO: What if these floats are different types?
         kwargs...,
     )
     return debug ? fitted : E(fitted.param...)
@@ -54,13 +53,13 @@ function lsqfit(
     kwargs...,
 )
     E = constructorof(typeof(eos))  # Get the `UnionAll` type
-    values = Collections.fieldvalues(eos)
+    values = fieldvalues(eos)
     original_units = unit.(values)  # Keep a record of `eos`'s units
     f = x -> map(ustrip ∘ upreferred, x)  # Convert to preferred units and strip the unit
     trial_params = f.(values)
     result = lsqfit(form, E(trial_params...), f.(xdata), f.(ydata); kwargs...)
     if result isa EquationOfState  # i.e., if `debug = false` and no error is thrown
-        data = Collections.fieldvalues(result)
+        data = fieldvalues(result)
         # Convert back to original `eos`'s units
         return E([data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...)
     end
