@@ -275,8 +275,8 @@ Vinet
 ## Public interfaces
 
 ```@docs
-apply(::EnergyForm, eos::EquationOfState)
-apply(::EnergyForm, eos::Murnaghan, v)
-apply(::PressureForm, eos::Murnaghan, v)
-apply(::BulkModulusForm, eos::BirchMurnaghan2nd, v)
+(eos::EquationOfState)(eq::EquationForm)
+(f::EquationOfStateOnVolume{<:Murnaghan,EnergyForm})(v)
+(f::EquationOfStateOnVolume{<:Murnaghan,PressureForm})(v)
+(f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
 ```

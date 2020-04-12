@@ -414,17 +414,17 @@ end
 #                               Energy evaluation                              #
 # ============================================================================ #
 """
-    apply(EnergyForm(), eos::EquationOfState)
-    apply(PressureForm(), eos::EquationOfState)
-    apply(BulkModulusForm(), eos::EquationOfState)
+    (eos::EquationOfState)(EnergyForm())
+    (eos::EquationOfState)(PressureForm())
+    (eos::EquationOfState)(BulkModulusForm())
 
-Return a function that takes a volume as a variable, suitable for mapping onto an array.
+Return a [function-like object](https://docs.julialang.org/en/v1/manual/methods/#Function-like-objects-1) that takes a volume as a variable, suitable for mapping onto an array.
 
 # Examples
 ```jldoctest
 julia> using EquationsOfState, EquationsOfState.Collections
 
-julia> f = apply(EnergyForm(), Vinet(1, 2, 3));
+julia> f = Vinet(1, 2, 3)(EnergyForm());
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -439,7 +439,7 @@ julia> map(f, 1:1:10)
  1.6679539823686644
  1.7203642945516917
 
-julia> g = apply(PressureForm(), Vinet(1, 2, 3));
+julia> g = Vinet(1, 2, 3)(PressureForm());
 
 julia> map(g, 1:1:10)
 10-element Array{Float64,1}:
@@ -454,7 +454,7 @@ julia> map(g, 1:1:10)
  -0.05864401631176751
  -0.04674768462396211
 
-julia> h = apply(BulkModulusForm(), BirchMurnaghan3rd(1, 2, 3));
+julia> h = BirchMurnaghan3rd(1, 2, 3)(BulkModulusForm());
 
 julia> map(h, 1:1:10)
 10-element Array{Float64,1}:
@@ -476,7 +476,7 @@ In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/bas
 is preferred:
 ```jldoctest
 julia> map(1:1:10) do v
-           apply(EnergyForm(), eos, v)
+           eos(EnergyForm())(v)
        end
 10-element Array{Float64,1}:
  0.0
@@ -493,7 +493,7 @@ julia> map(1:1:10) do v
 """
 (eos::EquationOfState)(eq::EquationForm) = EquationOfStateOnVolume{typeof(eos),typeof(eq)}(eos)
 """
-    apply(EnergyForm(), eos::EquationOfState, v)
+    (eos::EquationOfState)(EnergyForm())(v)
 
 Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
@@ -553,7 +553,7 @@ end
 #                              Pressure evaluation                             #
 # ============================================================================ #
 """
-    apply(PressureForm(), eos::EquationOfState, v)
+    (eos::EquationOfState)(PressureForm())(v)
 
 Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
@@ -626,7 +626,7 @@ end
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
 """
-    apply(BulkModulusForm(), eos::EquationOfState, v)
+    (eos::EquationOfState)(BulkModulusForm())(v)
 
 Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
