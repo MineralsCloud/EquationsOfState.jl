@@ -2,7 +2,6 @@ using Test
 
 using Unitful, UnitfulAtomic
 
-using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.NonlinearFitting
 

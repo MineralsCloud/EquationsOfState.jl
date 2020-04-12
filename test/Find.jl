@@ -4,7 +4,6 @@ using Roots
 using Unitful
 using UnitfulAtomic
 
-using EquationsOfState
 using EquationsOfState.Collections
 using EquationsOfState.Find
 

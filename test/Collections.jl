@@ -1,7 +1,6 @@
 using Test
 
 using Unitful
-using EquationsOfState
 using EquationsOfState.Collections
 
 @testset "Test EOS promotion" begin
