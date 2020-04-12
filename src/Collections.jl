@@ -7,11 +7,12 @@ module Collections
 
 using Unitful: AbstractQuantity, dimension, upreferred, @u_str
 
-using EquationsOfState: EnergyForm, PressureForm, BulkModulusForm
-
 import Unitful
 
 export apply,
+    EnergyForm,
+    PressureForm,
+    BulkModulusForm,
     EquationOfState,
     FiniteStrainEquationOfState,
     Murnaghan,
@@ -29,6 +30,11 @@ export apply,
 # ============================================================================ #
 #                                     Types                                    #
 # ============================================================================ #
+abstract type EquationForm end
+struct EnergyForm <: EquationForm end
+struct PressureForm <: EquationForm end
+struct BulkModulusForm <: EquationForm end
+
 """
     EquationOfState{T}
 

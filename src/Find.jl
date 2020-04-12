@@ -5,8 +5,6 @@ pressure, energy, or bulk modulus with(out) units.
 module Find
 
 using InteractiveUtils: subtypes
-using Unitful: AbstractQuantity, ustrip
-
 using Roots: find_zero,
              AbstractBracketing,
              AbstractNonBracketing,
@@ -18,9 +16,9 @@ using Roots: find_zero,
              Brent,
              Newton,
              ConvergenceFailed
+using Unitful: AbstractQuantity, ustrip
 
-import ..EquationForm
-using ..Collections: EquationOfState, apply
+using ..Collections: EquationOfState, EquationForm, apply
 
 export findvolume
 
@@ -37,7 +35,7 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
 - `x0`: can be either a range of volumes (`Vector`, `Tuple`, etc.) or just a single volume.
     Units can be provided if necessary.
 - `method::Roots.AbstractUnivariateZeroMethod`: a method used to find the root of an equation.
-    If it is omitted, the algorithm will traverse all possible methods of 
+    If it is omitted, the algorithm will traverse all possible methods of
     [Roots.jl](https://github.com/JuliaMath/Roots.jl). And the `x0` parameter must be
     an array or a tuple, of which only the maximum and minimum values will be used in the
     root-finding process.
