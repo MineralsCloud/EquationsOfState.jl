@@ -29,10 +29,10 @@ export EnergyForm,
 # ============================================================================ #
 #                                     Types                                    #
 # ============================================================================ #
-abstract type EquationForm end
-struct EnergyForm <: EquationForm end
-struct PressureForm <: EquationForm end
-struct BulkModulusForm <: EquationForm end
+abstract type PhysicalProperty end
+struct EnergyForm <: PhysicalProperty end
+struct PressureForm <: PhysicalProperty end
+struct BulkModulusForm <: PhysicalProperty end
 
 """
     EquationOfState{T}
@@ -404,7 +404,7 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
     Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 # This is a helper type and should be exported!
-struct EquationOfStateOnVolume{S<:EquationOfState,T<:EquationForm}
+struct EquationOfStateOnVolume{S<:EquationOfState,T<:PhysicalProperty}
     eos::S
 end
 # =================================== Types ================================== #
@@ -491,7 +491,7 @@ julia> map(1:1:10) do v
  1.7203642945516917
 ```
 """
-(eos::EquationOfState)(eq::EquationForm) = EquationOfStateOnVolume{typeof(eos),typeof(eq)}(eos)
+(eos::EquationOfState)(eq::PhysicalProperty) = EquationOfStateOnVolume{typeof(eos),typeof(eq)}(eos)
 """
     (eos::EquationOfState)(EnergyForm())(v)
 

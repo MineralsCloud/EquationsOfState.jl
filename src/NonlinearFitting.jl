@@ -8,7 +8,7 @@ using ConstructionBase: constructorof
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
-using ..Collections: EquationForm, EquationOfState, fieldvalues
+using ..Collections: PhysicalProperty, EquationOfState, fieldvalues
 
 export lsqfit
 
@@ -18,7 +18,7 @@ export lsqfit
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
 # Arguments
-- `form::EquationForm`: an `EquationForm` instance. If `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusForm`, fit ``B(V)``.
+- `form::PhysicalProperty`: an `PhysicalProperty` instance. If `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusForm`, fit ``B(V)``.
 - `eos::EquationOfState`: a trial equation of state. If it has units, `xdata` and `ydata` must also have.
 - `xdata::AbstractVector`: a vector of volumes (``V``), with(out) units.
 - `ydata::AbstractVector`: a vector of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `form`.
@@ -27,7 +27,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(
-    form::EquationForm,
+    form::PhysicalProperty,
     eos::EquationOfState{<:Real},
     xdata::AbstractVector{<:Real},
     ydata::AbstractVector{<:Real};
@@ -46,7 +46,7 @@ function lsqfit(
     return debug ? fitted : E(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    form::EquationForm,
+    form::PhysicalProperty,
     eos::EquationOfState{<:AbstractQuantity},
     xdata::AbstractVector{<:AbstractQuantity},
     ydata::AbstractVector{<:AbstractQuantity};
