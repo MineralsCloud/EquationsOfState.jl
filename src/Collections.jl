@@ -1,5 +1,5 @@
 """
-This module provides `EquationOfState` types and `apply` methods to calculate
+This module provides `EquationOfState` types and calculate
 energy, pressure, or bulk modulus of an `EquationOfState` on
 a (an) volume (array of volumes).
 """
