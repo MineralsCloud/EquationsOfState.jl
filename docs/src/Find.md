@@ -62,7 +62,8 @@ A figure is plotted below to verify our results, and it fits very well.
 findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
 ```
 
-All available `method`s are the leaves of the tree below (Remember to add a `Roots.` prefix):
+All available `method`s are the leaves of the tree below (Remember to add a
+`Roots.` prefix):
 
 ```
 AbstractUnivariateZeroMethod

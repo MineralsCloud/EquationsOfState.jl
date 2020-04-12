@@ -22,15 +22,17 @@ brew cask install julia
 
 ### on Linux
 
-On Linux, the best way to install Julia is to use the Generic Linux Binaries. The
-[JILL](https://github.com/abelsiqueira/jill) script does this for you. Just run
+On Linux, the best way to install Julia is to use the Generic Linux Binaries.
+The [JILL](https://github.com/abelsiqueira/jill) script does this for you. Just
+run
 
 ```shell
 bash -ci "$(curl -fsSL https://raw.githubusercontent.com/abelsiqueira/jill/master/jill.sh)"
 ```
 
 installs Julia into `$HOME/.local/bin`. This script also has a Python version,
-[JILL.py](https://github.com/johnnychen94/jill.py). It can also be used on macOS.
+[JILL.py](https://github.com/johnnychen94/jill.py). It can also be used on
+macOS.
 
 ## Installing the package
 
