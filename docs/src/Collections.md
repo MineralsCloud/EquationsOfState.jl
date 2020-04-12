@@ -46,7 +46,7 @@ julia> eos
 Murnaghan{Float64}(4.0, 2.0, 3.0, 0.0)
 ```
 
-To modify multiple fields (say, `:v0`, `:bp0`, `:bpp0`, `:e0`) at a time, use
+To modify multiple fields (say, `:v0`, `:b′0`, `:b′′0`, `:e0`) at a time, use
 [`@batchlens`](https://tkf.github.io/Kaleido.jl/stable/#Kaleido.@batchlens) from
 [`Kaleido.jl`](https://github.com/tkf/Kaleido.jl):
 
@@ -55,11 +55,11 @@ julia> using Setfield, Kaleido
 
 julia> lens = @batchlens(begin
            _.v0
-           _.bp0
-           _.bpp0
+           _.b′0
+           _.b′′0
            _.e0
        end)
-IndexBatchLens(:v0, :bp0, :bpp0, :e0)
+IndexBatchLens(:v0, :b′0, :b′′0, :e0)
 
 julia> eos = BirchMurnaghan4th(1, 2.0, 3, 4)
 BirchMurnaghan4th{Float64}(1.0, 2.0, 3.0, 4.0, 0.0)
