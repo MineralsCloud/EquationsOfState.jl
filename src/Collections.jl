@@ -49,7 +49,7 @@ An abstraction of finite strain equations of state, where `T` specifies the elem
 abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
 
 """
-    Murnaghan(v0, b0, bp0, e0)
+    Murnaghan(v0, b0, b′0, e0)
 
 Create a Murnaghan equation of state. The elements' type will be handled automatically.
 
@@ -59,7 +59,7 @@ This equation of state can have units. The units are specified in [`Unitful.jl`]
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
@@ -77,16 +77,16 @@ Murnaghan{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 3.0 eV)
 struct Murnaghan{T} <: EquationOfState{T}
     v0::T
     b0::T
-    bp0::T
+    b′0::T
     e0::T
 end
-function Murnaghan(v0, b0, bp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    return Murnaghan{T}(convert.(T, [v0, b0, bp0, e0])...)
+function Murnaghan(v0, b0, b′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, e0)
+    return Murnaghan{T}(convert.(T, [v0, b0, b′0, e0])...)
 end
-Murnaghan(v0::Real, b0::Real, bp0::Real) = Murnaghan(v0, b0, bp0, 0)
-Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
-    Murnaghan(v0, b0, bp0, 0 * upreferred(Unitful.J))
+Murnaghan(v0::Real, b0::Real, b′0::Real) = Murnaghan(v0, b0, b′0, 0)
+Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
+    Murnaghan(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 """
     BirchMurnaghan2nd(v0, b0, e0)
@@ -126,14 +126,14 @@ BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
     BirchMurnaghan2nd(v0, b0, 0 * upreferred(Unitful.J))
 
 """
-    BirchMurnaghan3rd(v0, b0, bp0, e0)
+    BirchMurnaghan3rd(v0, b0, b′0, e0)
 
 Create a Birch–Murnaghan 3rd order equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 See also: [`BirchMurnaghan2nd`](@ref), [`BirchMurnaghan4th`](@ref)
@@ -153,27 +153,27 @@ BirchMurnaghan3rd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 4.0,
 struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
-    bp0::T
+    b′0::T
     e0::T
 end
-function BirchMurnaghan3rd(v0, b0, bp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    return BirchMurnaghan3rd{T}(convert.(T, [v0, b0, bp0, e0])...)
+function BirchMurnaghan3rd(v0, b0, b′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, e0)
+    return BirchMurnaghan3rd{T}(convert.(T, [v0, b0, b′0, e0])...)
 end
-BirchMurnaghan3rd(v0::Real, b0::Real, bp0::Real) = BirchMurnaghan3rd(v0, b0, bp0, 0)
-BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
-    BirchMurnaghan3rd(v0, b0, bp0, 0 * upreferred(Unitful.J))
+BirchMurnaghan3rd(v0::Real, b0::Real, b′0::Real) = BirchMurnaghan3rd(v0, b0, b′0, 0)
+BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
+    BirchMurnaghan3rd(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 """
-    BirchMurnaghan4th(v0, b0, bp0, bpp0, e0)
+    BirchMurnaghan4th(v0, b0, b′0, b′′0, e0)
 
 Create a Birch–Murnaghan 4th order equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′′0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 See also: [`BirchMurnaghan2nd`](@ref), [`BirchMurnaghan4th`](@ref)
@@ -193,18 +193,18 @@ BirchMurnaghan4th{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0,
 struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
-    bp0::T
-    bpp0::T
+    b′0::T
+    b′′0::T
     e0::T
 end
-function BirchMurnaghan4th(v0, b0, bp0, bpp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
-    return BirchMurnaghan4th{T}(convert.(T, [v0, b0, bp0, bpp0, e0])...)
+function BirchMurnaghan4th(v0, b0, b′0, b′′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, b′′0, e0)
+    return BirchMurnaghan4th{T}(convert.(T, [v0, b0, b′0, b′′0, e0])...)
 end
-BirchMurnaghan4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
-    BirchMurnaghan4th(v0, b0, bp0, bpp0, 0)
-BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, bp0, bpp0::AbstractQuantity) =
-    BirchMurnaghan4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
+BirchMurnaghan4th(v0::Real, b0::Real, b′0::Real, b′′0::Real) =
+    BirchMurnaghan4th(v0, b0, b′0, b′′0, 0)
+BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, b′0, b′′0::AbstractQuantity) =
+    BirchMurnaghan4th(v0, b0, b′0, b′′0, 0 * upreferred(Unitful.J))
 
 """
     PoirierTarantola2nd(v0, b0, e0)
@@ -244,14 +244,14 @@ PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
     PoirierTarantola2nd(v0, b0, 0 * upreferred(Unitful.J))
 
 """
-    PoirierTarantola3rd(v0, b0, bp0, e0)
+    PoirierTarantola3rd(v0, b0, b′0, e0)
 
 Create a Poirier–Tarantola 3rd order equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 See also: [`PoirierTarantola2nd`](@ref), [`PoirierTarantola4th`](@ref)
@@ -271,27 +271,27 @@ PoirierTarantola3rd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.
 struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
-    bp0::T
+    b′0::T
     e0::T
 end
-function PoirierTarantola3rd(v0, b0, bp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    return PoirierTarantola3rd{T}(convert.(T, [v0, b0, bp0, e0])...)
+function PoirierTarantola3rd(v0, b0, b′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, e0)
+    return PoirierTarantola3rd{T}(convert.(T, [v0, b0, b′0, e0])...)
 end
-PoirierTarantola3rd(v0::Real, b0::Real, bp0::Real) = PoirierTarantola3rd(v0, b0, bp0, 0)
-PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
-    PoirierTarantola3rd(v0, b0, bp0, 0 * upreferred(Unitful.J))
+PoirierTarantola3rd(v0::Real, b0::Real, b′0::Real) = PoirierTarantola3rd(v0, b0, b′0, 0)
+PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
+    PoirierTarantola3rd(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 """
-    PoirierTarantola4th(v0, b0, bp0, bpp0, e0)
+    PoirierTarantola4th(v0, b0, b′0, b′′0, e0)
 
 Create a Birch–Murnaghan 4th order equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
-- `bpp0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′′0`: the second-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 See also: [`PoirierTarantola2nd`](@ref), [`PoirierTarantola3rd`](@ref)
@@ -311,32 +311,32 @@ PoirierTarantola4th{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.
 struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
     v0::T
     b0::T
-    bp0::T
-    bpp0::T
+    b′0::T
+    b′′0::T
     e0::T
 end
-function PoirierTarantola4th(v0, b0, bp0, bpp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, bpp0, e0)
-    return PoirierTarantola4th{T}(convert.(T, [v0, b0, bp0, bpp0, e0])...)
+function PoirierTarantola4th(v0, b0, b′0, b′′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, b′′0, e0)
+    return PoirierTarantola4th{T}(convert.(T, [v0, b0, b′0, b′′0, e0])...)
 end
-PoirierTarantola4th(v0::Real, b0::Real, bp0::Real, bpp0::Real) =
-    PoirierTarantola4th(v0, b0, bp0, bpp0, 0)
+PoirierTarantola4th(v0::Real, b0::Real, b′0::Real, b′′0::Real) =
+    PoirierTarantola4th(v0, b0, b′0, b′′0, 0)
 PoirierTarantola4th(
     v0::AbstractQuantity,
     b0::AbstractQuantity,
-    bp0,
-    bpp0::AbstractQuantity,
-) = PoirierTarantola4th(v0, b0, bp0, bpp0, 0 * upreferred(Unitful.J))
+    b′0,
+    b′′0::AbstractQuantity,
+) = PoirierTarantola4th(v0, b0, b′0, b′′0, 0 * upreferred(Unitful.J))
 
 """
-    Vinet(v0, b0, bp0, e0)
+    Vinet(v0, b0, b′0, e0)
 
 Create a Vinet equation of state. The elements' type will be handled automatically.
 
 # Arguments
 - `v0`: the volume of solid at zero pressure.
 - `b0`: the bulk modulus of solid at zero pressure.
-- `bp0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
+- `b′0`: the first-order pressure-derivative bulk modulus of solid at zero pressure.
 - `e0`: the energy of solid at zero pressure. Its default value is `0u"eV"` (`0`), if other parameters have (no) units.
 
 # Examples
@@ -354,16 +354,16 @@ Vinet{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 eV)
 struct Vinet{T} <: EquationOfState{T}
     v0::T
     b0::T
-    bp0::T
+    b′0::T
     e0::T
 end
-function Vinet(v0, b0, bp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    return Vinet{T}(convert.(T, [v0, b0, bp0, e0])...)
+function Vinet(v0, b0, b′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, e0)
+    return Vinet{T}(convert.(T, [v0, b0, b′0, e0])...)
 end
-Vinet(v0::Real, b0::Real, bp0::Real) = Vinet(v0, b0, bp0, 0)
-Vinet(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
-    Vinet(v0, b0, bp0, 0 * upreferred(Unitful.J))
+Vinet(v0::Real, b0::Real, b′0::Real) = Vinet(v0, b0, b′0, 0)
+Vinet(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
+    Vinet(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 struct AntonSchmidt{T} <: EquationOfState{T}
     v0::T
@@ -392,16 +392,16 @@ BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 struct Shanker{T} <: EquationOfState{T}
     v0::T
     b0::T
-    bp0::T
+    b′0::T
     e0::T
 end
-function Shanker(v0, b0, bp0, e0)
-    T = Base.promote_typeof(v0, b0, bp0, e0)
-    return Shanker{T}(convert.(T, [v0, b0, bp0, e0])...)
+function Shanker(v0, b0, b′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, e0)
+    return Shanker{T}(convert.(T, [v0, b0, b′0, e0])...)
 end
-Shanker(v0::Real, b0::Real, bp0::Real) = Shanker(v0, b0, bp0, 0)
-Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bp0) =
-    Shanker(v0, b0, bp0, 0 * upreferred(Unitful.J))
+Shanker(v0::Real, b0::Real, b′0::Real) = Shanker(v0, b0, b′0, 0)
+Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
+    Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 # This is a helper type and should be exported!
 struct EquationOfStateOnVolume{S<:EquationOfState,T<:EquationForm}
@@ -499,9 +499,9 @@ Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 """
 function (f::EquationOfStateOnVolume{<:Murnaghan,EnergyForm})(v)
-    v0, b0, bp0, e0 = fieldvalues(f.eos)
-    x, y = bp0 - 1, (v0 / v)^bp0
-    return e0 + b0 / bp0 * v * (y / x + 1) - v0 * b0 / x
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
+    x, y = b′0 - 1, (v0 / v)^b′0
+    return e0 + b0 / b′0 * v * (y / x + 1) - v0 * b0 / x
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,EnergyForm})(v)
     v0, b0, e0 = fieldvalues(f.eos)
@@ -509,36 +509,36 @@ function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,EnergyForm})(v)
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan3rd,EnergyForm})(v)
-    v0, b0, bp0, e0 = fieldvalues(f.eos)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
     eta = cbrt(v0 / v)
     xi = eta^2 - 1
-    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + bp0 * xi - 4 * eta^2)
+    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + b′0 * xi - 4 * eta^2)
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan4th,EnergyForm})(v)
-    v0, b0, bp0, bpp0, e0 = fieldvalues(f.eos)
-    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
-    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63bp0 + 143) * f^2 + 12 * (bp0 - 4) * f + 12)
+    v0, b0, b′0, b′′0, e0 = fieldvalues(f.eos)
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
+    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12 * (b′0 - 4) * f + 12)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,EnergyForm})(v)
     v0, b0, e0 = fieldvalues(f.eos)
     return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola3rd,EnergyForm})(v)
-    v0, b0, bp0, e0 = fieldvalues(f.eos)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = -3 * log(x)
-    return e0 + b0 / 6 * v0 * xi^2 * ((bp0 - 2) * xi + 3)
+    return e0 + b0 / 6 * v0 * xi^2 * ((b′0 - 2) * xi + 3)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola4th,EnergyForm})(v)
-    v0, b0, bp0, bpp0, e0 = fieldvalues(f.eos)
+    v0, b0, b′0, b′′0, e0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
-    h = b0 * bpp0 + bp0^2
-    return e0 + b0 / 24v0 * xi^2 * ((h + 3bp0 + 3) * xi^2 + 4 * (bp0 + 2) * xi + 12)
+    h = b0 * b′′0 + b′0^2
+    return e0 + b0 / 24v0 * xi^2 * ((h + 3b′0 + 3) * xi^2 + 4 * (b′0 + 2) * xi + 12)
 end
 function (f::EquationOfStateOnVolume{<:Vinet,EnergyForm})(v)
-    v0, b0, bp0, e0 = fieldvalues(f.eos)
-    x, xi = cbrt(v / v0), 3 / 2 * (bp0 - 1)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
+    x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
     return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
 end
 function (f::EquationOfStateOnVolume{<:AntonSchmidt,EnergyForm})(v)
@@ -559,8 +559,8 @@ Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 """
 function (f::EquationOfStateOnVolume{<:Murnaghan,PressureForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
-    return b0 / bp0 * ((v0 / v)^bp0 - 1)
+    v0, b0, b′0 = fieldvalues(f.eos)
+    return b0 / b′0 * ((v0 / v)^b′0 - 1)
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,PressureForm})(v)
     v0, b0 = fieldvalues(f.eos)
@@ -568,14 +568,14 @@ function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,PressureForm})(v)
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan3rd,PressureForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     eta = cbrt(v0 / v)
-    return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (bp0 - 4) * (eta^2 - 1))
+    return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (b′0 - 4) * (eta^2 - 1))
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan4th,PressureForm})(v)
-    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
-    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63bp0 + 143) * f^2 + 9 * (bp0 - 4) * f + 6)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63b′0 + 143) * f^2 + 9 * (b′0 - 4) * f + 6)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,PressureForm})(v)
     v0, b0 = fieldvalues(f.eos)
@@ -583,22 +583,22 @@ function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,PressureForm})(v)
     return -b0 / x * log(x)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola3rd,PressureForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     xi = log(x)
-    return -b0 * xi / 2x * ((bp0 - 2) * xi - 2)
+    return -b0 * xi / 2x * ((b′0 - 2) * xi - 2)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola4th,PressureForm})(v)
-    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
-    h = b0 * bpp0 + bp0^2
-    return -b0 * xi / 6 / x * ((h + 3bp0 + 3) * xi^2 + 3 * (bp0 + 6) * xi + 6)
+    h = b0 * b′′0 + b′0^2
+    return -b0 * xi / 6 / x * ((h + 3b′0 + 3) * xi^2 + 3 * (b′0 + 6) * xi + 6)
 end
 function (f::EquationOfStateOnVolume{<:Vinet,PressureForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
-    xi = 3 / 2 * (bp0 - 1)
+    xi = 3 / 2 * (b′0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
 end
 function (f::EquationOfStateOnVolume{<:AntonSchmidt,PressureForm})(v)
@@ -612,10 +612,10 @@ function (f::EquationOfStateOnVolume{<:BreenanStacey,PressureForm})(v)
     return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
 end
 function (f::EquationOfStateOnVolume{<:Shanker,PressureForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     y = 1 - x
-    t = bp0 - 8 / 3
+    t = b′0 - 8 / 3
     return b0 / (x^(4 / 3) * t) *
            ((1 - 1 / t + 2 / t^2) * exp(t * y - 1) + y * (1 + y - 2 / t) * exp(t * y))
 end
@@ -637,16 +637,16 @@ function (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan3rd,BulkModulusForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (bp0 - 4) - 4f + 2)
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (b′0 - 4) - 4f + 2)
 end
 function (f::EquationOfStateOnVolume{<:BirchMurnaghan4th,BulkModulusForm})(v)
-    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
-    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * bpp0 + bp0^2
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
     return b0 / 6 *
            (2f + 1)^(5 / 2) *
-           ((99h - 693bp0 + 1573) * f^3 + (27h - 108bp0 + 105) * f^2 + 6f * (3bp0 - 5) + 6)
+           ((99h - 693b′0 + 1573) * f^3 + (27h - 108b′0 + 105) * f^2 + 6f * (3b′0 - 5) + 6)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,BulkModulusForm})(v)
     v0, b0 = fieldvalues(f.eos)
@@ -654,23 +654,23 @@ function (f::EquationOfStateOnVolume{<:PoirierTarantola2nd,BulkModulusForm})(v)
     return b0 / x * (1 - log(x))
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola3rd,BulkModulusForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     xi = log(x)
-    return -b0 / 2x * (((bp0 - 2) * xi + 2 - 2bp0) * xi + 2)
+    return -b0 / 2x * (((b′0 - 2) * xi + 2 - 2b′0) * xi + 2)
 end
 function (f::EquationOfStateOnVolume{<:PoirierTarantola4th,BulkModulusForm})(v)
-    v0, b0, bp0, bpp0 = fieldvalues(f.eos)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
-    h = b0 * bpp0 + bp0^2
+    h = b0 * b′′0 + b′0^2
     return -b0 / (6x) *
-           ((h + 3bp0 + 3) * xi^3 - 3 * xi^2 * (h + 2bp0 + 1) - 6xi * (bp0 + 1) - 6)
+           ((h + 3b′0 + 3) * xi^3 - 3 * xi^2 * (h + 2b′0 + 1) - 6xi * (b′0 + 1) - 6)
 end
 function (f::EquationOfStateOnVolume{<:Vinet,BulkModulusForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
-    x, xi = cbrt(v / v0), 3 / 2 * (bp0 - 1)
-    return -b0 / (2 * x^2) * (3x * (x - 1) * (bp0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
+    v0, b0, b′0 = fieldvalues(f.eos)
+    x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
+    return -b0 / (2 * x^2) * (3x * (x - 1) * (b′0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
 function (f::EquationOfStateOnVolume{<:AntonSchmidt,BulkModulusForm})(v)
     v0, β, n = fieldvalues(f.eos)
@@ -678,10 +678,10 @@ function (f::EquationOfStateOnVolume{<:AntonSchmidt,BulkModulusForm})(v)
     return β * x^n * (1 + n * log(x))
 end
 function (f::EquationOfStateOnVolume{<:Shanker,BulkModulusForm})(v)
-    v0, b0, bp0 = fieldvalues(f.eos)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     y = 1 - x
-    t = bp0 - 8 / 3
+    t = b′0 - 8 / 3
     return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * eos(PressureForm())(v)
 end
 # ========================== Bulk modulus evaluation ========================= #
