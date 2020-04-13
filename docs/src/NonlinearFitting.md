@@ -111,8 +111,9 @@ Then 4 different equations of state will be fitted.
 
 ## Public interfaces
 
-```@docs
-lsqfit(form::PhysicalProperty, eos::EquationOfState{<:Real}, xdata::AbstractVector{<:Real}, ydata::AbstractVector{<:Real}; debug::Bool, kwargs...)
+```@autodocs
+Modules = [NonlinearFitting]
+Order   = [:type, :function]
 ```
 
 ## References

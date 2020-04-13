@@ -58,8 +58,9 @@ A figure is plotted below to verify our results, and it fits very well.
 
 ## Public interfaces
 
-```@docs
-findvolume(form::PhysicalProperty, eos::EquationOfState, y, x0, method)
+```@autodocs
+Modules = [Find]
+Order   = [:type, :function]
 ```
 
 All available `method`s are the leaves of the tree below (Remember to add a `Roots.` prefix):
