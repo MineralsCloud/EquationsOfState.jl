@@ -7,16 +7,12 @@ module Find
 using InteractiveUtils: subtypes
 using Roots:
     find_zero,
-    AbstractBracketing,
-    AbstractNonBracketing,
     AbstractHalleyLikeMethod,
-    AbstractNewtonLikeMethod,
     AbstractAlefeldPotraShi,
     AbstractBisection,
     AbstractSecant,
     Brent,
-    Newton,
-    ConvergenceFailed
+    Newton
 using Unitful: AbstractQuantity, ustrip
 
 using ..Collections: EquationOnVolume, PhysicalProperty
