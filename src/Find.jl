@@ -19,7 +19,7 @@ using Roots:
     ConvergenceFailed
 using Unitful: AbstractQuantity, ustrip
 
-using ..Collections: EquationOfState, PhysicalProperty
+using ..Collections: EquationOnVolume, PhysicalProperty
 
 export findvolume
 
@@ -41,13 +41,8 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     an array or a tuple, of which only the maximum and minimum values will be used in the
     root-finding process.
 """
-findvolume(f::Tuple{EquationOfState,PhysicalProperty}, y, x0, method) =
-    find_zero(v -> f(v) - y, x0, method)
-function findvolume(
-    f::Tuple{EquationOfState,PhysicalProperty},
-    y,
-    x0::Union{AbstractVector,Tuple},
-)
+findvolume(f::EquationOnVolume, y, x0, method) = find_zero(v -> f(v) - y, x0, method)
+function findvolume(f::EquationOnVolume, y, x0::Union{AbstractVector,Tuple})
     for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
         @info("Using method \"$T\"...")
         try

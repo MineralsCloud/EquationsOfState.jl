@@ -8,7 +8,7 @@ using ConstructionBase: constructorof
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
-using ..Collections: PhysicalProperty, EquationOfState, fieldvalues
+using ..Collections: PhysicalProperty, EquationOfState, EquationOnVolume, fieldvalues
 
 export lsqfit
 
@@ -27,7 +27,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(
-    (eos, prop)::Tuple{EquationOfState{<:Real},PhysicalProperty},
+    (eos, prop)::EquationOnVolume{<:Real},
     xdata::AbstractVector{<:Real},
     ydata::AbstractVector{<:Real};
     debug = false,
@@ -45,7 +45,7 @@ function lsqfit(
     return debug ? fitted : E(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    (eos, prop)::Tuple{EquationOfState{<:AbstractQuantity},PhysicalProperty},
+    (eos, prop)::EquationOnVolume{<:AbstractQuantity},
     xdata::AbstractVector{<:AbstractQuantity},
     ydata::AbstractVector{<:AbstractQuantity};
     kwargs...,

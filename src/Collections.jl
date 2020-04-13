@@ -504,7 +504,7 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
 
 # This is a helper type and should be exported!
 (eos::EquationOfState)(eq::PhysicalProperty) = (eos, eq)
-const EquationOnVolume = Tuple{EquationOfState,PhysicalProperty}
+const EquationOnVolume{T} = Tuple{EquationOfState{T},PhysicalProperty}
 # =================================== Types ================================== #
 
 
