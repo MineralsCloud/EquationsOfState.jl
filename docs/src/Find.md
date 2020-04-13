@@ -91,12 +91,12 @@ AbstractUnivariateZeroMethod
 The usage is like
 
 ```julia
-findvolume(eos(form), y, (3, 4))                     # Try all possible methods
-findvolume(eos(form), y, (3, 4), Order1())           # Specify two starting points for secant method
-findvolume(eos(form), y, 3.0, Order2())              # Use Steffensen method
-findvolume(eos(form), y, big(3.0), Order16())        # Rapid convergence
-findvolume(eos(form), y, (3, 4), Roots.A42())        # Fewer function calls than Bisection(), in this case
-findvolume(eos(form), y, (3, 4), FalsePosition(8))   # 1 of 12 possible algorithms for false position
-findvolume(eos(form), y, 3.0, Roots.Newton())        # Use Newton's method
-findvolume(eos(form), y, 3.0, Roots.Halley())        # Use Halley's method
+findvolume(eos(prop), y, (3, 4))                     # Try all possible methods
+findvolume(eos(prop), y, (3, 4), Order1())           # Specify two starting points for secant method
+findvolume(eos(prop), y, 3.0, Order2())              # Use Steffensen method
+findvolume(eos(prop), y, big(3.0), Order16())        # Rapid convergence
+findvolume(eos(prop), y, (3, 4), Roots.A42())        # Fewer function calls than Bisection(), in this case
+findvolume(eos(prop), y, (3, 4), FalsePosition(8))   # 1 of 12 possible algorithms for false position
+findvolume(eos(prop), y, 3.0, Roots.Newton())        # Use Newton's method
+findvolume(eos(prop), y, 3.0, Roots.Halley())        # Use Halley's method
 ```

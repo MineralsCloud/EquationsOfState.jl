@@ -24,14 +24,14 @@ using ..Collections: EquationOfState, PhysicalProperty
 export findvolume
 
 """
-    findvolume(eos(form), y, x0, method)
-    findvolume(eos(form), y, x0::Union{AbstractVector,Tuple})
+    findvolume(eos(prop), y, x0, method)
+    findvolume(eos(prop), y, x0::Union{AbstractVector,Tuple})
 
 Find a volume which leads to the given pressure, energy, or bulk modulus based on an `eos`.
 
 # Arguments
 - `eos::EquationOfState`: an equation of state. If it has units, `y` and `x0` must also have.
-- `form::PhysicalProperty`: an `PhysicalProperty` instance.
+- `prop::PhysicalProperty`: an `PhysicalProperty` instance.
 - `y`: a pressure, energy, or bulk modulus.
 - `x0`: can be either a range of volumes (`Vector`, `Tuple`, etc.) or just a single volume.
     Units can be provided if necessary.
