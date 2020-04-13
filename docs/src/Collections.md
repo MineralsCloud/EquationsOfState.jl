@@ -257,9 +257,12 @@ The $B(V)$ relation of equations of state are listed as below:
    B(V) = \beta\left(\frac{V}{V_{0}}\right)^{n}\left[1+n \ln \frac{V}{V_{0}}\right].
    ```
 
-## Types
+## Public interfaces
 
 ```@docs
+EnergyForm
+PressureForm
+BulkModulusForm
 EquationOfState
 FiniteStrainEquationOfState
 Murnaghan
@@ -270,13 +273,4 @@ PoirierTarantola2nd
 PoirierTarantola3rd
 PoirierTarantola4th
 Vinet
-```
-
-## Public interfaces
-
-```@docs
-(eos::EquationOfState)(eq::PhysicalProperty)
-(f::EquationOnVolume{<:Murnaghan,EnergyForm})(v)
-(f::EquationOnVolume{<:Murnaghan,PressureForm})(v)
-(f::EquationOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
 ```

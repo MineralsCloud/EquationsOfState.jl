@@ -30,8 +30,112 @@ export EnergyForm,
 #                                     Types                                    #
 # ============================================================================ #
 abstract type PhysicalProperty end
+"""
+    (::EquationOfState)(EnergyForm())(v)
+    (::EquationOfState)(EnergyForm())
+
+Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
+`v` must also has.
+
+Return a [function-like object](https://docs.julialang.org/en/v1/manual/methods/#Function-like-objects-1) that takes a volume as a variable, suitable for mapping onto an array.
+
+# Examples
+```jldoctest
+julia> using EquationsOfState.Collections
+
+julia> f = Vinet(1, 2, 3)(EnergyForm());
+
+julia> map(f, 1:1:10)
+10-element Array{Float64,1}:
+ 0.0
+ 0.367905230584308
+ 0.7652477289745814
+ 1.0516459435179233
+ 1.2560420090256408
+ 1.405149833626178
+ 1.5165867441792136
+ 1.6017034530570884
+ 1.6679539823686644
+ 1.7203642945516917
+```
+
+However, these methods are preserved for special cases
+(see [#52](https://github.com/MineralsCloud/EquationsOfState.jl/issues/52#issuecomment-555856194)).
+In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/base/base/#do)
+is preferred:
+```jldoctest
+julia> map(1:1:10) do v
+           eos(EnergyForm())(v)
+       end
+10-element Array{Float64,1}:
+ 0.0
+ 0.367905230584308
+ 0.7652477289745814
+ 1.0516459435179235
+ 1.2560420090256412
+ 1.405149833626178
+ 1.5165867441792138
+ 1.6017034530570884
+ 1.6679539823686644
+ 1.7203642945516917
+```
+"""
 struct EnergyForm <: PhysicalProperty end
+"""
+    (::EquationOfState)(PressureForm())(v)
+    (::EquationOfState)(PressureForm())
+
+Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
+`v` must also has.
+
+# Examples
+```jldoctest
+julia> using EquationsOfState.Collections
+
+julia> f = Vinet(1, 2, 3)(PressureForm());
+
+julia> map(f, 1:1:10)
+10-element Array{Float64,1}:
+  0.0
+ -0.45046308428750254
+ -0.3384840350043251
+ -0.24010297221667418
+ -0.17314062272722755
+ -0.12795492664586872
+ -0.09677154467733216
+ -0.07468060255179591
+ -0.05864401631176751
+ -0.04674768462396211
+```
+"""
 struct PressureForm <: PhysicalProperty end
+"""
+    (::EquationOfState)(BulkModulusForm())(v)
+    (::EquationOfState)(BulkModulusForm())
+
+Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has units,
+`v` must also has.
+
+# Examples
+```jldoctest
+julia> using EquationsOfState.Collections
+
+julia> f = BirchMurnaghan3rd(1, 2, 3)(BulkModulusForm());
+
+julia> map(f, 1:1:10)
+10-element Array{Float64,1}:
+ 2.0
+ 0.9216086833346415
+ 0.444903691617472
+ 0.2540009203153288
+ 0.16193296566524193
+ 0.11130584492987289
+ 0.08076305569984538
+ 0.06103515625
+ 0.047609811583958425
+ 0.03808959181078831
+```
+"""
 struct BulkModulusForm <: PhysicalProperty end
 
 """
@@ -404,6 +508,7 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
     Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 # This is a helper type and should be exported!
+(eos::EquationOfState)(eq::PhysicalProperty) = (eos, eq)
 const EquationOnVolume = Tuple{EquationOfState,PhysicalProperty}
 # =================================== Types ================================== #
 
@@ -411,91 +516,6 @@ const EquationOnVolume = Tuple{EquationOfState,PhysicalProperty}
 # ============================================================================ #
 #                               Energy evaluation                              #
 # ============================================================================ #
-"""
-    (eos::EquationOfState)(EnergyForm())
-    (eos::EquationOfState)(PressureForm())
-    (eos::EquationOfState)(BulkModulusForm())
-
-Return a [function-like object](https://docs.julialang.org/en/v1/manual/methods/#Function-like-objects-1) that takes a volume as a variable, suitable for mapping onto an array.
-
-# Examples
-```jldoctest
-julia> using EquationsOfState, EquationsOfState.Collections
-
-julia> f = Vinet(1, 2, 3)(EnergyForm());
-
-julia> map(f, 1:1:10)
-10-element Array{Float64,1}:
- 0.0
- 0.367905230584308
- 0.7652477289745814
- 1.0516459435179233
- 1.2560420090256408
- 1.405149833626178
- 1.5165867441792136
- 1.6017034530570884
- 1.6679539823686644
- 1.7203642945516917
-
-julia> g = Vinet(1, 2, 3)(PressureForm());
-
-julia> map(g, 1:1:10)
-10-element Array{Float64,1}:
-  0.0
- -0.45046308428750254
- -0.3384840350043251
- -0.24010297221667418
- -0.17314062272722755
- -0.12795492664586872
- -0.09677154467733216
- -0.07468060255179591
- -0.05864401631176751
- -0.04674768462396211
-
-julia> h = BirchMurnaghan3rd(1, 2, 3)(BulkModulusForm());
-
-julia> map(h, 1:1:10)
-10-element Array{Float64,1}:
- 2.0
- 0.9216086833346415
- 0.444903691617472
- 0.2540009203153288
- 0.16193296566524193
- 0.11130584492987289
- 0.08076305569984538
- 0.06103515625
- 0.047609811583958425
- 0.03808959181078831
-```
-
-However, these methods are preserved for special cases
-(see [#52](https://github.com/MineralsCloud/EquationsOfState.jl/issues/52#issuecomment-555856194)).
-In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/base/base/#do)
-is preferred:
-```jldoctest
-julia> map(1:1:10) do v
-           eos(EnergyForm())(v)
-       end
-10-element Array{Float64,1}:
- 0.0
- 0.367905230584308
- 0.7652477289745814
- 1.0516459435179235
- 1.2560420090256412
- 1.405149833626178
- 1.5165867441792138
- 1.6017034530570884
- 1.6679539823686644
- 1.7203642945516917
-```
-"""
-(eos::EquationOfState)(eq::PhysicalProperty) = (eos, eq)
-"""
-    (::EquationOfState)(EnergyForm())(v)
-
-Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
-`v` must also has.
-"""
 function (f::Tuple{Murnaghan,EnergyForm})(v)
     v0, b0, b′0, e0 = fieldvalues(first(f))
     x, y = b′0 - 1, (v0 / v)^b′0
@@ -550,12 +570,6 @@ end
 # ============================================================================ #
 #                              Pressure evaluation                             #
 # ============================================================================ #
-"""
-    (::EquationOfState)(PressureForm())(v)
-
-Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
-`v` must also has.
-"""
 function (f::Tuple{Murnaghan,PressureForm})(v)
     v0, b0, b′0 = fieldvalues(first(f))
     return b0 / b′0 * ((v0 / v)^b′0 - 1)
@@ -623,12 +637,6 @@ end
 # ============================================================================ #
 #                            Bulk modulus evaluation                           #
 # ============================================================================ #
-"""
-    (::EquationOfState)(BulkModulusForm())(v)
-
-Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has units,
-`v` must also has.
-"""
 function (f::Tuple{BirchMurnaghan2nd,BulkModulusForm})(v)
     v0, b0 = fieldvalues(first(f))
     f = (cbrt(v0 / v)^2 - 1) / 2
