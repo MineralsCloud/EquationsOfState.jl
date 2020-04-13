@@ -59,7 +59,7 @@ function lsqfit(
     if result isa EquationOfState  # i.e., if `debug = false` and no error is thrown
         data = fieldvalues(result)
         # Convert back to original `eos`'s units
-        return E([data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...)
+        return E((data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units))...)
     end
     return result
 end  # function lsqfit
