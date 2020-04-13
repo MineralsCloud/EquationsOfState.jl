@@ -7,13 +7,13 @@ plotlyjs()
 pressures = collect(0:20:200) .* u"GPa"
 eos = BirchMurnaghan3rd(167 * u"angstrom^3", 2600 * u"kbar", 4.0)
 volumes = map(
-    p -> findvolume(PressureForm(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
+    p -> findvolume(Pressure(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
     pressures,
 )
 plot(ustrip.(volumes), ustrip.(pressures), label = "pressures")
 scatter!(
     ustrip.(volumes),
-    ustrip.(u"GPa", eos(PressureForm()).(volumes)),
+    ustrip.(u"GPa", eos(Pressure()).(volumes)),
     label = "P(V)",
     dpi = 400,
 )

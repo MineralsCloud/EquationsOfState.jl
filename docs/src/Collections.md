@@ -265,9 +265,9 @@ The $B(V)$ relation of equations of state are listed as below:
 ## Public interfaces
 
 ```@docs
-EnergyForm
-PressureForm
-BulkModulusForm
+Energy
+Pressure
+BulkModulus
 EquationOfState
 FiniteStrainEquationOfState
 Murnaghan

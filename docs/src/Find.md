@@ -9,7 +9,7 @@ approximate volume at a given pressure, energy, or bulk modulus based on an
 equation of state. A result is not always guaranteed, especially when the
 equation of state is not a monotonic function of volume. However, according to
 experience, `P(V)` relation is usually a monotonic function. So we suggest using
-`PressureForm` to find the corresponding volume.
+`Pressure` to find the corresponding volume.
 
 ## Usage
 
@@ -21,7 +21,7 @@ julia> pressures = collect(0:20:200) .* u"GPa";
 julia> eos = BirchMurnaghan3rd(167u"angstrom^3", 2600u"kbar", 4.0);
 
 julia> volumes = map(
-           p -> findvolume(PressureForm(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
+           p -> findvolume(Pressure(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
            pressures
        )
 [ Info: Using method "Roots.Bisection"...

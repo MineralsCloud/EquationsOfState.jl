@@ -15,7 +15,7 @@ using EquationsOfState.NonlinearFitting
         ) |> Collections.fieldvalues
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3.0, 0)(EnergyForm()),
+            BirchMurnaghan3rd(1, 2, 3.0, 0)(Energy()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -24,7 +24,7 @@ using EquationsOfState.NonlinearFitting
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(EnergyForm()),
+            BirchMurnaghan3rd(1, 2, 3, 0)(Energy()),
             [1, 2, 3, 4, 5.0],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -33,7 +33,7 @@ using EquationsOfState.NonlinearFitting
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3.0, 0)(EnergyForm()),
+            BirchMurnaghan3rd(1, 2, 3.0, 0)(Energy()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7.0],
         ) |> Collections.fieldvalues,
@@ -42,7 +42,7 @@ using EquationsOfState.NonlinearFitting
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(EnergyForm()),
+            BirchMurnaghan3rd(1, 2, 3, 0)(Energy()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -51,7 +51,7 @@ using EquationsOfState.NonlinearFitting
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(big(1), 2, big(3), 0)(EnergyForm()),
+            BirchMurnaghan3rd(big(1), 2, big(3), 0)(Energy()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -60,7 +60,7 @@ using EquationsOfState.NonlinearFitting
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(big(1), 2, 3, 0)(EnergyForm()),
+            BirchMurnaghan3rd(big(1), 2, 3, 0)(Energy()),
             BigFloat[1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -69,7 +69,7 @@ using EquationsOfState.NonlinearFitting
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(big(1.0), 2, 3, 0)(EnergyForm()),
+            BirchMurnaghan3rd(big(1.0), 2, 3, 0)(Energy()),
             [1, 2, 3, 4, 5],
             BigInt[5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -84,7 +84,7 @@ end
         Collections.fieldvalues
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3.0, 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, 3.0, 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -93,7 +93,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, 3, 0)(Pressure()),
             [1, 2, 3, 4, 5.0],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -102,7 +102,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3.0, 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, 3.0, 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7.0],
         ) |> Collections.fieldvalues,
@@ -111,7 +111,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, 3, 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -120,7 +120,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, big(3), 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, big(3), 0)(Pressure()),
             [1, 2, 3, 4, 5],
             BigInt[5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -129,7 +129,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, big(3.0), 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, big(3.0), 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -138,7 +138,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, big(3), 0)(PressureForm()),
+            BirchMurnaghan3rd(1, 2, big(3), 0)(Pressure()),
             [big(1), 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -153,7 +153,7 @@ end
         Collections.fieldvalues
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3.0, 0)(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3.0, 0)(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -162,7 +162,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3, 0)(BulkModulus()),
             [1, 2, 3, 4, 5.0],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -171,7 +171,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3.0, 0)(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3.0, 0)(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7.0],
         ) |> Collections.fieldvalues,
@@ -180,7 +180,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3, 0)(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -189,7 +189,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
         ) |> Collections.fieldvalues,
@@ -198,7 +198,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulus()),
             [1, 2, 3, big(4.0), 5],
             [big(5), 6, 9, 8, 7.0],
         ) |> Collections.fieldvalues,
@@ -207,7 +207,7 @@ end
     )
     @test isapprox(
         lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulusForm()),
+            BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulus()),
             [1, 2, 3, 4, 5],
             [big(5), 6, 9, 8, 7.0],
         ) |> Collections.fieldvalues,
@@ -280,7 +280,7 @@ end
         -9.73155247952,
     ]
     @test isapprox(
-        lsqfit(BirchMurnaghan3rd(40, 0.5, 4, 0)(EnergyForm()), volumes, energies) |>
+        lsqfit(BirchMurnaghan3rd(40, 0.5, 4, 0)(Energy()), volumes, energies) |>
         Collections.fieldvalues,
         BirchMurnaghan3rd(
             40.98926572528106,
@@ -290,7 +290,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        lsqfit(Murnaghan(41, 0.5, 4, 0)(EnergyForm()), volumes, energies) |>
+        lsqfit(Murnaghan(41, 0.5, 4, 0)(Energy()), volumes, energies) |>
         Collections.fieldvalues,
         Murnaghan(
             41.13757930387086,
@@ -300,7 +300,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        lsqfit(PoirierTarantola3rd(41, 0.5, 4, 0)(EnergyForm()), volumes, energies) |>
+        lsqfit(PoirierTarantola3rd(41, 0.5, 4, 0)(Energy()), volumes, energies) |>
         Collections.fieldvalues,
         PoirierTarantola3rd(
             40.86770643373908,
@@ -310,7 +310,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        lsqfit(Vinet(41, 0.5, 4, 0)(EnergyForm()), volumes, energies) |>
+        lsqfit(Vinet(41, 0.5, 4, 0)(Energy()), volumes, energies) |>
         Collections.fieldvalues,
         Vinet(
             40.916875663779784,
@@ -403,7 +403,7 @@ end
         -1.594410995,
     ]
 
-    fitted_eos = lsqfit(Vinet(23, 0.5, 4, -2)(EnergyForm()), mp153_volumes, mp153_energies)
+    fitted_eos = lsqfit(Vinet(23, 0.5, 4, -2)(Energy()), mp153_volumes, mp153_energies)
     @test isapprox(
         fitted_eos |> Collections.fieldvalues,
         Vinet(
@@ -414,7 +414,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        map(fitted_eos(EnergyForm()), mp153_volumes),
+        map(fitted_eos(Energy()), mp153_volumes),
         mp153_known_energies_vinet;
         atol = 1e-5,
     )
@@ -493,7 +493,7 @@ end
         -5.118654229,
     ]
 
-    fitted_eos = lsqfit(Vinet(20, 0.5, 4, -5)(EnergyForm()), mp149_volumes, mp149_energies)
+    fitted_eos = lsqfit(Vinet(20, 0.5, 4, -5)(Energy()), mp149_volumes, mp149_energies)
     @test isapprox(
         fitted_eos |> Collections.fieldvalues,
         Vinet(
@@ -504,7 +504,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        map(fitted_eos(EnergyForm()), mp149_volumes),
+        map(fitted_eos(Energy()), mp149_volumes),
         mp149_known_energies_vinet;
         atol = 1e-5,
     )
@@ -583,7 +583,7 @@ end
         -7.897414664,
     ]
 
-    fitted_eos = lsqfit(Vinet(17, 0.5, 4, -7)(EnergyForm()), mp72_volumes, mp72_energies)
+    fitted_eos = lsqfit(Vinet(17, 0.5, 4, -7)(Energy()), mp72_volumes, mp72_energies)
     @test isapprox(
         fitted_eos |> Collections.fieldvalues,
         Vinet(
@@ -594,7 +594,7 @@ end
         ) |> Collections.fieldvalues,
     )
     @test isapprox(
-        map(fitted_eos(EnergyForm()), mp72_volumes),
+        map(fitted_eos(Energy()), mp72_volumes),
         mp72_known_energies_vinet;
         atol = 1e-5,
     )
@@ -669,14 +669,14 @@ end
         volumes = data[:, 1]
         energies = data[:, 2]
         @test isapprox(
-            lsqfit(Murnaghan(224, 0.006, 4, -323)(EnergyForm()), volumes, energies) |>
+            lsqfit(Murnaghan(224, 0.006, 4, -323)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Murnaghan(224.501825, 0.00060479524074699499, 3.723835, -323.417686) |>
             Collections.fieldvalues;
             atol = 1e-5,
         )
         @test isapprox(
-            lsqfit(BirchMurnaghan2nd(224, 0.0006, -323)(EnergyForm()), volumes, energies) |>
+            lsqfit(BirchMurnaghan2nd(224, 0.0006, -323)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             BirchMurnaghan2nd(
                 223.7192539523166,
@@ -686,7 +686,7 @@ end
             atol = 1e-3,
         )
         @test lsqfit(
-            BirchMurnaghan3rd(224, 0.0006, 4, -323)(EnergyForm()),
+            BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()),
             volumes,
             energies,
         ) |> Collections.fieldvalues ≈
@@ -698,7 +698,7 @@ end
         ) |> Collections.fieldvalues
         @test isapprox(
             lsqfit(
-                BirchMurnaghan4th(224, 0.0006, 4, -5460, -323)(EnergyForm()),
+                BirchMurnaghan4th(224, 0.0006, 4, -5460, -323)(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -711,7 +711,7 @@ end
             ) |> Collections.fieldvalues;
             rtol = 1e-6,
         )
-        @test lsqfit(Vinet(224, 0.0006, 4, -323)(EnergyForm()), volumes, energies) |>
+        @test lsqfit(Vinet(224, 0.0006, 4, -323)(Energy()), volumes, energies) |>
               Collections.fieldvalues ≈
               Vinet(
             224.45278665796354,
@@ -721,7 +721,7 @@ end
         ) |> Collections.fieldvalues
         @test isapprox(
             lsqfit(
-                PoirierTarantola3rd(100, 0.0006, 3.7, -323)(EnergyForm()),
+                PoirierTarantola3rd(100, 0.0006, 3.7, -323)(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -729,7 +729,7 @@ end
             Collections.fieldvalues;
             atol = 1e-5,
         )
-        # @test lsqfit(PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323)(EnergyForm()), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
+        # @test lsqfit(PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323)(Energy()), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
     end # testset
 
     @testset "with units" begin
@@ -743,7 +743,7 @@ end
                         9.164446 * u"GPa",
                         3.752432,
                         -161.708856 * u"hartree",
-                    )(EnergyForm()),
+                    )(Energy()),
                     volumes,
                     energies,
                 ) |> Collections.fieldvalues,
@@ -765,7 +765,7 @@ end
                     9.164446 * u"GPa",
                     3.752432,
                     -161.708856 * u"hartree",
-                )(EnergyForm()),
+                )(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -779,7 +779,7 @@ end
             ) |> Collections.fieldvalues,
         )
         # @test ustrip.(
-        #     lsqfit(BirchMurnaghan4th(224.445371u"bohr^3", 9.164446u"GPa", 3.752432, -0.371174u"1/GPa", -161.708856u"hartree")(EnergyForm()), volumes, energies) |> Collections.fieldvalues
+        #     lsqfit(BirchMurnaghan4th(224.445371u"bohr^3", 9.164446u"GPa", 3.752432, -0.371174u"1/GPa", -161.708856u"hartree")(Energy()), volumes, energies) |> Collections.fieldvalues
         # ) ≈
         # ustrip.(
         #     BirchMurnaghan4th(224.457562u"bohr^3", 9.163736u"GPa", 3.730992, -0.361830u"1/GPa", -161.708856u"hartree") |> Collections.fieldvalues
@@ -902,7 +902,7 @@ end
         volumes = data[:, 1]  # unit: bohr^3
         energies = data[:, 2]  # unit: Rydberg
         @test isapprox(
-            lsqfit(Murnaghan(224, 0.0006, 4, -323)(EnergyForm()), volumes, energies) |>
+            lsqfit(Murnaghan(224, 0.0006, 4, -323)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Murnaghan(
                 435.05782299050884,
@@ -913,7 +913,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(BirchMurnaghan2nd(224, 0.0006, -323)(EnergyForm()), volumes, energies) |>
+            lsqfit(BirchMurnaghan2nd(224, 0.0006, -323)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             BirchMurnaghan2nd(
                 430.10027687726716,
@@ -924,7 +924,7 @@ end
         )
         @test isapprox(
             lsqfit(
-                BirchMurnaghan3rd(224, 0.0006, 4, -323)(EnergyForm()),
+                BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -938,7 +938,7 @@ end
         )
         @test isapprox(
             lsqfit(
-                BirchMurnaghan4th(432, 0.0003, 3.8, -11773, -1201)(EnergyForm()),
+                BirchMurnaghan4th(432, 0.0003, 3.8, -11773, -1201)(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -952,7 +952,7 @@ end
             rtol = 1e-5,
         )
         @test isapprox(
-            lsqfit(Vinet(432, 0.0003, 3.8, -1201)(EnergyForm()), volumes, energies) |>
+            lsqfit(Vinet(432, 0.0003, 3.8, -1201)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Vinet(
                 432.04609865398015,
@@ -968,7 +968,7 @@ end
         volumes = data[:, 1] .* u"bohr^3"
         energies = data[:, 2] .* u"Ry"
         fitted_eos = lsqfit(
-            BirchMurnaghan3rd(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry")(EnergyForm()),
+            BirchMurnaghan3rd(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry")(Energy()),
             volumes,
             energies,
         )
@@ -983,7 +983,7 @@ end
         )
         @test ustrip.(
             lsqfit(
-                BirchMurnaghan3rd(224 * u"bohr^3", 10 * u"GPa", 3.75, -161 * u"hartree")(EnergyForm()),
+                BirchMurnaghan3rd(224 * u"bohr^3", 10 * u"GPa", 3.75, -161 * u"hartree")(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -1136,7 +1136,7 @@ end
         volumes = data[:, 1]  # unit: bohr^3
         energies = data[:, 2]  # unit: Rydberg
         @test isapprox(
-            lsqfit(Murnaghan(110, 0.01, 4, -34)(EnergyForm()), volumes, energies) |>
+            lsqfit(Murnaghan(110, 0.01, 4, -34)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Murnaghan(
                 124.88539638285143,
@@ -1147,7 +1147,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(BirchMurnaghan2nd(124, 0.012, -34)(EnergyForm()), volumes, energies) |>
+            lsqfit(BirchMurnaghan2nd(124, 0.012, -34)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             BirchMurnaghan2nd(
                 124.60346122403192,
@@ -1157,7 +1157,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(BirchMurnaghan3rd(110, 0.01, 4, -34)(EnergyForm()), volumes, energies) |>
+            lsqfit(BirchMurnaghan3rd(110, 0.01, 4, -34)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             BirchMurnaghan3rd(
                 124.82366127014902,
@@ -1169,7 +1169,7 @@ end
         )
         @test isapprox(
             lsqfit(
-                BirchMurnaghan4th(124, 0.01, 4, -5300, -34)(EnergyForm()),
+                BirchMurnaghan4th(124, 0.01, 4, -5300, -34)(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -1183,7 +1183,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(Vinet(124, 0.01, 4, -34)(EnergyForm()), volumes, energies) |>
+            lsqfit(Vinet(124, 0.01, 4, -34)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Vinet(
                 124.78343088049905,
@@ -1204,7 +1204,7 @@ end
                 0.01 * u"Ry/angstrom^3",
                 4,
                 -34 * u"Ry",
-            )(EnergyForm()),
+            )(Energy()),
             volumes,
             energies,
         )
@@ -1219,7 +1219,7 @@ end
         )
         @test ustrip.(
             lsqfit(
-                BirchMurnaghan3rd(124 * u"angstrom^3", 20 * u"GPa", 4, -17 * u"hartree")(EnergyForm()),
+                BirchMurnaghan3rd(124 * u"angstrom^3", 20 * u"GPa", 4, -17 * u"hartree")(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -1346,7 +1346,7 @@ end
         volumes = data[:, 1]  # unit: bohr^3
         energies = data[:, 2]  # unit: Rydberg
         @test isapprox(
-            lsqfit(Murnaghan(132, 0.01, 3.68, -14)(EnergyForm()), volumes, energies) |>
+            lsqfit(Murnaghan(132, 0.01, 3.68, -14)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Murnaghan(
                 132.9174710492377,
@@ -1357,7 +1357,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(BirchMurnaghan2nd(132, 0.01, -14)(EnergyForm()), volumes, energies) |>
+            lsqfit(BirchMurnaghan2nd(132, 0.01, -14)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             BirchMurnaghan2nd(
                 130.7191505712864,
@@ -1367,7 +1367,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(BirchMurnaghan3rd(128, 0.03, 4, -14)(EnergyForm()), volumes, energies) |>
+            lsqfit(BirchMurnaghan3rd(128, 0.03, 4, -14)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             BirchMurnaghan3rd(
                 126.49515516259525,
@@ -1379,7 +1379,7 @@ end
         )
         @test isapprox(
             lsqfit(
-                BirchMurnaghan4th(128, 0.03, 4, -320, -14)(EnergyForm()),
+                BirchMurnaghan4th(128, 0.03, 4, -320, -14)(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
@@ -1393,7 +1393,7 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(Vinet(128, 0.03, 4, -14)(EnergyForm()), volumes, energies) |>
+            lsqfit(Vinet(128, 0.03, 4, -14)(Energy()), volumes, energies) |>
             Collections.fieldvalues,
             Vinet(
                 124.71725873851614,
@@ -1409,7 +1409,7 @@ end
         volumes = data[:, 1] .* u"bohr^3"
         energies = data[:, 2] .* u"Ry"
         fitted_eos = lsqfit(
-            BirchMurnaghan3rd(128 * u"bohr^3", 0.03 * u"Ry/bohr^3", 4, -14 * u"Ry")(EnergyForm()),
+            BirchMurnaghan3rd(128 * u"bohr^3", 0.03 * u"Ry/bohr^3", 4, -14 * u"Ry")(Energy()),
             volumes,
             energies,
         )
@@ -1424,7 +1424,7 @@ end
         )
         @test ustrip.(
             lsqfit(
-                BirchMurnaghan3rd(128 * u"bohr^3", 44 * u"GPa", 4, -14 * u"hartree")(EnergyForm()),
+                BirchMurnaghan3rd(128 * u"bohr^3", 44 * u"GPa", 4, -14 * u"hartree")(Energy()),
                 volumes,
                 energies,
             ) |> Collections.fieldvalues,
