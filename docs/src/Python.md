@@ -33,8 +33,7 @@ writing too much code. Luckily, Julia provides such a feature.
    Out[4]: <PyCall.jlwrap EquationsOfState.Collections.Murnaghan{Float64}(1.0, 2.0, 3.0, 4.0)>
 
    In [5]: result = lsqfit(
-      ...:     Pressure(),
-      ...:     BirchMurnaghan3rd(1, 2, 3.0, 0),
+      ...:     BirchMurnaghan3rd(1, 2, 3.0, 0)(Pressure()),
       ...:     [1, 2, 3, 4, 5],
       ...:     [5, 6, 9, 8, 7],
       ...: )
@@ -48,7 +47,7 @@ writing too much code. Luckily, Julia provides such a feature.
 
    In [9]: energies = Main.eval("data[:, 2] .* UnitfulAtomic.Ry")
 
-   In [10]: Main.eval("EquationsOfState.NonlinearFitting.lsqfit(EquationsOfState.Energy(), EquationsOfState.Collections.Murnaghan(224.445371 * UnitfulAtomic.bohr^3, 9.164446 * Unitful.GPa, 3.752432, -161.708856 * UnitfulAtomic.hartree), volumes, energies)")
+   In [10]: Main.eval("EquationsOfState.NonlinearFitting.lsqfit(EquationsOfState.Collections.Murnaghan(224.445371 * UnitfulAtomic.bohr^3, 9.164446 * Unitful.GPa, 3.752432, -161.708856 * UnitfulAtomic.hartree)（EquationsOfState.Energy()), volumes, energies)")
    Out[10]: <PyCall.jlwrap EquationsOfState.Collections.Murnaghan{Unitful.Quantity{Float64,D,U} where U where D}(224.5018173532159 a₀^3, 8.896845579229117 GPa, 3.7238388137735674, -161.70884303138902 Eₕ)>
    ```
 
