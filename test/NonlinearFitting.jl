@@ -41,11 +41,8 @@ using EquationsOfState.NonlinearFitting
         atol = 1e-5,
     )
     @test isapprox(
-        lsqfit(
-            BirchMurnaghan3rd(1, 2, 3, 0)(Energy()),
-            [1, 2, 3, 4, 5],
-            [5, 6, 9, 8, 7],
-        ) |> Collections.fieldvalues,
+        lsqfit(BirchMurnaghan3rd(1, 2, 3, 0)(Energy()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]) |>
+        Collections.fieldvalues,
         result;
         atol = 1e-5,
     )
@@ -923,11 +920,8 @@ end
             atol = 1e-3,
         )
         @test isapprox(
-            lsqfit(
-                BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()),
-                volumes,
-                energies,
-            ) |> Collections.fieldvalues,
+            lsqfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies) |>
+            Collections.fieldvalues,
             BirchMurnaghan3rd(
                 432.67139080209046,
                 0.00030508544859901674,
