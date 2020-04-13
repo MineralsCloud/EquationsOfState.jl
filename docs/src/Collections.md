@@ -2,11 +2,6 @@
 
 ```@meta
 CurrentModule = EquationsOfState.Collections
-DocTestSetup  = quote
-   using EquationsOfState.Collections
-   using Unitful
-   using UnitfulAtomic
-end
 ```
 
 The current `EquationOfState`s contain

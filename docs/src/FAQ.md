@@ -28,7 +28,7 @@ Or to write a non-lazy version of `fieldvalues` manually:
 julia> fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
 fieldvalues (generic function with 1 method)
 
-julia> Collections.fieldvalues(eos)
+julia> fieldvalues(eos)
 5-element Array{Float64,1}:
  1.0
  2.0

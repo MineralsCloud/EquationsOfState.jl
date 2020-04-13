@@ -20,21 +20,10 @@ julia> pressures = collect(0:20:200) .* u"GPa";
 
 julia> eos = BirchMurnaghan3rd(167u"angstrom^3", 2600u"kbar", 4.0);
 
-julia> volumes = map(
-           p -> findvolume(Pressure(), eos, p, (eps() * u"bohr^3", eos.v0 * 1.3)),
-           pressures
-       )
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
-[ Info: Using method "Roots.Bisection"...
+julia> volumes = map(pressures) do p
+           findvolume(eos(Pressure()), p, (eps() * u"bohr^3", eos.v0 * 1.3))
+       end
+[...]
 11-element Array{Quantity{Float64,𝐋^3,Unitful.FreeUnits{(Å^3,),𝐋^3,nothing}},1}:
               167.0 Å^3
  156.14036210727835 Å^3
@@ -102,12 +91,12 @@ AbstractUnivariateZeroMethod
 The usage is like
 
 ```julia
-findvolume(form, eos, y, (3, 4))                     # Try all possible methods
-findvolume(form, eos, y, (3, 4), Order1())           # Specify two starting points for secant method
-findvolume(form, eos, y, 3.0, Order2())              # Use Steffensen method
-findvolume(form, eos, y, big(3.0), Order16())        # Rapid convergence
-findvolume(form, eos, y, (3, 4), Roots.A42())      # Fewer function calls than Bisection(), in this case
-findvolume(form, eos, y, (3, 4), FalsePosition(8))   # 1 of 12 possible algorithms for false position
-findvolume(form, eos, y, 3.0, Roots.Newton())        # Use Newton's method
-findvolume(form, eos, y, 3.0, Roots.Halley())        # Use Halley's method
+findvolume(eos(form), y, (3, 4))                     # Try all possible methods
+findvolume(eos(form), y, (3, 4), Order1())           # Specify two starting points for secant method
+findvolume(eos(form), y, 3.0, Order2())              # Use Steffensen method
+findvolume(eos(form), y, big(3.0), Order16())        # Rapid convergence
+findvolume(eos(form), y, (3, 4), Roots.A42())        # Fewer function calls than Bisection(), in this case
+findvolume(eos(form), y, (3, 4), FalsePosition(8))   # 1 of 12 possible algorithms for false position
+findvolume(eos(form), y, 3.0, Roots.Newton())        # Use Newton's method
+findvolume(eos(form), y, 3.0, Roots.Halley())        # Use Halley's method
 ```
