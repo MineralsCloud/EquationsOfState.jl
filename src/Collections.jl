@@ -707,6 +707,9 @@ function Base.getproperty(eos::EquationOfState, name::Symbol)
     end
 end
 
+Base.show(io::IO, (eos, form)::EquationOnVolume) =
+    print(io, "EquationOnVolume(" * string(eos) * ", " * string(form) * ")")
+
 Unitful.upreferred(::typeof(dimension(u"J"))) = u"eV"
 Unitful.upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
 Unitful.upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
