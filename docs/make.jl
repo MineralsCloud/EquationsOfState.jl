@@ -16,9 +16,9 @@ makedocs(;
         "Home" => "index.md",
         "Installation" => "installation.md",
         "Manual" => [
-            "Collections" => "Collections.md",
-            "Nonlinear fitting" => "NonlinearFitting.md",
-            "Find volume" => "Find.md",
+            "Collections" => "api/Collections.md",
+            "Nonlinear fitting" => "api/NonlinearFitting.md",
+            "Find volume" => "api/Find.md",
             "Portability" => "portability.md",
             "Interoperability" => "interoperability.md",
         ],

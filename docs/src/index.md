@@ -28,9 +28,9 @@ and types.
 
 ```@contents
 Pages = [
-    "Collections.md",
-    "NonlinearFitting.md",
-    "Find.md",
+    "api/Collections.md",
+    "api/NonlinearFitting.md",
+    "api/Find.md",
     "portability.md",
     "interoperability.md",
     "faq.md",
