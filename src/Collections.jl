@@ -503,23 +503,27 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
     Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
 
 # This is a helper type and should be exported!
-for T in (
-    :Murnaghan,
-    :BirchMurnaghan2nd,
-    :BirchMurnaghan3rd,
-    :BirchMurnaghan4th,
-    :PoirierTarantola2nd,
-    :PoirierTarantola3rd,
-    :PoirierTarantola4th,
-    :Vinet,
-    :AntonSchmidt,
-    :BreenanStacey,
-    :Shanker,
-)
-    eval(quote
-        (eos::$T)(eq::PhysicalProperty) = (eos, eq)
-    end)
-end  # Julia 1.0 does not support adding methods to abstract types.
+if VERSION >= v"1.3"
+    (eos::EquationOfState)(eq::PhysicalProperty) = (eos, eq)
+else
+    for T in (
+        :Murnaghan,
+        :BirchMurnaghan2nd,
+        :BirchMurnaghan3rd,
+        :BirchMurnaghan4th,
+        :PoirierTarantola2nd,
+        :PoirierTarantola3rd,
+        :PoirierTarantola4th,
+        :Vinet,
+        :AntonSchmidt,
+        :BreenanStacey,
+        :Shanker,
+    )
+        eval(quote
+            (eos::$T)(eq::PhysicalProperty) = (eos, eq)
+        end)
+    end  # Julia 1.0-1.2 does not support adding methods to abstract types.
+end
 const EquationOnVolume{T} = Tuple{EquationOfState{T},PhysicalProperty}
 # =================================== Types ================================== #
 
