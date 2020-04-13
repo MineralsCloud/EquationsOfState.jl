@@ -37,15 +37,15 @@ This package also includes linear and nonlinear fitting methods, also referenced
 from Ref. 1.
 
 See its
-[documentation](https://mineralscloud.github.io/EquationsOfState.jl/dev/).
+[documentation](https://mineralscloud.github.io/EquationsOfState.jl/stable/).
 
 ## Compatibility
 
 - [Julia version: `v1.0.0` and above](https://julialang.org/downloads/)
 - Dependencies: see `Project.toml`
-  [`deps` field](https://github.com/MineralsCloud/EquationsOfState.jl/blob/da3a6ea/Project.toml#L7-L14)
+  [`deps` field](Project.toml#L7-L13)
   and
-  [`compat` field](https://github.com/MineralsCloud/EquationsOfState.jl/blob/da3a6ea/Project.toml#L17-L23)
+  [`compat` field](Project.toml#L16-L21)
 - OS: macOS, Linux, and Windows
 
 ## TODOs
@@ -53,11 +53,7 @@ See its
 - [ ] Implement nonlinear fitting using
       [CMPFit.jl](https://github.com/gcalderone/CMPFit.jl).
 
-## Related packages
-
-1. [CommandLineEquationsOfState.jl](https://github.com/MineralsCloud/CommandLineEquationsOfState.jl)
-
 ## References
 
-1. A. Otero-De-La-Roza, V. Luaña, _Comput. Phys. Commun._ **182**, 1708–1720
-   (2011).
+1. [A. Otero-De-La-Roza, V. Luaña, _Comput. Phys. Commun._ **182**, 1708–1720
+   (2011).](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
