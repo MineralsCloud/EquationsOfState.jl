@@ -14,15 +14,15 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
-        "Installation" => "Installation.md",
+        "Installation" => "installation.md",
         "Manual" => [
             "Collections" => "Collections.md",
             "Nonlinear fitting" => "NonlinearFitting.md",
             "Find volume" => "Find.md",
-            "Portability" => "Portability.md",
-            "Interoperability" => "Python.md",
+            "Portability" => "portability.md",
+            "Interoperability" => "interoperability.md",
         ],
-        "FAQ" => "FAQ.md",
+        "FAQ" => "faq.md",
     ],
 )
 

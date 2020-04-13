@@ -31,9 +31,9 @@ Pages = [
     "Collections.md",
     "NonlinearFitting.md",
     "Find.md",
-    "Portability.md",
-    "Python.md",
-    "FAQ.md",
+    "portability.md",
+    "interoperability.md",
+    "faq.md",
 ]
 Depth = 3
 ```

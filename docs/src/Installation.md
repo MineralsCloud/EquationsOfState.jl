@@ -1,7 +1,7 @@
 # Installation
 
 ```@contents
-Pages = ["Installation.md"]
+Pages = ["installation.md"]
 Depth = 5
 ```
 
