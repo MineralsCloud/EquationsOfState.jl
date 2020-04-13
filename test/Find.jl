@@ -73,8 +73,8 @@ using EquationsOfState.Find
             -9.73155247952,
         ] .* u"eV"
     isapprox(
-        map(
-            e -> findvolume(
+        map(energies) do e
+            findvolume(
                 BirchMurnaghan3rd(
                     40.98926572528106 * u"angstrom^3",
                     0.5369258245417454 * u"eV/angstrom^3",
@@ -83,9 +83,8 @@ using EquationsOfState.Find
                 )(Energy()),
                 e,
                 (eps(), 100) .* u"angstrom^3",
-            ),
-            energies,
-        ),
+            )
+        end,
         results,
     )
 end
@@ -93,10 +92,9 @@ end
 @testset "Test `findvolume` with random unit" begin
     pressures = collect(0:20:200) .* u"GPa"
     eos = BirchMurnaghan3rd(167 * u"angstrom^3", 2600 * u"kbar", 4.0 * u"1000mm/m")
-    volumes = map(
-        p -> findvolume(eos(Pressure()), p, (eps() * u"bohr^3", eos.v0 * 1.3)),
-        pressures,
-    )
+    volumes = map(pressures) do p
+        findvolume(eos(Pressure()), p, (eps(1.0 * u"bohr^3"), eos.v0 * 1.3))
+    end
     @test isapprox(
         ustrip.(map(eos(Pressure()), volumes) - pressures),
         zeros(11),

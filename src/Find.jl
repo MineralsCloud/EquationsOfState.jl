@@ -41,12 +41,10 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     an array or a tuple, of which only the maximum and minimum values will be used in the
     root-finding process.
 """
-function findvolume((eos, form)::Tuple{EquationOfState,PhysicalProperty}, y, x0, method)
-    f = v -> eos(form)(v) - y
-    return find_zero(f, x0, method)
-end # function findvolume
+findvolume(f::Tuple{EquationOfState,PhysicalProperty}, y, x0, method) =
+    find_zero(v -> f(v) - y, x0, method)
 function findvolume(
-    (eos, form)::Tuple{EquationOfState,PhysicalProperty},
+    f::Tuple{EquationOfState,PhysicalProperty},
     y,
     x0::Union{AbstractVector,Tuple},
 )
@@ -54,7 +52,7 @@ function findvolume(
         @info("Using method \"$T\"...")
         try
             # `maximum` and `minimum` also works with `AbstractQuantity`s.
-            return findvolume(form, eos, y, (minimum(x0), maximum(x0)), T())
+            return findvolume(f, y, (minimum(x0), maximum(x0)), T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue
@@ -68,7 +66,7 @@ function findvolume(
     ]
         @info("Using method \"$T\"...")
         try
-            return findvolume(form, eos, y, (minimum(x0) + maximum(x0)) / 2, T())
+            return findvolume(f, y, (minimum(x0) + maximum(x0)) / 2, T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue
