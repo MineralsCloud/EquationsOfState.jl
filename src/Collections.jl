@@ -29,8 +29,9 @@ export Energy,
 # ============================================================================ #
 abstract type PhysicalProperty end
 """
-    (::EquationOfState)(Energy())(v)
-    (::EquationOfState)(Energy())
+    Energy()
+    (::EquationOfState)(::Energy)(v)
+    (::EquationOfState)(::Energy)
 
 Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
@@ -78,8 +79,9 @@ julia> map(1:1:10) do v
 """
 struct Energy <: PhysicalProperty end
 """
-    (::EquationOfState)(Pressure())(v)
-    (::EquationOfState)(Pressure())
+    Pressure()
+    (::EquationOfState)(::Pressure)(v)
+    (::EquationOfState)(::Pressure)
 
 Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
@@ -104,8 +106,9 @@ julia> map(f, 1:1:10)
 """
 struct Pressure <: PhysicalProperty end
 """
-    (::EquationOfState)(BulkModulus())(v)
-    (::EquationOfState)(BulkModulus())
+    BulkModulus()
+    (::EquationOfState)(::BulkModulus)(v)
+    (::EquationOfState)(::BulkModulus)
 
 Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
