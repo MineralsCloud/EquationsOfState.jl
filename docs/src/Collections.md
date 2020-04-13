@@ -2,6 +2,11 @@
 
 ```@meta
 CurrentModule = EquationsOfState.Collections
+DocTestSetup  = quote
+   using EquationsOfState.Collections
+   using Unitful
+   using UnitfulAtomic
+end
 ```
 
 The current `EquationOfState`s contain
@@ -257,9 +262,12 @@ The $B(V)$ relation of equations of state are listed as below:
    B(V) = \beta\left(\frac{V}{V_{0}}\right)^{n}\left[1+n \ln \frac{V}{V_{0}}\right].
    ```
 
-## Types
+## Public interfaces
 
 ```@docs
+Energy
+Pressure
+BulkModulus
 EquationOfState
 FiniteStrainEquationOfState
 Murnaghan
@@ -270,13 +278,4 @@ PoirierTarantola2nd
 PoirierTarantola3rd
 PoirierTarantola4th
 Vinet
-```
-
-## Public interfaces
-
-```@docs
-(eos::EquationOfState)(eq::EquationForm)
-(f::EquationOfStateOnVolume{<:Murnaghan,EnergyForm})(v)
-(f::EquationOfStateOnVolume{<:Murnaghan,PressureForm})(v)
-(f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
 ```

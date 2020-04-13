@@ -5,11 +5,7 @@ calculate various strains.
 module FiniteStrains
 
 export FiniteStrain,
-       EulerianStrain,
-       LagrangianStrain,
-       NaturalStrain,
-       InfinitesimalStrain,
-       getstrain
+    EulerianStrain, LagrangianStrain, NaturalStrain, InfinitesimalStrain, getstrain
 
 abstract type FiniteStrain end
 

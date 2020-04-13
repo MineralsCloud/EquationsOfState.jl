@@ -8,18 +8,18 @@ using ConstructionBase: constructorof
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
-using ..Collections: EquationForm, EquationOfState, fieldvalues
+using ..Collections: PhysicalProperty, EquationOfState, fieldvalues
 
 export lsqfit
 
 """
-    lsqfit(form, eos, xdata, ydata; debug = false, kwargs...)
+    lsqfit(eos(form), xdata, ydata; debug = false, kwargs...)
 
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
 # Arguments
-- `form::EquationForm`: an `EquationForm` instance. If `EnergyForm`, fit ``E(V)``; if `PressureForm`, fit ``P(V)``; if `BulkModulusForm`, fit ``B(V)``.
 - `eos::EquationOfState`: a trial equation of state. If it has units, `xdata` and `ydata` must also have.
+- `form::PhysicalProperty`: an `PhysicalProperty` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
 - `xdata::AbstractVector`: a vector of volumes (``V``), with(out) units.
 - `ydata::AbstractVector`: a vector of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `form`.
 - `debug::Bool=false`: if `true`, then an `LsqFit.LsqFitResult` is returned, containing estimated Jacobian, residuals, etc.; if `false`, a fitted `EquationOfState` is returned. The default value is `false`.
@@ -27,8 +27,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(
-    form::EquationForm,
-    eos::EquationOfState{<:Real},
+    (eos, form)::Tuple{EquationOfState{<:Real},PhysicalProperty},
     xdata::AbstractVector{<:Real},
     ydata::AbstractVector{<:Real};
     debug = false,
@@ -46,8 +45,7 @@ function lsqfit(
     return debug ? fitted : E(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    form::EquationForm,
-    eos::EquationOfState{<:AbstractQuantity},
+    (eos, form)::Tuple{EquationOfState{<:AbstractQuantity},PhysicalProperty},
     xdata::AbstractVector{<:AbstractQuantity},
     ydata::AbstractVector{<:AbstractQuantity};
     kwargs...,
@@ -57,11 +55,11 @@ function lsqfit(
     original_units = unit.(values)  # Keep a record of `eos`'s units
     f = x -> map(ustrip ∘ upreferred, x)  # Convert to preferred units and strip the unit
     trial_params = f.(values)
-    result = lsqfit(form, E(trial_params...), f.(xdata), f.(ydata); kwargs...)
+    result = lsqfit(E(trial_params...)(form), f.(xdata), f.(ydata); kwargs...)
     if result isa EquationOfState  # i.e., if `debug = false` and no error is thrown
         data = fieldvalues(result)
         # Convert back to original `eos`'s units
-        return E([data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units)]...)
+        return E((data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units))...)
     end
     return result
 end  # function lsqfit

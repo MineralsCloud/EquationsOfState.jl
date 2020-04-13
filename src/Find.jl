@@ -5,32 +5,33 @@ pressure, energy, or bulk modulus with(out) units.
 module Find
 
 using InteractiveUtils: subtypes
-using Roots: find_zero,
-             AbstractBracketing,
-             AbstractNonBracketing,
-             AbstractHalleyLikeMethod,
-             AbstractNewtonLikeMethod,
-             AbstractAlefeldPotraShi,
-             AbstractBisection,
-             AbstractSecant,
-             Brent,
-             Newton,
-             ConvergenceFailed
+using Roots:
+    find_zero,
+    AbstractBracketing,
+    AbstractNonBracketing,
+    AbstractHalleyLikeMethod,
+    AbstractNewtonLikeMethod,
+    AbstractAlefeldPotraShi,
+    AbstractBisection,
+    AbstractSecant,
+    Brent,
+    Newton,
+    ConvergenceFailed
 using Unitful: AbstractQuantity, ustrip
 
-using ..Collections: EquationOfState, EquationForm
+using ..Collections: EquationOfState, PhysicalProperty
 
 export findvolume
 
 """
-    findvolume(form, eos, y, x0, method)
-    findvolume(form, eos, y, x0::Union{AbstractVector,Tuple})
+    findvolume(eos(form), y, x0, method)
+    findvolume(eos(form), y, x0::Union{AbstractVector,Tuple})
 
 Find a volume which leads to the given pressure, energy, or bulk modulus based on an `eos`.
 
 # Arguments
-- `form::EquationForm`: an `EquationForm` instance.
 - `eos::EquationOfState`: an equation of state. If it has units, `y` and `x0` must also have.
+- `form::PhysicalProperty`: an `PhysicalProperty` instance.
 - `y`: a pressure, energy, or bulk modulus.
 - `x0`: can be either a range of volumes (`Vector`, `Tuple`, etc.) or just a single volume.
     Units can be provided if necessary.
@@ -40,13 +41,10 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     an array or a tuple, of which only the maximum and minimum values will be used in the
     root-finding process.
 """
-function findvolume(form::EquationForm, eos::EquationOfState, y, x0, method)
-    f = v -> eos(form)(v) - y
-    return find_zero(f, x0, method)
-end # function findvolume
+findvolume(f::Tuple{EquationOfState,PhysicalProperty}, y, x0, method) =
+    find_zero(v -> f(v) - y, x0, method)
 function findvolume(
-    form::EquationForm,
-    eos::EquationOfState,
+    f::Tuple{EquationOfState,PhysicalProperty},
     y,
     x0::Union{AbstractVector,Tuple},
 )
@@ -54,7 +52,7 @@ function findvolume(
         @info("Using method \"$T\"...")
         try
             # `maximum` and `minimum` also works with `AbstractQuantity`s.
-            return findvolume(form, eos, y, (minimum(x0), maximum(x0)), T())
+            return findvolume(f, y, (minimum(x0), maximum(x0)), T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue
@@ -68,7 +66,7 @@ function findvolume(
     ]
         @info("Using method \"$T\"...")
         try
-            return findvolume(form, eos, y, (minimum(x0) + maximum(x0)) / 2, T())
+            return findvolume(f, y, (minimum(x0) + maximum(x0)) / 2, T())
         catch e
             @info("Method \"$T\" failed because of $e.")
             continue
