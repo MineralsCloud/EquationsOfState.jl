@@ -112,7 +112,7 @@ Then 4 different equations of state will be fitted.
 ## Public interfaces
 
 ```@docs
-lsqfit(form::EquationForm, eos::EquationOfState{<:Real}, xdata::AbstractVector{<:Real}, ydata::AbstractVector{<:Real}; debug::Bool, kwargs...)
+lsqfit(form::PhysicalProperty, eos::EquationOfState{<:Real}, xdata::AbstractVector{<:Real}, ydata::AbstractVector{<:Real}; debug::Bool, kwargs...)
 ```
 
 ## References

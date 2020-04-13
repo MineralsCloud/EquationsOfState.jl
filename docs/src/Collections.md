@@ -275,7 +275,7 @@ Vinet
 ## Public interfaces
 
 ```@docs
-(eos::EquationOfState)(eq::EquationForm)
+(eos::EquationOfState)(eq::PhysicalProperty)
 (f::EquationOfStateOnVolume{<:Murnaghan,EnergyForm})(v)
 (f::EquationOfStateOnVolume{<:Murnaghan,PressureForm})(v)
 (f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
