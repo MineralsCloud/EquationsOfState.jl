@@ -40,13 +40,12 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     an array or a tuple, of which only the maximum and minimum values will be used in the
     root-finding process.
 """
-function findvolume(form::PhysicalProperty, eos::EquationOfState, y, x0, method)
+function findvolume((eos, form)::Tuple{EquationOfState,PhysicalProperty}, y, x0, method)
     f = v -> eos(form)(v) - y
     return find_zero(f, x0, method)
 end # function findvolume
 function findvolume(
-    form::PhysicalProperty,
-    eos::EquationOfState,
+    (eos, form)::Tuple{EquationOfState,PhysicalProperty},
     y,
     x0::Union{AbstractVector,Tuple},
 )
