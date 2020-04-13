@@ -276,7 +276,7 @@ Vinet
 
 ```@docs
 (eos::EquationOfState)(eq::PhysicalProperty)
-(f::EquationOfStateOnVolume{<:Murnaghan,EnergyForm})(v)
-(f::EquationOfStateOnVolume{<:Murnaghan,PressureForm})(v)
-(f::EquationOfStateOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
+(f::EquationOnVolume{<:Murnaghan,EnergyForm})(v)
+(f::EquationOnVolume{<:Murnaghan,PressureForm})(v)
+(f::EquationOnVolume{<:BirchMurnaghan2nd,BulkModulusForm})(v)
 ```
