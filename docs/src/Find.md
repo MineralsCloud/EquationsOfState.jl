@@ -63,7 +63,8 @@ Modules = [Find]
 Order   = [:type, :function]
 ```
 
-All available `method`s are the leaves of the tree below (Remember to add a `Roots.` prefix):
+All available `method`s are the leaves of the tree below (Remember to add a
+`Roots.` prefix):
 
 ```
 AbstractUnivariateZeroMethod
