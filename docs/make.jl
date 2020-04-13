@@ -1,7 +1,6 @@
 using EquationsOfState
 using Documenter
 
-DocMeta.setdocmeta!(EquationsOfState, :DocTestSetup, :(using EquationsOfState, EquationOfState.Collections, Unitful); recursive=true)
 makedocs(;
     modules=[EquationsOfState],
     authors="Qi Zhang <singularitti@outlook.com>",

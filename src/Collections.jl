@@ -41,8 +41,6 @@ Return a [function-like object](https://docs.julialang.org/en/v1/manual/methods/
 
 # Examples
 ```jldoctest
-julia> using EquationsOfState.Collections
-
 julia> f = Vinet(1, 2, 3)(EnergyForm());
 
 julia> map(f, 1:1:10)
@@ -90,8 +88,6 @@ Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 
 # Examples
 ```jldoctest
-julia> using EquationsOfState.Collections
-
 julia> f = Vinet(1, 2, 3)(PressureForm());
 
 julia> map(f, 1:1:10)
@@ -118,8 +114,6 @@ Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has unit
 
 # Examples
 ```jldoctest
-julia> using EquationsOfState.Collections
-
 julia> f = BirchMurnaghan3rd(1, 2, 3)(BulkModulusForm());
 
 julia> map(f, 1:1:10)
