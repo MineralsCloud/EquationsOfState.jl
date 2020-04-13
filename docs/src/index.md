@@ -28,12 +28,12 @@ and types.
 
 ```@contents
 Pages = [
-    "Collections.md",
-    "NonlinearFitting.md",
-    "Find.md",
-    "Portability.md",
-    "Python.md",
-    "FAQ.md",
+    "api/Collections.md",
+    "api/NonlinearFitting.md",
+    "api/Find.md",
+    "portability.md",
+    "interoperability.md",
+    "faq.md",
 ]
 Depth = 3
 ```
