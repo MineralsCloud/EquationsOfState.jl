@@ -6,7 +6,7 @@
 
 [![Build Status](https://github.com/MineralsCloud/EquationsOfState.jl/workflows/CI/badge.svg)](https://github.com/MineralsCloud/EquationsOfState.jl/actions)
 [![Build Status](https://travis-ci.com/MineralsCloud/EquationsOfState.jl.svg?branch=master)](https://travis-ci.com/MineralsCloud/EquationsOfState.jl)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/singularitti/EquationsOfState.jl?svg=true)](https://ci.appveyor.com/project/singularitti/EquationsOfState-jl)
+[![Build Status](https://ci.appveyor.com/api/projects/status/mqfsm1ssxergkmec?svg=true)](https://ci.appveyor.com/project/singularitti/EquationsOfState-jl)
 [![Build Status](https://cloud.drone.io/api/badges/MineralsCloud/EquationsOfState.jl/status.svg)](https://cloud.drone.io/MineralsCloud/EquationsOfState.jl)
 [![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
 [![Coverage](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
