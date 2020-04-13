@@ -61,7 +61,7 @@ In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/bas
 is preferred:
 ```jldoctest
 julia> map(1:1:10) do v
-           eos(Energy())(v)
+           Vinet(1, 2, 3)(Energy())(v)
        end
 10-element Array{Float64,1}:
  0.0
@@ -167,7 +167,7 @@ julia> Murnaghan(Int8(1), 2//1, 3.0, 4)
 Murnaghan{Float64}(1.0, 2.0, 3.0, 4.0)
 
 julia> Murnaghan(1u"nm^3", 2u"GPa", 3, 3.0u"eV")
-Murnaghan{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 3.0 eV)
+Murnaghan{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 3.0 eV)
 ```
 """
 struct Murnaghan{T} <: EquationOfState{T}
@@ -205,7 +205,7 @@ julia> BirchMurnaghan2nd(Int8(1), 2//1, 0.0)
 BirchMurnaghan2nd{Float64}(1.0, 2.0, 0.0)
 
 julia> BirchMurnaghan2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
-BirchMurnaghan2nd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0 eV)
+BirchMurnaghan2nd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0 eV)
 ```
 """
 struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
@@ -243,7 +243,7 @@ julia> BirchMurnaghan3rd(Int8(1), 2//1, 4, 0.0)
 BirchMurnaghan3rd{Float64}(1.0, 2.0, 4.0, 0.0)
 
 julia> BirchMurnaghan3rd(1u"nm^3", 2u"GPa", 4.0, 3u"eV")
-BirchMurnaghan3rd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 4.0, 3.0 eV)
+BirchMurnaghan3rd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 4.0, 3.0 eV)
 ```
 """
 struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
@@ -283,7 +283,7 @@ julia> BirchMurnaghan4th(Int8(1), 2//1, 4, 5.0, Float16(6))
 BirchMurnaghan4th{Float64}(1.0, 2.0, 4.0, 5.0, 6.0)
 
 julia> BirchMurnaghan4th(1u"nm^3", 2u"GPa", 3.0, 4u"1/GPa", 5u"eV")
-BirchMurnaghan4th{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 GPa^-1, 5.0 eV)
+BirchMurnaghan4th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 eV)
 ```
 """
 struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
@@ -323,7 +323,7 @@ julia> PoirierTarantola2nd(Int8(1), 2//1, 3.0)
 PoirierTarantola2nd{Float64}(1.0, 2.0, 3.0)
 
 julia> PoirierTarantola2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
-PoirierTarantola2nd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0 eV)
+PoirierTarantola2nd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0 eV)
 ```
 """
 struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
@@ -361,7 +361,7 @@ julia> PoirierTarantola3rd(Int8(1), 2//1, 3.0, Float16(4))
 PoirierTarantola3rd{Float64}(1.0, 2.0, 3.0, 4.0)
 
 julia> PoirierTarantola3rd(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
-PoirierTarantola3rd{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 eV)
+PoirierTarantola3rd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 eV)
 ```
 """
 struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
@@ -401,7 +401,7 @@ julia> PoirierTarantola4th(Int8(1), 2//1, 3.0, Float16(4), 5)
 PoirierTarantola4th{Float64}(1.0, 2.0, 3.0, 4.0, 5.0)
 
 julia> PoirierTarantola4th(1u"nm^3", 2u"GPa", 3, 4u"1/GPa", 5.0u"eV")
-PoirierTarantola4th{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 GPa^-1, 5.0 eV)
+PoirierTarantola4th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 eV)
 ```
 """
 struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
@@ -444,7 +444,7 @@ julia> Vinet(Int8(1), 2//1, 3.0, Float16(4))
 Vinet{Float64}(1.0, 2.0, 3.0, 4.0)
 
 julia> Vinet(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
-Vinet{Quantity{Float64,D,U} where U where D}(1.0 nm^3, 2.0 GPa, 3.0, 4.0 eV)
+Vinet{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 eV)
 ```
 """
 struct Vinet{T} <: EquationOfState{T}
