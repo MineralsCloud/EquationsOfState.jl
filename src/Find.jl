@@ -5,17 +5,18 @@ pressure, energy, or bulk modulus with(out) units.
 module Find
 
 using InteractiveUtils: subtypes
-using Roots: find_zero,
-             AbstractBracketing,
-             AbstractNonBracketing,
-             AbstractHalleyLikeMethod,
-             AbstractNewtonLikeMethod,
-             AbstractAlefeldPotraShi,
-             AbstractBisection,
-             AbstractSecant,
-             Brent,
-             Newton,
-             ConvergenceFailed
+using Roots:
+    find_zero,
+    AbstractBracketing,
+    AbstractNonBracketing,
+    AbstractHalleyLikeMethod,
+    AbstractNewtonLikeMethod,
+    AbstractAlefeldPotraShi,
+    AbstractBisection,
+    AbstractSecant,
+    Brent,
+    Newton,
+    ConvergenceFailed
 using Unitful: AbstractQuantity, ustrip
 
 using ..Collections: EquationOfState, PhysicalProperty
