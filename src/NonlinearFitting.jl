@@ -19,7 +19,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 
 # Arguments
 - `eos::EquationOfState`: a trial equation of state. If it has units, `xdata` and `ydata` must also have.
-- `prop::PhysicalProperty`: an `PhysicalProperty` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
+- `prop::PhysicalProperty`: a `PhysicalProperty` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
 - `xdata::AbstractVector`: a vector of volumes (``V``), with(out) units.
 - `ydata::AbstractVector`: a vector of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
 - `debug::Bool=false`: if `true`, then an `LsqFit.LsqFitResult` is returned, containing estimated Jacobian, residuals, etc.; if `false`, a fitted `EquationOfState` is returned. The default value is `false`.
