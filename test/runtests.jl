@@ -6,5 +6,5 @@ using Test
     include("FiniteStrains.jl")
     include("NonlinearFitting.jl")
     include("LinearFitting.jl")
-    # include("Find.jl")
+    include("Find.jl")
 end
