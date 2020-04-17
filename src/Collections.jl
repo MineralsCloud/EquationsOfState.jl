@@ -5,6 +5,7 @@ a (an) volume (array of volumes).
 """
 module Collections
 
+using IterTools: FieldValues, fieldvalues
 using Unitful: AbstractQuantity, dimension, upreferred, @u_str
 
 import Unitful
@@ -501,10 +502,177 @@ end
 Shanker(v0::Real, b0::Real, b′0::Real) = Shanker(v0, b0, b′0, 0)
 Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
     Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
+# =================================== Types ================================== #
 
-# This is a helper type and should be exported!
+# Energy evaluation
+function _evaluate(eos::Murnaghan, ::Energy, v)
+    v0, b0, b′0, e0 = fieldvalues(eos)
+    x, y = b′0 - 1, (v0 / v)^b′0
+    return e0 + b0 / b′0 * v * (y / x + 1) - v0 * b0 / x
+end
+function _evaluate(eos::BirchMurnaghan2nd, ::Energy, v)
+    v0, b0, e0 = fieldvalues(eos)
+    f = (cbrt(v0 / v)^2 - 1) / 2
+    return e0 + 9 / 2 * b0 * v0 * f^2
+end
+function _evaluate(eos::BirchMurnaghan3rd, ::Energy, v)
+    v0, b0, b′0, e0 = fieldvalues(eos)
+    eta = cbrt(v0 / v)
+    xi = eta^2 - 1
+    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + b′0 * xi - 4 * eta^2)
+end
+function _evaluate(eos::BirchMurnaghan4th, ::Energy, v)
+    v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
+    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12 * (b′0 - 4) * f + 12)
+end
+function _evaluate(eos::PoirierTarantola2nd, ::Energy, v)
+    v0, b0, e0 = fieldvalues(eos)
+    return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
+end
+function _evaluate(eos::PoirierTarantola3rd, ::Energy, v)
+    v0, b0, b′0, e0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    xi = -3 * log(x)
+    return e0 + b0 / 6 * v0 * xi^2 * ((b′0 - 2) * xi + 3)
+end
+function _evaluate(eos::PoirierTarantola4th, ::Energy, v)
+    v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    xi = log(x)
+    h = b0 * b′′0 + b′0^2
+    return e0 + b0 / 24v0 * xi^2 * ((h + 3b′0 + 3) * xi^2 + 4 * (b′0 + 2) * xi + 12)
+end
+function _evaluate(eos::Vinet, ::Energy, v)
+    v0, b0, b′0, e0 = fieldvalues(eos)
+    x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
+    return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
+end
+function _evaluate(eos::AntonSchmidt, ::Energy, v)
+    v0, β, n, e∞ = fieldvalues(eos)
+    x, η = v / v0, n + 1
+    return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
+end
+# Pressure evaluation
+function _evaluate(eos::Murnaghan, ::Pressure, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    return b0 / b′0 * ((v0 / v)^b′0 - 1)
+end
+function _evaluate(eos::BirchMurnaghan2nd, ::Pressure, v)
+    v0, b0 = fieldvalues(eos)
+    f = (cbrt(v0 / v)^2 - 1) / 2
+    return 3b0 * f * (1 + 2f)^(5 / 2)
+end
+function _evaluate(eos::BirchMurnaghan3rd, ::Pressure, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    eta = cbrt(v0 / v)
+    return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (b′0 - 4) * (eta^2 - 1))
+end
+function _evaluate(eos::BirchMurnaghan4th, ::Pressure, v)
+    v0, b0, b′0, b′′0 = fieldvalues(eos)
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63b′0 + 143) * f^2 + 9 * (b′0 - 4) * f + 6)
+end
+function _evaluate(eos::PoirierTarantola2nd, ::Pressure, v)
+    v0, b0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    return -b0 / x * log(x)
+end
+function _evaluate(eos::PoirierTarantola3rd, ::Pressure, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    x = v / v0
+    xi = log(x)
+    return -b0 * xi / 2x * ((b′0 - 2) * xi - 2)
+end
+function _evaluate(eos::PoirierTarantola4th, ::Pressure, v)
+    v0, b0, b′0, b′′0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    xi = log(x)
+    h = b0 * b′′0 + b′0^2
+    return -b0 * xi / 6 / x * ((h + 3b′0 + 3) * xi^2 + 3 * (b′0 + 6) * xi + 6)
+end
+function _evaluate(eos::Vinet, ::Pressure, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    xi = 3 / 2 * (b′0 - 1)
+    return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
+end
+function _evaluate(eos::AntonSchmidt, ::Pressure, v)
+    v0, β, n = fieldvalues(eos)
+    x = v / v0
+    return -β * x^n * log(x)
+end
+function _evaluate(eos::BreenanStacey, ::Pressure, v)
+    v0, b0, γ0 = fieldvalues(eos)
+    x = v0 / v
+    return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
+end
+function _evaluate(eos::Shanker, ::Pressure, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    x = v / v0
+    y = 1 - x
+    t = b′0 - 8 / 3
+    return b0 / (x^(4 / 3) * t) *
+           ((1 - 1 / t + 2 / t^2) * exp(t * y - 1) + y * (1 + y - 2 / t) * exp(t * y))
+end
+# Bulk modulus evaluation
+function _evaluate(eos::BirchMurnaghan2nd, ::BulkModulus, v)
+    v0, b0 = fieldvalues(eos)
+    f = (cbrt(v0 / v)^2 - 1) / 2
+    return b0 * (7f + 1) * (2f + 1)^(5 / 2)
+end
+function _evaluate(eos::BirchMurnaghan3rd, ::BulkModulus, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    f = (cbrt(v0 / v)^2 - 1) / 2
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (b′0 - 4) - 4f + 2)
+end
+function _evaluate(eos::BirchMurnaghan4th, ::BulkModulus, v)
+    v0, b0, b′0, b′′0 = fieldvalues(eos)
+    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
+    return b0 / 6 *
+           (2f + 1)^(5 / 2) *
+           ((99h - 693b′0 + 1573) * f^3 + (27h - 108b′0 + 105) * f^2 + 6f * (3b′0 - 5) + 6)
+end
+function _evaluate(eos::PoirierTarantola2nd, ::BulkModulus, v)
+    v0, b0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    return b0 / x * (1 - log(x))
+end
+function _evaluate(eos::PoirierTarantola3rd, ::BulkModulus, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    x = v / v0
+    xi = log(x)
+    return -b0 / 2x * (((b′0 - 2) * xi + 2 - 2b′0) * xi + 2)
+end
+function _evaluate(eos::PoirierTarantola4th, ::BulkModulus, v)
+    v0, b0, b′0, b′′0 = fieldvalues(eos)
+    x = cbrt(v / v0)
+    xi = log(x)
+    h = b0 * b′′0 + b′0^2
+    return -b0 / (6x) *
+           ((h + 3b′0 + 3) * xi^3 - 3 * xi^2 * (h + 2b′0 + 1) - 6xi * (b′0 + 1) - 6)
+end
+function _evaluate(eos::Vinet, ::BulkModulus, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
+    return -b0 / (2 * x^2) * (3x * (x - 1) * (b′0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
+end
+function _evaluate(eos::AntonSchmidt, ::BulkModulus, v)
+    v0, β, n = fieldvalues(eos)
+    x = v / v0
+    return β * x^n * (1 + n * log(x))
+end
+function _evaluate(eos::Shanker, ::BulkModulus, v)
+    v0, b0, b′0 = fieldvalues(eos)
+    x = v / v0
+    y = 1 - x
+    t = b′0 - 8 / 3
+    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * eos(Pressure())(v)
+end
+
+# Miscellaneous
 if VERSION >= v"1.3"
-    (eos::EquationOfState)(eq::PhysicalProperty) = (eos, eq)
+    (eos::EquationOfState)(prop::PhysicalProperty) = v -> _evaluate(eos, prop, v)
 else
     for T in (
         :Murnaghan,
@@ -520,203 +688,14 @@ else
         :Shanker,
     )
         eval(quote
-            (eos::$T)(eq::PhysicalProperty) = (eos, eq)
+            (eos::$T)(prop::PhysicalProperty) = v -> _evaluate(eos, prop, v)
         end)
     end  # Julia 1.0-1.2 does not support adding methods to abstract types.
 end
-const EquationOnVolume{T} = Tuple{EquationOfState{T},PhysicalProperty}
-# =================================== Types ================================== #
 
+Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) .== fieldvalues(y))
 
-# ============================================================================ #
-#                               Energy evaluation                              #
-# ============================================================================ #
-function (f::Tuple{Murnaghan,Energy})(v)
-    v0, b0, b′0, e0 = fieldvalues(first(f))
-    x, y = b′0 - 1, (v0 / v)^b′0
-    return e0 + b0 / b′0 * v * (y / x + 1) - v0 * b0 / x
-end
-function (f::Tuple{BirchMurnaghan2nd,Energy})(v)
-    v0, b0, e0 = fieldvalues(first(f))
-    f = (cbrt(v0 / v)^2 - 1) / 2
-    return e0 + 9 / 2 * b0 * v0 * f^2
-end
-function (f::Tuple{BirchMurnaghan3rd,Energy})(v)
-    v0, b0, b′0, e0 = fieldvalues(first(f))
-    eta = cbrt(v0 / v)
-    xi = eta^2 - 1
-    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + b′0 * xi - 4 * eta^2)
-end
-function (f::Tuple{BirchMurnaghan4th,Energy})(v)
-    v0, b0, b′0, b′′0, e0 = fieldvalues(first(f))
-    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
-    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12 * (b′0 - 4) * f + 12)
-end
-function (f::Tuple{PoirierTarantola2nd,Energy})(v)
-    v0, b0, e0 = fieldvalues(first(f))
-    return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
-end
-function (f::Tuple{PoirierTarantola3rd,Energy})(v)
-    v0, b0, b′0, e0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    xi = -3 * log(x)
-    return e0 + b0 / 6 * v0 * xi^2 * ((b′0 - 2) * xi + 3)
-end
-function (f::Tuple{PoirierTarantola4th,Energy})(v)
-    v0, b0, b′0, b′′0, e0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    xi = log(x)
-    h = b0 * b′′0 + b′0^2
-    return e0 + b0 / 24v0 * xi^2 * ((h + 3b′0 + 3) * xi^2 + 4 * (b′0 + 2) * xi + 12)
-end
-function (f::Tuple{Vinet,Energy})(v)
-    v0, b0, b′0, e0 = fieldvalues(first(f))
-    x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
-    return e0 + 9b0 * v0 / xi^2 * (1 + (xi * (1 - x) - 1) * exp(xi * (1 - x)))
-end
-function (f::Tuple{AntonSchmidt,Energy})(v)
-    v0, β, n, e∞ = fieldvalues(first(f))
-    x, η = v / v0, n + 1
-    return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
-end
-# ============================= Energy evaluation ============================ #
-
-
-# ============================================================================ #
-#                              Pressure evaluation                             #
-# ============================================================================ #
-function (f::Tuple{Murnaghan,Pressure})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    return b0 / b′0 * ((v0 / v)^b′0 - 1)
-end
-function (f::Tuple{BirchMurnaghan2nd,Pressure})(v)
-    v0, b0 = fieldvalues(first(f))
-    f = (cbrt(v0 / v)^2 - 1) / 2
-    return 3b0 * f * (1 + 2f)^(5 / 2)
-end
-function (f::Tuple{BirchMurnaghan3rd,Pressure})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    eta = cbrt(v0 / v)
-    return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (b′0 - 4) * (eta^2 - 1))
-end
-function (f::Tuple{BirchMurnaghan4th,Pressure})(v)
-    v0, b0, b′0, b′′0 = fieldvalues(first(f))
-    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63b′0 + 143) * f^2 + 9 * (b′0 - 4) * f + 6)
-end
-function (f::Tuple{PoirierTarantola2nd,Pressure})(v)
-    v0, b0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    return -b0 / x * log(x)
-end
-function (f::Tuple{PoirierTarantola3rd,Pressure})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    x = v / v0
-    xi = log(x)
-    return -b0 * xi / 2x * ((b′0 - 2) * xi - 2)
-end
-function (f::Tuple{PoirierTarantola4th,Pressure})(v)
-    v0, b0, b′0, b′′0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    xi = log(x)
-    h = b0 * b′′0 + b′0^2
-    return -b0 * xi / 6 / x * ((h + 3b′0 + 3) * xi^2 + 3 * (b′0 + 6) * xi + 6)
-end
-function (f::Tuple{Vinet,Pressure})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    xi = 3 / 2 * (b′0 - 1)
-    return 3b0 / x^2 * (1 - x) * exp(xi * (1 - x))
-end
-function (f::Tuple{AntonSchmidt,Pressure})(v)
-    v0, β, n = fieldvalues(first(f))
-    x = v / v0
-    return -β * x^n * log(x)
-end
-function (f::Tuple{BreenanStacey,Pressure})(v)
-    v0, b0, γ0 = fieldvalues(first(f))
-    x = v0 / v
-    return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
-end
-function (f::Tuple{Shanker,Pressure})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    x = v / v0
-    y = 1 - x
-    t = b′0 - 8 / 3
-    return b0 / (x^(4 / 3) * t) *
-           ((1 - 1 / t + 2 / t^2) * exp(t * y - 1) + y * (1 + y - 2 / t) * exp(t * y))
-end
-# ============================ Pressure evaluation =========================== #
-
-
-# ============================================================================ #
-#                            Bulk modulus evaluation                           #
-# ============================================================================ #
-function (f::Tuple{BirchMurnaghan2nd,BulkModulus})(v)
-    v0, b0 = fieldvalues(first(f))
-    f = (cbrt(v0 / v)^2 - 1) / 2
-    return b0 * (7f + 1) * (2f + 1)^(5 / 2)
-end
-function (f::Tuple{BirchMurnaghan3rd,BulkModulus})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    f = (cbrt(v0 / v)^2 - 1) / 2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (b′0 - 4) - 4f + 2)
-end
-function (f::Tuple{BirchMurnaghan4th,BulkModulus})(v)
-    v0, b0, b′0, b′′0 = fieldvalues(first(f))
-    f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
-    return b0 / 6 *
-           (2f + 1)^(5 / 2) *
-           ((99h - 693b′0 + 1573) * f^3 + (27h - 108b′0 + 105) * f^2 + 6f * (3b′0 - 5) + 6)
-end
-function (f::Tuple{PoirierTarantola2nd,BulkModulus})(v)
-    v0, b0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    return b0 / x * (1 - log(x))
-end
-function (f::Tuple{PoirierTarantola3rd,BulkModulus})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    x = v / v0
-    xi = log(x)
-    return -b0 / 2x * (((b′0 - 2) * xi + 2 - 2b′0) * xi + 2)
-end
-function (f::Tuple{PoirierTarantola4th,BulkModulus})(v)
-    v0, b0, b′0, b′′0 = fieldvalues(first(f))
-    x = cbrt(v / v0)
-    xi = log(x)
-    h = b0 * b′′0 + b′0^2
-    return -b0 / (6x) *
-           ((h + 3b′0 + 3) * xi^3 - 3 * xi^2 * (h + 2b′0 + 1) - 6xi * (b′0 + 1) - 6)
-end
-function (f::Tuple{Vinet,BulkModulus})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
-    return -b0 / (2 * x^2) * (3x * (x - 1) * (b′0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
-end
-function (f::Tuple{AntonSchmidt,BulkModulus})(v)
-    v0, β, n = fieldvalues(first(f))
-    x = v / v0
-    return β * x^n * (1 + n * log(x))
-end
-function (f::Tuple{Shanker,BulkModulus})(v)
-    v0, b0, b′0 = fieldvalues(first(f))
-    x = v / v0
-    y = 1 - x
-    t = b′0 - 8 / 3
-    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * eos(Pressure())(v)
-end
-# ========================== Bulk modulus evaluation ========================= #
-
-
-# ============================================================================ #
-#                                 Miscellaneous                                #
-# ============================================================================ #
-# This is a helper function and should not be exported.
-fieldvalues(eos::EquationOfState) = [getfield(eos, i) for i in 1:nfields(eos)]
-
-function Base.:(==)(x::T, y::T) where {T<:EquationOfState}
-    return all(getfield(x, i) == getfield(y, i) for i in 1:fieldcount(T))
-end
+Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
 
 function Base.getproperty(eos::EquationOfState, name::Symbol)
     if name ∈ (:bp0, :bd0)
@@ -728,12 +707,8 @@ function Base.getproperty(eos::EquationOfState, name::Symbol)
     end
 end
 
-Base.show(io::IO, (eos, prop)::EquationOnVolume) =
-    print(io, "EquationOnVolume(" * string(eos) * ", " * string(prop) * ")")
-
 Unitful.upreferred(::typeof(dimension(u"J"))) = u"eV"
 Unitful.upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
 Unitful.upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
-# =============================== Miscellaneous ============================== #
 
 end

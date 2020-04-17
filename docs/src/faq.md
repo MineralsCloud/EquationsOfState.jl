@@ -12,7 +12,7 @@ julia> eos = BirchMurnaghan4th(1, 2.0, 3, 4)
 BirchMurnaghan4th{Float64}(1.0, 2.0, 3.0, 4.0, 0.0)
 
 julia> collect(fieldvalues(eos))
-5-element Array{Any,1}:
+5-element Array{Float64,1}:
  1.0
  2.0
  3.0
@@ -20,7 +20,7 @@ julia> collect(fieldvalues(eos))
  0.0
 ```
 
-It is lazy and fast. But the `Vector` has element type `Any`.
+It is lazy and fast.
 
 Or to write a non-lazy version of `fieldvalues` manually:
 
@@ -37,5 +37,4 @@ julia> fieldvalues(eos)
  0.0
 ```
 
-It is slower than `IterTools.fieldvalues` but has the exact element type `Float64`.
-Use it with care.
+It is slower than `IterTools.fieldvalues`. Use it with care.
