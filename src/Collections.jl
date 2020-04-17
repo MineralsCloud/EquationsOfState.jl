@@ -693,8 +693,7 @@ else
     end  # Julia 1.0-1.2 does not support adding methods to abstract types.
 end
 
-Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) == fieldvalues(y))
-
+Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) .== fieldvalues(y))
 function Base.getproperty(eos::EquationOfState, name::Symbol)
     if name ∈ (:bp0, :bd0)
         return getfield(eos, :b′0)
