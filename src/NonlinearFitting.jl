@@ -5,10 +5,11 @@ with(out) units.
 module NonlinearFitting
 
 using ConstructionBase: constructorof
+using IterTools: fieldvalues
 using LsqFit: curve_fit
 using Unitful: AbstractQuantity, upreferred, ustrip, unit
 
-using ..Collections: PhysicalProperty, EquationOfState, EquationOnVolume, fieldvalues
+using ..Collections: PhysicalProperty, EquationOfState
 
 export lsqfit
 
@@ -27,41 +28,40 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(
-    (eos, prop)::EquationOnVolume{<:Real},
+    f::Function,
     xdata::AbstractVector{<:Real},
     ydata::AbstractVector{<:Real};
     debug = false,
     kwargs...,
 )
-    E = constructorof(typeof(eos))  # Get the `UnionAll` type
-    model = (x, p) -> map(E(p...)(prop), x)
+    T = constructorof(typeof(f.eos))  # Get the `UnionAll` type
+    model = (x, p) -> map(T(p...)(f.prop), x)
     fitted = curve_fit(
         model,
         float(xdata),  # Convert `xdata` elements to floats
         float(ydata),  # Convert `ydata` elements to floats
-        float(fieldvalues(eos));  # TODO: What if these floats are different types?
+        float.(fieldvalues(f.eos));  # TODO: What if these floats are different types?
         kwargs...,
     )
-    return debug ? fitted : E(fitted.param...)
+    return debug ? fitted : T(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    (eos, prop)::EquationOnVolume{<:AbstractQuantity},
+    f::Function,
     xdata::AbstractVector{<:AbstractQuantity},
     ydata::AbstractVector{<:AbstractQuantity};
     kwargs...,
 )
-    E = constructorof(typeof(eos))  # Get the `UnionAll` type
-    values = fieldvalues(eos)
+    T = constructorof(typeof(f.eos))  # Get the `UnionAll` type
+    values = fieldvalues(f.eos)
     original_units = unit.(values)  # Keep a record of `eos`'s units
-    f = x -> map(ustrip ∘ upreferred, x)  # Convert to preferred units and strip the unit
-    trial_params = f.(values)
-    result = lsqfit(E(trial_params...)(prop), f.(xdata), f.(ydata); kwargs...)
+    g = x -> map(ustrip ∘ upreferred, x)  # Convert to preferred units and strip the unit
+    trial_params = g.(values)
+    result = lsqfit(T(trial_params...)(f.prop), g.(xdata), g.(ydata); kwargs...)
     if result isa EquationOfState  # i.e., if `debug = false` and no error is thrown
-        data = fieldvalues(result)
-        # Convert back to original `eos`'s units
-        return E((data[i] * upreferred(u) |> u for (i, u) in enumerate(original_units))...)
+        return T((x * upreferred(u) |> u for (x, u) in zip(fieldvalues(result), original_units))...)  # Convert back to original `eos`'s units
+    else
+        return result
     end
-    return result
 end  # function lsqfit
 
 end

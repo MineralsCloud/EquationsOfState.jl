@@ -5,7 +5,7 @@ a (an) volume (array of volumes).
 """
 module Collections
 
-using IterTools: fieldvalues
+using IterTools: FieldValues, fieldvalues
 using Unitful: AbstractQuantity, dimension, upreferred, @u_str
 
 import Unitful
@@ -694,6 +694,9 @@ else
 end
 
 Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) .== fieldvalues(y))
+
+Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
+
 function Base.getproperty(eos::EquationOfState, name::Symbol)
     if name ∈ (:bp0, :bd0)
         return getfield(eos, :b′0)
