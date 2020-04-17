@@ -58,7 +58,9 @@ function lsqfit(
     trial_params = g.(values)
     result = lsqfit(T(trial_params...)(f.prop), g.(xdata), g.(ydata); kwargs...)
     if result isa EquationOfState  # i.e., if `debug = false` and no error is thrown
-        return T((x * upreferred(u) |> u for (x, u) in zip(fieldvalues(result), original_units))...)  # Convert back to original `eos`'s units
+        return T((
+            x * upreferred(u) |> u for (x, u) in zip(fieldvalues(result), original_units)
+        )...)  # Convert back to original `eos`'s units
     else
         return result
     end
