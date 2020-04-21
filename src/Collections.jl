@@ -696,6 +696,7 @@ end
 Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) .== fieldvalues(y))
 
 Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
+Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
 
 function Base.getproperty(eos::EquationOfState, name::Symbol)
     if name ∈ (:bp0, :bd0)
