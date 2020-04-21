@@ -28,7 +28,7 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(
-    f::Function,
+    f,
     xdata::AbstractVector{<:Real},
     ydata::AbstractVector{<:Real};
     debug = false,
@@ -46,7 +46,7 @@ function lsqfit(
     return debug ? fitted : T(fitted.param...)
 end  # function lsqfit
 function lsqfit(
-    f::Function,
+    f,
     xdata::AbstractVector{<:AbstractQuantity},
     ydata::AbstractVector{<:AbstractQuantity};
     kwargs...,
