@@ -21,19 +21,13 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 # Arguments
 - `eos::EquationOfState`: a trial equation of state. If it has units, `xdata` and `ydata` must also have.
 - `prop::PhysicalProperty`: a `PhysicalProperty` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
-- `xdata::AbstractVector`: a vector of volumes (``V``), with(out) units.
-- `ydata::AbstractVector`: a vector of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
+- `xdata::AbstractArray`: an array of volumes (``V``), with(out) units.
+- `ydata::AbstractArray`: an array of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
 - `debug::Bool=false`: if `true`, then an `LsqFit.LsqFitResult` is returned, containing estimated Jacobian, residuals, etc.; if `false`, a fitted `EquationOfState` is returned. The default value is `false`.
 - `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md)
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
-function lsqfit(
-    f,
-    xdata::AbstractArray{<:Real},
-    ydata::AbstractArray{<:Real};
-    debug = false,
-    kwargs...,
-)
+function lsqfit(f, xdata::AbstractArray, ydata::AbstractArray; debug = false, kwargs...)
     T = constructorof(typeof(f.eos))  # Get the `UnionAll` type
     model = (x, p) -> map(T(p...)(f.prop), x)
     fitted = curve_fit(
