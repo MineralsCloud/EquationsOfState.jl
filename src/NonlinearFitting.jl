@@ -29,8 +29,8 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
 """
 function lsqfit(
     f,
-    xdata::AbstractVector{<:Real},
-    ydata::AbstractVector{<:Real};
+    xdata::AbstractArray{<:Real},
+    ydata::AbstractArray{<:Real};
     debug = false,
     kwargs...,
 )
@@ -47,8 +47,8 @@ function lsqfit(
 end  # function lsqfit
 function lsqfit(
     f,
-    xdata::AbstractVector{<:AbstractQuantity},
-    ydata::AbstractVector{<:AbstractQuantity};
+    xdata::AbstractArray{<:AbstractQuantity},
+    ydata::AbstractArray{<:AbstractQuantity};
     kwargs...,
 )
     T = constructorof(typeof(f.eos))  # Get the `UnionAll` type
