@@ -28,10 +28,10 @@ Fit an equation of state using least-squares fitting method (with the Levenberg-
     and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
 function lsqfit(f, xdata, ydata; kwargs...)
-    eos, prop = fieldvalues(f)
+    eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
     params, xdata, ydata = _preprocess(eos, xdata, ydata)
-    model = (x, p) -> map(T(p...)(prop), x)
+    model = (x, p) -> map(T(p...)(property), x)
     fit = curve_fit(model, xdata, ydata, params; kwargs...)
     return _postprocess(T(fit.param...), eos)
 end # function lsqfit
