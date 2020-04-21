@@ -123,6 +123,8 @@ using EquationsOfState.Collections
           BreenanStacey{Quantity{Float64}}
     @test typeof(BreenanStacey(1 * u"nm^3", 2 * u"GPa", 3 // 1, 0 * u"eV")) ===
           BreenanStacey{Quantity{Rational{Int}}}
+    @test BirchMurnaghan3rd(1 * u"angstrom^3", 2 * u"GPa", 4 // 1, 3 * u"eV").b′0 isa
+          DimensionlessQuantity
 end
 
 @testset "Test default EOS parameter `e0` and promotion" begin
