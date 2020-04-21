@@ -38,7 +38,7 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     root-finding process.
 """
 findvolume(f, y, x0, method) = find_zero(v -> f(v) - y, x0, method)
-function findvolume(f, y, x0::Union{AbstractVector,Tuple})
+function findvolume(f, y, x0)
     for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
         @info("Using method \"$T\"...")
         try

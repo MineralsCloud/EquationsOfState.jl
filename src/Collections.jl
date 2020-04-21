@@ -672,7 +672,7 @@ end
 
 # Miscellaneous
 if VERSION >= v"1.3"
-    (eos::EquationOfState)(prop::PhysicalProperty) = v -> _evaluate(eos, prop, v)
+    (eos::EquationOfState)(property::PhysicalProperty) = v -> _evaluate(eos, property, v)
 else
     for T in (
         :Murnaghan,
@@ -688,7 +688,7 @@ else
         :Shanker,
     )
         eval(quote
-            (eos::$T)(prop::PhysicalProperty) = v -> _evaluate(eos, prop, v)
+            (eos::$T)(property::PhysicalProperty) = v -> _evaluate(eos, property, v)
         end)
     end  # Julia 1.0-1.2 does not support adding methods to abstract types.
 end
@@ -696,6 +696,7 @@ end
 Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) .== fieldvalues(y))
 
 Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
+Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
 
 function Base.getproperty(eos::EquationOfState, name::Symbol)
     if name ∈ (:bp0, :bd0)

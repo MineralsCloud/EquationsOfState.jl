@@ -4,7 +4,8 @@ This module provides some linear fitting methods.
 module LinearFitting
 
 using LinearAlgebra: dot
-using Polynomials: polyder, polyfit, degree, coeffs, Poly
+using Polynomials: polyder, degree, coeffs, Poly
+using Polynomials.PolyCompat: polyfit
 
 using ..FiniteStrains
 
