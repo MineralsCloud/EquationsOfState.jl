@@ -7,8 +7,7 @@ using LinearAlgebra: dot
 using Polynomials: polyder, degree, coeffs, Poly
 using Polynomials.PolyCompat: polyfit
 
-export FiniteStrain,
-    EulerianStrain, LagrangianStrain, NaturalStrain, InfinitesimalStrain, getstrain
+export FiniteStrain, EulerianStrain, LagrangianStrain, NaturalStrain, InfinitesimalStrain
 export energy_strain_expansion,
     energy_strain_derivative,
     strain_volume_derivative,
@@ -23,10 +22,10 @@ struct LagrangianStrain <: FiniteStrain end
 struct NaturalStrain <: FiniteStrain end
 struct InfinitesimalStrain <: FiniteStrain end
 
-getstrain(::EulerianStrain, v0::Real, v::Real) = (cbrt(v0 / v)^2 - 1) / 2
-getstrain(::LagrangianStrain, v0::Real, v::Real) = (cbrt(v / v0)^2 - 1) / 2
-getstrain(::NaturalStrain, v0::Real, v::Real) = log(v / v0) / 3
-getstrain(::InfinitesimalStrain, v0::Real, v::Real) = 1 - cbrt(v0 / v)
+(::EulerianStrain)(v0, v) = (cbrt(v0 / v)^2 - 1) / 2
+(::LagrangianStrain)(v0, v) = (cbrt(v / v0)^2 - 1) / 2
+(::NaturalStrain)(v0, v) = log(v / v0) / 3
+(::InfinitesimalStrain)(v0, v) = 1 - cbrt(v0 / v)
 
 energy_strain_expansion(f::Vector{<:Real}, e::Vector{<:Real}, n::Int)::Poly =
     polyfit(f, e, n)
@@ -46,7 +45,7 @@ function strain_volume_derivative(s::NaturalStrain, v0::Real, v::Real, m::Int)
     -m / v * strain_volume_derivative(s, v0, v, m - 1)
 end
 function strain_volume_derivative(s::InfinitesimalStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return (1 - getstrain(s, v0, v))^4 / 3 / v0
+    m == 1 && return (1 - s(v0, v))^4 / 3 / v0
     -(3m + 1) / (3v) * strain_volume_derivative(s, v0, v, m - 1)
 end
 
@@ -60,7 +59,7 @@ function energy_volume_expansion(
     # The zeroth order value plus values from the first to the ``highest_order`.
     p(v) + dot(
         energy_volume_derivatives(s, v0, v, p, highest_order),
-        getstrain(s, v0, v) .^ collect(1:highest_order),
+        s(v0, v) .^ collect(1:highest_order),
     )
 end
 
