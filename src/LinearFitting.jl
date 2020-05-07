@@ -7,7 +7,7 @@ using LinearAlgebra: dot
 using Polynomials: degree, coeffs
 using Polynomials.PolyCompat: polyfit, polyder, Poly
 
-export FiniteStrain, EulerianStrain, LagrangianStrain, NaturalStrain, InfinitesimalStrain
+export FiniteStrain, Eulerian, Lagrangian, Natural, Infinitesimal
 export energy_strain_expansion,
     energy_strain_derivative,
     strain_volume_derivative,
@@ -16,11 +16,10 @@ export energy_strain_expansion,
     energy_volume_nth_derivative
 
 abstract type FiniteStrain end
-
-struct EulerianStrain <: FiniteStrain end
-struct LagrangianStrain <: FiniteStrain end
-struct NaturalStrain <: FiniteStrain end
-struct InfinitesimalStrain <: FiniteStrain end
+struct Eulerian <: FiniteStrain end
+struct Lagrangian <: FiniteStrain end
+struct Natural <: FiniteStrain end
+struct Infinitesimal <: FiniteStrain end
 
 (::EulerianStrain)(v0, v) = (cbrt(v0 / v)^2 - 1) / 2
 (::LagrangianStrain)(v0, v) = (cbrt(v / v0)^2 - 1) / 2
@@ -31,28 +30,28 @@ energy_strain_expansion(f::Vector{<:Real}, e::Vector{<:Real}, n::Int) = polyfit(
 
 energy_strain_derivative(p::Poly, deg) = polyder(p, deg)
 
-function strain_volume_derivative(s::EulerianStrain, v0, v, deg)
+function strain_volume_derivative(s::Eulerian, v0, v, deg)
     if deg == 1
         return -1 / (3v) * cbrt(v0 / v)^2
     else  # Recursion
         return -(3deg + 2) / (3v) * strain_volume_derivative(s, v0, v, deg - 1)
     end
 end
-function strain_volume_derivative(s::LagrangianStrain, v0, v, deg)
+function strain_volume_derivative(s::Lagrangian, v0, v, deg)
     if deg == 1
         return -1 / (3v) * cbrt(v / v0)^2
     else  # Recursion
         return -(3deg - 2) / (3v) * strain_volume_derivative(s, v0, v, deg - 1)
     end
 end
-function strain_volume_derivative(s::NaturalStrain, v0, v, deg)
+function strain_volume_derivative(s::Natural, v0, v, deg)
     if deg == 1
         return 1 / (3v)
     else  # Recursion
         return -deg / v * strain_volume_derivative(s, v0, v, deg - 1)
     end
 end
-function strain_volume_derivative(s::InfinitesimalStrain, v0, v, deg)
+function strain_volume_derivative(s::Infinitesimal, v0, v, deg)
     if deg == 1
         return (1 - s(v0, v))^4 / 3 / v0
     else  # Recursion
