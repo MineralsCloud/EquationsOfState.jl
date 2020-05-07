@@ -21,10 +21,21 @@ struct Lagrangian <: FiniteStrain end
 struct Natural <: FiniteStrain end
 struct Infinitesimal <: FiniteStrain end
 
-(::EulerianStrain)(v0, v) = (cbrt(v0 / v)^2 - 1) / 2
-(::LagrangianStrain)(v0, v) = (cbrt(v / v0)^2 - 1) / 2
-(::NaturalStrain)(v0, v) = log(v / v0) / 3
-(::InfinitesimalStrain)(v0, v) = 1 - cbrt(v0 / v)
+struct StrainFromVolume{T<:FiniteStrain}
+    v0::Any
+end
+(x::StrainFromVolume{Eulerian})(v) = (cbrt(x.v0 / v)^2 - 1) / 2
+(x::StrainFromVolume{Lagrangian})(v) = (cbrt(v / x.v0)^2 - 1) / 2
+(x::StrainFromVolume{Natural})(v) = log(v / x.v0) / 3
+(x::StrainFromVolume{Infinitesimal})(v) = 1 - cbrt(x.v0 / v)
+
+struct VolumeFromStrain{T<:FiniteStrain}
+    v0::Any
+end
+(x::VolumeFromStrain{Eulerian})(f) = x.v0 / (2f + 1)^(3 / 2)
+(x::VolumeFromStrain{Lagrangian})(f) = x.v0 * (2f + 1)^(3 / 2)
+(x::VolumeFromStrain{Natural})(f) = x.v0 * exp(3f)
+(x::VolumeFromStrain{Infinitesimal})(f) = x.v0 / (1 - f)^3
 
 energy_strain_expansion(f::Vector{<:Real}, e::Vector{<:Real}, n::Int) = polyfit(f, e, n)
 
@@ -79,6 +90,8 @@ function energy_volume_derivatives(s::FiniteStrain, v0, v, p::Poly, highest_orde
         throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
     end
 end
+Base.inv(x::StrainFromVolume{T}) where {T} = VolumeFromStrain{T}(x.v0)
+Base.inv(x::VolumeFromStrain{T}) where {T} = StrainFromVolume{T}(x.v0)
 
 function energy_volume_nth_derivative(deg)
     function (f::Vector{<:Real}, e::Vector{<:Real})
@@ -98,5 +111,9 @@ function energy_volume_nth_derivative(deg)
         end
     end
 end
+Base.:∘(a::StrainFromVolume{T}, b::VolumeFromStrain{T}) where {T} =
+    a.v0 == b.v0 ? identity : error("operation undefined!")
+Base.:∘(a::VolumeFromStrain{T}, b::StrainFromVolume{T}) where {T} =
+    a.v0 == b.v0 ? identity : error("operation undefined!")
 
 end
