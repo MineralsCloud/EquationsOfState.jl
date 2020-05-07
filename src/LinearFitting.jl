@@ -13,7 +13,7 @@ export energy_strain_expansion,
     strain_volume_derivative,
     energy_volume_expansion,
     energy_volume_derivatives,
-    energy_volume_derivative_at_order
+    energy_volume_nth_derivative
 
 abstract type FiniteStrain end
 
@@ -69,17 +69,19 @@ function energy_volume_expansion(s::FiniteStrain, v0, v, p::Poly, highest_order 
 end
 
 function energy_volume_derivatives(s::FiniteStrain, v0, v, p::Poly, highest_order)
-    0 ≤ highest_order ≤ degree(p) ? (x = 1:highest_order) :
-    throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
-    strain_derivatives = map(m -> strain_volume_derivative(s, v0, v, m), x)
-    energy_derivatives = map(f -> f(v), map(m -> energy_strain_derivative(p, m), x))
-    return map(
-        m -> energy_volume_derivative_at_order(m)(strain_derivatives, energy_derivatives),
-        x,
-    )
+    if 0 ≤ highest_order ≤ degree(p)
+        x = 1:highest_order
+        strain_derivatives = map(m -> strain_volume_derivative(s, v0, v, m), x)
+        energy_derivatives = map(f -> f(v), map(m -> energy_strain_derivative(p, m), x))
+        return map(x) do m
+            energy_volume_nth_derivative(m)(strain_derivatives, energy_derivatives)
+        end
+    else
+        throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
+    end
 end
 
-function energy_volume_derivative_at_order(deg)
+function energy_volume_nth_derivative(deg)
     function (f::Vector{<:Real}, e::Vector{<:Real})
         if deg == 1
             return e[1] * f[1]
@@ -89,9 +91,9 @@ function energy_volume_derivative_at_order(deg)
             return e[3] * f[1]^3 + 3 * f[1] * f[2] * e[2] + e[1] * f[3]
         elseif deg == 4
             return e[4] * f[1]^4 +
-            6 * f[1]^2 * f[2] * e[3] +
-            (4 * f[1] * f[3] + 3 * f[3]^2) * e[2] +
-            e[1] * f[3]
+                   6 * f[1]^2 * f[2] * e[3] +
+                   (4 * f[1] * f[3] + 3 * f[3]^2) * e[2] +
+                   e[1] * f[3]
         else
             error("Expansion is not defined at order = $(deg)!")
         end
