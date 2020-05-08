@@ -7,7 +7,7 @@ using Polynomials: Polynomial, fit, derivative, roots, coeffs
 
 using ..Collections: PolynomialEOS
 
-export linearfit
+export linfit
 
 _islocalminimum(f, x, δx) = f(x) < f(x - δx) && f(x) < f(x + δx)
 
@@ -21,7 +21,7 @@ function _findglobalminimum(f, localminima, δx)
     end
 end # function _findglobalminimum
 
-function linearfit(volumes, energies, deg = 3)
+function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
     poly1d = derivative(poly, 1)
     δx = minimum(diff(volumes)) / 10
@@ -34,6 +34,6 @@ function linearfit(volumes, energies, deg = 3)
     v0, e0 = _findglobalminimum(poly, localminima, δx)
     bs = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
     return PolynomialEOS(v0, bs, e0)
-end # function linearfit
+end # function linfit
 
 end
