@@ -52,6 +52,12 @@ function linearfit(volumes, energies, deg = 3)
         end
     end
     v0, e0 = _findglobalminimum(poly, localminima, δx)
+    bs = []
+    for n in 2:deg
+        f = derivative(poly, n) / factorial(n)
+        push!(bs, f(v0))
+    end
+    return [v0, e0, bs...]
 end # function linearfit
 
 Base.inv(x::StrainFromVolume{T}) where {T} = VolumeFromStrain{T}(x.v0)
