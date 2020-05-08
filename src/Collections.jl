@@ -23,7 +23,8 @@ export Energy,
     Vinet,
     AntonSchmidt,
     BreenanStacey,
-    Shanker
+    Shanker,
+    PolynomialEOS
 
 # ============================================================================ #
 #                                     Types                                    #
@@ -502,6 +503,16 @@ end
 Shanker(v0::Real, b0::Real, b′0::Real) = Shanker(v0, b0, b′0, 0)
 Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
     Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
+
+struct PolynomialEOS{N,T} <: EquationOfState{T}
+    v0::T
+    b0::NTuple{N,T}
+    e0::T
+end
+function PolynomialEOS(v0, b0, e0)
+    T = Base.promote_typeof(v0, b0..., e0)
+    return PolynomialEOS{length(b0),T}(convert(T, v0), T.(b0), convert(T, e0))
+end
 # =================================== Types ================================== #
 
 # Energy evaluation
