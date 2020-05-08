@@ -142,11 +142,11 @@ An abstraction of equations of state, where `T` specifies the elements' common t
 abstract type EquationOfState{T} end
 
 """
-    FiniteStrainEquationOfState{T} <: EquationOfState{T}
+    FiniteStrainEOS{T} <: EquationOfState{T}
 
 An abstraction of finite strain equations of state, where `T` specifies the elements' common type.
 """
-abstract type FiniteStrainEquationOfState{T} <: EquationOfState{T} end
+abstract type FiniteStrainEOS{T} <: EquationOfState{T} end
 
 """
     Murnaghan(v0, b0, b′0, e0)
@@ -212,7 +212,7 @@ julia> BirchMurnaghan2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
 BirchMurnaghan2nd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0 eV)
 ```
 """
-struct BirchMurnaghan2nd{T} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan2nd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     e0::T
@@ -250,7 +250,7 @@ julia> BirchMurnaghan3rd(1u"nm^3", 2u"GPa", 4.0, 3u"eV")
 BirchMurnaghan3rd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 4.0, 3.0 eV)
 ```
 """
-struct BirchMurnaghan3rd{T} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan3rd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -290,7 +290,7 @@ julia> BirchMurnaghan4th(1u"nm^3", 2u"GPa", 3.0, 4u"1/GPa", 5u"eV")
 BirchMurnaghan4th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 eV)
 ```
 """
-struct BirchMurnaghan4th{T} <: FiniteStrainEquationOfState{T}
+struct BirchMurnaghan4th{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -330,7 +330,7 @@ julia> PoirierTarantola2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
 PoirierTarantola2nd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0 eV)
 ```
 """
-struct PoirierTarantola2nd{T} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola2nd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     e0::T
@@ -368,7 +368,7 @@ julia> PoirierTarantola3rd(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
 PoirierTarantola3rd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 eV)
 ```
 """
-struct PoirierTarantola3rd{T} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola3rd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -408,7 +408,7 @@ julia> PoirierTarantola4th(1u"nm^3", 2u"GPa", 3, 4u"1/GPa", 5.0u"eV")
 PoirierTarantola4th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 eV)
 ```
 """
-struct PoirierTarantola4th{T} <: FiniteStrainEquationOfState{T}
+struct PoirierTarantola4th{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
