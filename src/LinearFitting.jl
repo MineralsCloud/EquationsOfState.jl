@@ -29,25 +29,29 @@ end
 (x::VolumeFromStrain{Natural})(f) = x.v0 * exp(3f)
 (x::VolumeFromStrain{Infinitesimal})(f) = x.v0 / (1 - f)^3
 
-_islocalminimum(poly, x, δx) = poly(x) < poly(x - δx) && poly(x) < poly(x + δx)
+_islocalminimum(f, x, δx) = f(x) < f(x - δx) && f(x) < f(x + δx)
+
+function _findglobalminimum(f, localminima, δx)
+    if length(localminima) == 0
+        error("no volume minimizes the energy!")
+    else
+        f0, i = findmin(f.(localminima))
+        x0 = localminima[i]
+        return x0, f0
+    end
+end # function _findglobalminimum
 
 function linearfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
-    der = derivative(poly, 1)
+    poly1d = derivative(poly, 1)
     δx = minimum(diff(volumes)) / 10
     localminima = eltype(volumes)[]
-    for x in roots(der)
+    for x in roots(poly1d)
         if _islocalminimum(poly, x, δx)
             push!(localminima, x)
         end
     end
-    if length(localminima) == 0
-        error("no volume minimizes the energy!")
-    else
-        e0, i = findmin(poly.(localminima))
-        v0 = localminima[i]
-        return Polynomial(append!([e0, 0], coeffs(poly)[3:end]))
-    end
+    v0, e0 = _findglobalminimum(poly, localminima, δx)
 end # function linearfit
 
 Base.inv(x::StrainFromVolume{T}) where {T} = VolumeFromStrain{T}(x.v0)
