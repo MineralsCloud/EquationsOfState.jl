@@ -46,7 +46,7 @@ function linearfit(volumes, energies, deg = 3)
     poly1d = derivative(poly, 1)
     δx = minimum(diff(volumes)) / 10
     localminima = eltype(volumes)[]
-    for x in roots(poly1d)
+    for x in real(filter(isreal, roots(poly1d)))  # Complex volume is meaningless
         if _islocalminimum(poly, x, δx)
             push!(localminima, x)
         end
