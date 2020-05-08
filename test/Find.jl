@@ -1,3 +1,5 @@
+module Find
+
 using Test
 
 using Roots
@@ -101,3 +103,5 @@ end
         atol = 1e-5,
     )
 end # testset
+
+end # module Find

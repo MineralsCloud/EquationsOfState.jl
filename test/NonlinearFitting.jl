@@ -1,3 +1,5 @@
+module NonlinearFitting
+
 using Test
 
 using IterTools: fieldvalues
@@ -1588,3 +1590,5 @@ end
         )
     end
 end
+
+end # module NonlinearFitting

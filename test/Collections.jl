@@ -1,3 +1,5 @@
+module Collections
+
 using Test
 
 using Unitful
@@ -173,3 +175,5 @@ end
     #@test typeof(BreenanStacey(1u"nm^3", 2u"GPa", 3))
     #@test typeof(BreenanStacey(1u"nm^3", 2u"GPa", 3.0)
 end
+
+end # module Collections
