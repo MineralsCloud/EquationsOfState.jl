@@ -3,89 +3,67 @@ This module provides some linear fitting methods.
 """
 module LinearFitting
 
-using LinearAlgebra: dot
-using Polynomials: polyder, degree, coeffs, Poly
-using Polynomials.PolyCompat: polyfit
+using Polynomials: Polynomial, fit, derivative, roots, coeffs
 
-using ..FiniteStrains
+using ..Collections: PolynomialEOS
 
-export energy_strain_expansion,
-    energy_strain_derivative,
-    strain_volume_derivative,
-    energy_volume_expansion,
-    energy_volume_derivatives,
-    energy_volume_derivative_at_order
+export FiniteStrain, Eulerian, Lagrangian, Natural, Infinitesimal, linearfit
 
-energy_strain_expansion(f::Vector{<:Real}, e::Vector{<:Real}, n::Int)::Poly =
-    polyfit(f, e, n)
+abstract type FiniteStrain end
+struct Eulerian <: FiniteStrain end
+struct Lagrangian <: FiniteStrain end
+struct Natural <: FiniteStrain end
+struct Infinitesimal <: FiniteStrain end
 
-energy_strain_derivative(p::Poly, m::Int)::Poly = polyder(p, m)
-
-function strain_volume_derivative(s::EulerianStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return -1 / (3v) * cbrt(v0 / v)^2
-    -(3m + 2) / (3v) * strain_volume_derivative(s, v0, v, m - 1)
+struct StrainFromVolume{T<:FiniteStrain}
+    v0::Any
 end
-function strain_volume_derivative(s::LagrangianStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return -1 / (3v) * cbrt(v / v0)^2
-    -(3m - 2) / (3v) * strain_volume_derivative(s, v0, v, m - 1)
-end
-function strain_volume_derivative(s::NaturalStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return 1 / (3v)
-    -m / v * strain_volume_derivative(s, v0, v, m - 1)
-end
-function strain_volume_derivative(s::InfinitesimalStrain, v0::Real, v::Real, m::Int)
-    m == 1 && return (1 - getstrain(s, v0, v))^4 / 3 / v0
-    -(3m + 1) / (3v) * strain_volume_derivative(s, v0, v, m - 1)
-end
+(x::StrainFromVolume{Eulerian})(v) = (cbrt(x.v0 / v)^2 - 1) / 2
+(x::StrainFromVolume{Lagrangian})(v) = (cbrt(v / x.v0)^2 - 1) / 2
+(x::StrainFromVolume{Natural})(v) = log(v / x.v0) / 3
+(x::StrainFromVolume{Infinitesimal})(v) = 1 - cbrt(x.v0 / v)
 
-function energy_volume_expansion(
-    s::FiniteStrain,
-    v0::Real,
-    v::Real,
-    p::Poly,
-    highest_order::Int = degree(p),
-)
-    # The zeroth order value plus values from the first to the ``highest_order`.
-    p(v) + dot(
-        energy_volume_derivatives(s, v0, v, p, highest_order),
-        getstrain(s, v0, v) .^ collect(1:highest_order),
-    )
+struct VolumeFromStrain{T<:FiniteStrain}
+    v0::Any
 end
+(x::VolumeFromStrain{Eulerian})(f) = x.v0 / (2f + 1)^(3 / 2)
+(x::VolumeFromStrain{Lagrangian})(f) = x.v0 * (2f + 1)^(3 / 2)
+(x::VolumeFromStrain{Natural})(f) = x.v0 * exp(3f)
+(x::VolumeFromStrain{Infinitesimal})(f) = x.v0 / (1 - f)^3
 
-function energy_volume_derivatives(
-    s::FiniteStrain,
-    v0::Real,
-    v::Real,
-    p::Poly,
-    highest_order::Int,
-)
-    0 ≤ highest_order ≤ degree(p) ? (x = 1:highest_order) :
-    throw(DomainError("The `highest_order` must be within 0 to $(degree(p))!"))
-    strain_derivatives = map(m -> strain_volume_derivative(s, v0, v, m), x)
-    energy_derivatives = map(f -> f(v), map(m -> energy_strain_derivative(p, m), x))
-    map(
-        m -> energy_volume_derivative_at_order(m)(strain_derivatives, energy_derivatives),
-        x,
-    )
-end
+_islocalminimum(f, x, δx) = f(x) < f(x - δx) && f(x) < f(x + δx)
 
-function energy_volume_derivative_at_order(m::Int)::Function
-    function (f::Vector{<:Real}, e::Vector{<:Real})
-        if m == 1
-            e[1] * f[1]
-        elseif m == 2
-            e[2] * f[1]^2 + e[1] * f[1]
-        elseif m == 3
-            e[3] * f[1]^3 + 3 * f[1] * f[2] * e[2] + e[1] * f[3]
-        elseif m == 4
-            e[4] * f[1]^4 +
-            6 * f[1]^2 * f[2] * e[3] +
-            (4 * f[1] * f[3] + 3 * f[3]^2) * e[2] +
-            e[1] * f[3]
-        else
-            error("Expansion is not defined at order = $(m)!")
+function _findglobalminimum(f, localminima, δx)
+    if length(localminima) == 0
+        error("no volume minimizes the energy!")
+    else
+        f0, i = findmin(f.(localminima))
+        x0 = localminima[i]
+        return x0, f0
+    end
+end # function _findglobalminimum
+
+function linearfit(volumes, energies, deg = 3)
+    poly = fit(volumes, energies, deg)
+    poly1d = derivative(poly, 1)
+    δx = minimum(diff(volumes)) / 10
+    localminima = eltype(volumes)[]
+    for x in real(filter(isreal, roots(poly1d)))  # Complex volume is meaningless
+        if _islocalminimum(poly, x, δx)
+            push!(localminima, x)
         end
     end
-end
+    v0, e0 = _findglobalminimum(poly, localminima, δx)
+    bs = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
+    return PolynomialEOS(v0, bs, e0)
+end # function linearfit
+
+Base.inv(x::StrainFromVolume{T}) where {T} = VolumeFromStrain{T}(x.v0)
+Base.inv(x::VolumeFromStrain{T}) where {T} = StrainFromVolume{T}(x.v0)
+
+Base.:∘(a::StrainFromVolume{T}, b::VolumeFromStrain{T}) where {T} =
+    a.v0 == b.v0 ? identity : error("operation undefined!")
+Base.:∘(a::VolumeFromStrain{T}, b::StrainFromVolume{T}) where {T} =
+    a.v0 == b.v0 ? identity : error("operation undefined!")
 
 end

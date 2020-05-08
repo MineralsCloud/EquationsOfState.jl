@@ -10,7 +10,7 @@ The current `EquationOfState`s contain
 EquationOfState
 ├─ AntonSchmidt
 ├─ BreenanStacey
-├─ FiniteStrainEquationOfState
+├─ FiniteStrainEOS
 │  ├─ BirchMurnaghan2nd
 │  ├─ BirchMurnaghan3rd
 │  ├─ BirchMurnaghan4th
@@ -264,7 +264,7 @@ Energy
 Pressure
 BulkModulus
 EquationOfState
-FiniteStrainEquationOfState
+FiniteStrainEOS
 Murnaghan
 BirchMurnaghan2nd
 BirchMurnaghan3rd
