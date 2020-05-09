@@ -23,11 +23,13 @@ useful in research. It currently includes:
    1. `BirchMurnaghan2nd`
    2. `BirchMurnaghan3rd`
    3. `BirchMurnaghan4th`
+   4. `BirchMurnaghan5th`
 3. `Vinet` EOS
 4. Poirier–Tarantola EOS family:
    1. `PoirierTarantola2nd`
    2. `PoirierTarantola3rd`
    3. `PoirierTarantola4th`
+   4. `PoirierTarantola5th`
 5. `AntonSchmidt` EOS (experimental)
 6. `BreenanStacey` EOS (experimental)
 

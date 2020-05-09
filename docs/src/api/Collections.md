@@ -14,10 +14,14 @@ EquationOfState
 │  ├─ BirchMurnaghan2nd
 │  ├─ BirchMurnaghan3rd
 │  ├─ BirchMurnaghan4th
+│  ├─ BirchMurnaghan5th
 │  ├─ PoirierTarantola2nd
 │  ├─ PoirierTarantola3rd
-│  └─ PoirierTarantola4th
+│  ├─ PoirierTarantola4th
+│  └─ PoirierTarantola5th
 ├─ Murnaghan
+├─ PolynomialEOS
+├─ Shanker
 └─ Vinet
 ```
 
@@ -269,8 +273,10 @@ Murnaghan
 BirchMurnaghan2nd
 BirchMurnaghan3rd
 BirchMurnaghan4th
+BirchMurnaghan5th
 PoirierTarantola2nd
 PoirierTarantola3rd
 PoirierTarantola4th
+PoirierTarantola5th
 Vinet
 ```
