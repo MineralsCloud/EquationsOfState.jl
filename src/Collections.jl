@@ -589,6 +589,19 @@ function _evaluate(eos::BirchMurnaghan4th, ::Energy, v)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12f * (b′0 - 4) + 12)
 end
+function _evaluate(eos::BirchMurnaghan5th, ::Energy, v)
+    v0, b0, b′0, b′′0, b′′′0, e0 = fieldvalues(eos)
+    f = (cbrt(v0 / v)^2 - 1) / 2
+    c2 = 9 / 2 * b0 * v0
+    c3 = c2 * (b′0 - 4)
+    c4 = 3 / 8 * b0 * v0 * (9 * (b′′0 * b0 + b′0^2) - 63b′0 + 143)
+    c5 =
+        (
+            432 * c2 * c3 * c4 + 576 * c2^2 * c4 - 243 * c3^3 - 648 * c2 * c3^2 -
+            1350 * c2^2 * c3 - 2520 * c2^3
+        ) / (180 * c2^2) + b′′′0 * c2^3 / (45 * v0^2)
+    return e0 + f^2 * (f * (f * (f * c5 + c4) + c3) + c2)
+end
 function _evaluate(eos::PoirierTarantola2nd, ::Energy, v)
     v0, b0, e0 = fieldvalues(eos)
     return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
@@ -605,6 +618,19 @@ function _evaluate(eos::PoirierTarantola4th, ::Energy, v)
     xi = log(x)
     h = b0 * b′′0 + b′0^2
     return e0 + b0 / 24v0 * xi^2 * ((h + 3b′0 + 3) * xi^2 + 4 * (b′0 + 2) * xi + 12)
+end
+function _evaluate(eos::PoirierTarantola5th, ::Energy, v)
+    v0, b0, b′0, b′′0, b′′′0, e0 = fieldvalues(eos)
+    f = log(v / v0) / 3
+    c = 9 / 2 * b0 * v0
+    d = c * (2 - b′0)
+    ee = (9v0 * (d^2 - c * d + c^2) + 2 * c^3 * b′′0) / (12c * v0)
+    g =
+        (
+            (432 * (d - c) * c * ee - 243 * d^3 + 486c * d * (d - c) + 324 * c^3) * v0^2 -
+            4 * c^5 * b′′′0
+        ) / (180 * (c * v0)^2)
+    return e0 + f^2 * (f * (f * (f * g + ee) + d) + c)
 end
 function _evaluate(eos::Vinet, ::Energy, v)
     v0, b0, b′0, e0 = fieldvalues(eos)
