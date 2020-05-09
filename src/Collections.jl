@@ -185,7 +185,7 @@ struct Murnaghan{T} <: EquationOfState{T}
 end
 function Murnaghan(v0, b0, b′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, e0)
-    return Murnaghan{T}(convert.(T, [v0, b0, b′0, e0])...)
+    return Murnaghan{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)  # Cannot use `T.(args...)`! For `AbstractQuantity` they will fail!
 end
 Murnaghan(v0::Real, b0::Real, b′0::Real) = Murnaghan(v0, b0, b′0, 0)
 Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
@@ -222,7 +222,7 @@ struct BirchMurnaghan2nd{T} <: FiniteStrainEOS{T}
 end
 function BirchMurnaghan2nd(v0, b0, e0)
     T = Base.promote_typeof(v0, b0, e0)
-    return BirchMurnaghan2nd{T}(convert.(T, [v0, b0, e0])...)
+    return BirchMurnaghan2nd{T}((convert(T, x) for x in (v0, b0, e0))...)
 end
 BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
 BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
@@ -261,7 +261,7 @@ struct BirchMurnaghan3rd{T} <: FiniteStrainEOS{T}
 end
 function BirchMurnaghan3rd(v0, b0, b′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, e0)
-    return BirchMurnaghan3rd{T}(convert.(T, [v0, b0, b′0, e0])...)
+    return BirchMurnaghan3rd{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)
 end
 BirchMurnaghan3rd(v0::Real, b0::Real, b′0::Real) = BirchMurnaghan3rd(v0, b0, b′0, 0)
 BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
@@ -302,7 +302,7 @@ struct BirchMurnaghan4th{T} <: FiniteStrainEOS{T}
 end
 function BirchMurnaghan4th(v0, b0, b′0, b′′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, b′′0, e0)
-    return BirchMurnaghan4th{T}(convert.(T, [v0, b0, b′0, b′′0, e0])...)
+    return BirchMurnaghan4th{T}((convert(T, x) for x in (v0, b0, b′0, b′′0, e0))...)
 end
 BirchMurnaghan4th(v0::Real, b0::Real, b′0::Real, b′′0::Real) =
     BirchMurnaghan4th(v0, b0, b′0, b′′0, 0)
@@ -362,7 +362,7 @@ struct PoirierTarantola2nd{T} <: FiniteStrainEOS{T}
 end
 function PoirierTarantola2nd(v0, b0, e0)
     T = Base.promote_typeof(v0, b0, e0)
-    return PoirierTarantola2nd{T}(convert.(T, [v0, b0, e0])...)
+    return PoirierTarantola2nd{T}((convert(T, x) for x in (v0, b0, e0))...)
 end
 PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
 PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
@@ -401,7 +401,7 @@ struct PoirierTarantola3rd{T} <: FiniteStrainEOS{T}
 end
 function PoirierTarantola3rd(v0, b0, b′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, e0)
-    return PoirierTarantola3rd{T}(convert.(T, [v0, b0, b′0, e0])...)
+    return PoirierTarantola3rd{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)
 end
 PoirierTarantola3rd(v0::Real, b0::Real, b′0::Real) = PoirierTarantola3rd(v0, b0, b′0, 0)
 PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
@@ -442,7 +442,7 @@ struct PoirierTarantola4th{T} <: FiniteStrainEOS{T}
 end
 function PoirierTarantola4th(v0, b0, b′0, b′′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, b′′0, e0)
-    return PoirierTarantola4th{T}(convert.(T, [v0, b0, b′0, b′′0, e0])...)
+    return PoirierTarantola4th{T}((convert(T, x) for x in (v0, b0, b′0, b′′0, e0))...)
 end
 PoirierTarantola4th(v0::Real, b0::Real, b′0::Real, b′′0::Real) =
     PoirierTarantola4th(v0, b0, b′0, b′′0, 0)
@@ -508,7 +508,7 @@ struct Vinet{T} <: EquationOfState{T}
 end
 function Vinet(v0, b0, b′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, e0)
-    return Vinet{T}(convert.(T, [v0, b0, b′0, e0])...)
+    return Vinet{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)
 end
 Vinet(v0::Real, b0::Real, b′0::Real) = Vinet(v0, b0, b′0, 0)
 Vinet(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
@@ -522,7 +522,7 @@ struct AntonSchmidt{T} <: EquationOfState{T}
 end
 function AntonSchmidt(v0, β, n, e∞)
     T = Base.promote_typeof(v0, β, n, e∞)
-    return AntonSchmidt{T}(convert.(T, [v0, β, n, e∞])...)
+    return AntonSchmidt{T}((convert(T, x) for x in (v0, β, n, e∞))...)
 end
 AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
@@ -534,7 +534,7 @@ struct BreenanStacey{T} <: EquationOfState{T}
 end
 function BreenanStacey(v0, b0, γ0, e0)
     T = Base.promote_typeof(v0, b0, γ0, e0)
-    return BreenanStacey{T}(convert.(T, [v0, b0, γ0, e0])...)
+    return BreenanStacey{T}((convert(T, x) for x in (v0, b0, γ0, e0))...)
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 
@@ -546,7 +546,7 @@ struct Shanker{T} <: EquationOfState{T}
 end
 function Shanker(v0, b0, b′0, e0)
     T = Base.promote_typeof(v0, b0, b′0, e0)
-    return Shanker{T}(convert.(T, [v0, b0, b′0, e0])...)
+    return Shanker{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)
 end
 Shanker(v0::Real, b0::Real, b′0::Real) = Shanker(v0, b0, b′0, 0)
 Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
@@ -559,7 +559,11 @@ struct PolynomialEOS{N,T} <: EquationOfState{T}
 end
 function PolynomialEOS(v0, b0, e0)
     T = Base.promote_typeof(v0, b0..., e0)
-    return PolynomialEOS{length(b0),T}(convert(T, v0), T.(b0), convert(T, e0))
+    return PolynomialEOS{length(b0),T}(
+        convert(T, v0),
+        Tuple(convert(T, x) for x in b0),
+        convert(T, e0),
+    )
 end
 # =================================== Types ================================== #
 
@@ -583,7 +587,7 @@ end
 function _evaluate(eos::BirchMurnaghan4th, ::Energy, v)
     v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
-    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12 * (b′0 - 4) * f + 12)
+    return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12f * (b′0 - 4) + 12)
 end
 function _evaluate(eos::PoirierTarantola2nd, ::Energy, v)
     v0, b0, e0 = fieldvalues(eos)
@@ -630,7 +634,7 @@ end
 function _evaluate(eos::BirchMurnaghan4th, ::Pressure, v)
     v0, b0, b′0, b′′0 = fieldvalues(eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
-    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63b′0 + 143) * f^2 + 9 * (b′0 - 4) * f + 6)
+    return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63b′0 + 143) * f^2 + 9f * (b′0 - 4) + 6)
 end
 function _evaluate(eos::PoirierTarantola2nd, ::Pressure, v)
     v0, b0 = fieldvalues(eos)
@@ -648,7 +652,7 @@ function _evaluate(eos::PoirierTarantola4th, ::Pressure, v)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * b′′0 + b′0^2
-    return -b0 * xi / 6 / x * ((h + 3b′0 + 3) * xi^2 + 3 * (b′0 + 6) * xi + 6)
+    return -b0 * xi / 6 / x * ((h + 3b′0 + 3) * xi^2 + 3xi * (b′0 + 6) + 6)
 end
 function _evaluate(eos::Vinet, ::Pressure, v)
     v0, b0, b′0 = fieldvalues(eos)
