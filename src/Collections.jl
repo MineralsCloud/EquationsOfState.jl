@@ -17,9 +17,11 @@ export Energy,
     BirchMurnaghan2nd,
     BirchMurnaghan3rd,
     BirchMurnaghan4th,
+    BirchMurnaghan5th,
     PoirierTarantola2nd,
     PoirierTarantola3rd,
     PoirierTarantola4th,
+    PoirierTarantola5th,
     Vinet,
     AntonSchmidt,
     BreenanStacey,
@@ -307,6 +309,28 @@ BirchMurnaghan4th(v0::Real, b0::Real, b′0::Real, b′′0::Real) =
 BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, b′0, b′′0::AbstractQuantity) =
     BirchMurnaghan4th(v0, b0, b′0, b′′0, 0 * upreferred(Unitful.J))
 
+struct BirchMurnaghan5th{T} <: FiniteStrainEOS{T}
+    v0::T
+    b0::T
+    b′0::T
+    b′′0::T
+    b′′′0::T
+    e0::T
+end
+function BirchMurnaghan5th(v0, b0, b′0, b′′0, b′′′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, b′′0, b′′′0, e0)
+    return BirchMurnaghan5th{T}((convert(T, x) for x in (v0, b0, b′0, b′′0, b′′′0, e0))...)
+end
+BirchMurnaghan5th(v0::Real, b0::Real, b′0::Real, b′′0::Real, b′′′0::Real) =
+    BirchMurnaghan5th(v0, b0, b′0, b′′0, b′′′0, 0)
+BirchMurnaghan5th(
+    v0::AbstractQuantity,
+    b0::AbstractQuantity,
+    b′0,
+    b′′0::AbstractQuantity,
+    b′′′0::AbstractQuantity,
+) = BirchMurnaghan5th(v0, b0, b′0, b′′0, b′′′0, 0 * upreferred(Unitful.J))
+
 """
     PoirierTarantola2nd(v0, b0, e0)
 
@@ -428,6 +452,30 @@ PoirierTarantola4th(
     b′0,
     b′′0::AbstractQuantity,
 ) = PoirierTarantola4th(v0, b0, b′0, b′′0, 0 * upreferred(Unitful.J))
+
+struct PoirierTarantola5th{T} <: FiniteStrainEOS{T}
+    v0::T
+    b0::T
+    b′0::T
+    b′′0::T
+    b′′′0::T
+    e0::T
+end
+function PoirierTarantola5th(v0, b0, b′0, b′′0, b′′′0, e0)
+    T = Base.promote_typeof(v0, b0, b′0, b′′0, b′′′0, e0)
+    return PoirierTarantola5th{T}((
+        convert(T, x) for x in (v0, b0, b′0, b′′0, b′′′0, e0)
+    )...)
+end
+PoirierTarantola5th(v0::Real, b0::Real, b′0::Real, b′′0::Real, b′′′0::Real) =
+    PoirierTarantola5th(v0, b0, b′0, b′′0, b′′′0, 0)
+PoirierTarantola5th(
+    v0::AbstractQuantity,
+    b0::AbstractQuantity,
+    b′0,
+    b′′0::AbstractQuantity,
+    b′′′0::AbstractQuantity,
+) = PoirierTarantola5th(v0, b0, b′0, b′′0, b′′′0, 0 * upreferred(Unitful.J))
 
 """
     Vinet(v0, b0, b′0, e0)
