@@ -6,7 +6,7 @@ a (an) volume (array of volumes).
 module Collections
 
 using IterTools: FieldValues, fieldvalues
-using Unitful: AbstractQuantity, dimension, upreferred, @u_str
+using Unitful: AbstractQuantity, @u_str
 
 import Unitful
 
@@ -189,7 +189,7 @@ function Murnaghan(v0, b0, b′0, e0)
 end
 Murnaghan(v0::Real, b0::Real, b′0::Real) = Murnaghan(v0, b0, b′0, 0)
 Murnaghan(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
-    Murnaghan(v0, b0, b′0, 0 * upreferred(Unitful.J))
+    Murnaghan(v0, b0, b′0, 0 * u"eV")
 
 """
     BirchMurnaghan2nd(v0, b0, e0)
@@ -226,7 +226,7 @@ function BirchMurnaghan2nd(v0, b0, e0)
 end
 BirchMurnaghan2nd(v0::Real, b0::Real) = BirchMurnaghan2nd(v0, b0, 0)
 BirchMurnaghan2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
-    BirchMurnaghan2nd(v0, b0, 0 * upreferred(Unitful.J))
+    BirchMurnaghan2nd(v0, b0, 0 * u"eV")
 
 """
     BirchMurnaghan3rd(v0, b0, b′0, e0)
@@ -265,7 +265,7 @@ function BirchMurnaghan3rd(v0, b0, b′0, e0)
 end
 BirchMurnaghan3rd(v0::Real, b0::Real, b′0::Real) = BirchMurnaghan3rd(v0, b0, b′0, 0)
 BirchMurnaghan3rd(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
-    BirchMurnaghan3rd(v0, b0, b′0, 0 * upreferred(Unitful.J))
+    BirchMurnaghan3rd(v0, b0, b′0, 0 * u"eV")
 
 """
     BirchMurnaghan4th(v0, b0, b′0, b′′0, e0)
@@ -307,7 +307,7 @@ end
 BirchMurnaghan4th(v0::Real, b0::Real, b′0::Real, b′′0::Real) =
     BirchMurnaghan4th(v0, b0, b′0, b′′0, 0)
 BirchMurnaghan4th(v0::AbstractQuantity, b0::AbstractQuantity, b′0, b′′0::AbstractQuantity) =
-    BirchMurnaghan4th(v0, b0, b′0, b′′0, 0 * upreferred(Unitful.J))
+    BirchMurnaghan4th(v0, b0, b′0, b′′0, 0 * u"eV")
 
 """
     BirchMurnaghan5th(v0, b0, b′0, b′′0, b′′′0, e0)
@@ -356,7 +356,7 @@ BirchMurnaghan5th(
     b′0,
     b′′0::AbstractQuantity,
     b′′′0::AbstractQuantity,
-) = BirchMurnaghan5th(v0, b0, b′0, b′′0, b′′′0, 0 * upreferred(Unitful.J))
+) = BirchMurnaghan5th(v0, b0, b′0, b′′0, b′′′0, 0 * u"eV")
 
 """
     PoirierTarantola2nd(v0, b0, e0)
@@ -393,7 +393,7 @@ function PoirierTarantola2nd(v0, b0, e0)
 end
 PoirierTarantola2nd(v0::Real, b0::Real) = PoirierTarantola2nd(v0, b0, 0)
 PoirierTarantola2nd(v0::AbstractQuantity, b0::AbstractQuantity) =
-    PoirierTarantola2nd(v0, b0, 0 * upreferred(Unitful.J))
+    PoirierTarantola2nd(v0, b0, 0 * u"eV")
 
 """
     PoirierTarantola3rd(v0, b0, b′0, e0)
@@ -432,7 +432,7 @@ function PoirierTarantola3rd(v0, b0, b′0, e0)
 end
 PoirierTarantola3rd(v0::Real, b0::Real, b′0::Real) = PoirierTarantola3rd(v0, b0, b′0, 0)
 PoirierTarantola3rd(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
-    PoirierTarantola3rd(v0, b0, b′0, 0 * upreferred(Unitful.J))
+    PoirierTarantola3rd(v0, b0, b′0, 0 * u"eV")
 
 """
     PoirierTarantola4th(v0, b0, b′0, b′′0, e0)
@@ -478,7 +478,7 @@ PoirierTarantola4th(
     b0::AbstractQuantity,
     b′0,
     b′′0::AbstractQuantity,
-) = PoirierTarantola4th(v0, b0, b′0, b′′0, 0 * upreferred(Unitful.J))
+) = PoirierTarantola4th(v0, b0, b′0, b′′0, 0 * u"eV")
 
 """
     PoirierTarantola5th(v0, b0, b′0, b′′0, b′′′0, e0)
@@ -529,7 +529,7 @@ PoirierTarantola5th(
     b′0,
     b′′0::AbstractQuantity,
     b′′′0::AbstractQuantity,
-) = PoirierTarantola5th(v0, b0, b′0, b′′0, b′′′0, 0 * upreferred(Unitful.J))
+) = PoirierTarantola5th(v0, b0, b′0, b′′0, b′′′0, 0 * u"eV")
 
 """
     Vinet(v0, b0, b′0, e0)
@@ -565,8 +565,7 @@ function Vinet(v0, b0, b′0, e0)
     return Vinet{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)
 end
 Vinet(v0::Real, b0::Real, b′0::Real) = Vinet(v0, b0, b′0, 0)
-Vinet(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
-    Vinet(v0, b0, b′0, 0 * upreferred(Unitful.J))
+Vinet(v0::AbstractQuantity, b0::AbstractQuantity, b′0) = Vinet(v0, b0, b′0, 0 * u"eV")
 
 struct AntonSchmidt{T} <: EquationOfState{T}
     v0::T
@@ -603,8 +602,7 @@ function Shanker(v0, b0, b′0, e0)
     return Shanker{T}((convert(T, x) for x in (v0, b0, b′0, e0))...)
 end
 Shanker(v0::Real, b0::Real, b′0::Real) = Shanker(v0, b0, b′0, 0)
-Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) =
-    Shanker(v0, b0, b′0, 0 * upreferred(Unitful.J))
+Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) = Shanker(v0, b0, b′0, 0 * u"eV")
 
 struct PolynomialEOS{N,T} <: EquationOfState{T}
     v0::T
