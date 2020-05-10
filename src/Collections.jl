@@ -632,9 +632,9 @@ function _evaluate(eos::BirchMurnaghan2nd, ::Energy, v)
 end
 function _evaluate(eos::BirchMurnaghan3rd, ::Energy, v)
     v0, b0, b′0, e0 = fieldvalues(eos)
-    eta = cbrt(v0 / v)
-    xi = eta^2 - 1
-    return e0 + 9 / 16 * b0 * v0 * xi^2 * (6 + b′0 * xi - 4 * eta^2)
+    x = cbrt(v0 / v)
+    y = x^2 - 1
+    return e0 + 9 / 16 * b0 * v0 * y^2 * (6 - 4 * x^2 + b′0 * y)
 end
 function _evaluate(eos::BirchMurnaghan4th, ::Energy, v)
     v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
@@ -705,8 +705,8 @@ function _evaluate(eos::BirchMurnaghan2nd, ::Pressure, v)
 end
 function _evaluate(eos::BirchMurnaghan3rd, ::Pressure, v)
     v0, b0, b′0 = fieldvalues(eos)
-    eta = cbrt(v0 / v)
-    return 3 / 2 * b0 * (eta^7 - eta^5) * (1 + 3 / 4 * (b′0 - 4) * (eta^2 - 1))
+    x = cbrt(v0 / v)
+    return 3 / 2 * b0 * (x^7 - x^5) * (1 + 3 / 4 * (b′0 - 4) * (x^2 - 1))
 end
 function _evaluate(eos::BirchMurnaghan4th, ::Pressure, v)
     v0, b0, b′0, b′′0 = fieldvalues(eos)
