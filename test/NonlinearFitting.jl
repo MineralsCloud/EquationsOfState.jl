@@ -625,14 +625,26 @@ end
         )
         @test _isapprox(
             lsqfit(
-                PoirierTarantola3rd(100, 0.0006, 3.7, -323)(Energy()),
+                PoirierTarantola3rd(224, 0.0006, 4, -323)(Energy()),
                 volumes,
                 energies,
             ),
             PoirierTarantola3rd(224.509208, 0.000635892264159838, 3.690448, -323.41773);
             atol = 1e-5,
         )
-        # @test lsqfit(PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323)(Energy()), volumes, energies; lower = Float64[220, 0, 3, -6000, -400], upper = Float64[300, 0.01, 5, -5000, -300]) ≈ PoirierTarantola4th(224.430182, 0.0006232241765069493, 3.758360, -5493.859729817176, -323.417712)
+        @test lsqfit(
+            PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323)(Energy()),
+            volumes,
+            energies;
+            lower = Float64[220, 0, 3, -6000, -400],
+            upper = Float64[300, 0.01, 5, -5000, -300],
+        ) ≈ PoirierTarantola4th(
+            224.430182,
+            0.0006232241765069493,
+            3.758360,
+            -5493.859729817176,
+            -323.417712,
+        )
     end # testset
 
     @testset "with units" begin
@@ -693,7 +705,51 @@ end
                 3.730992,
                 -0.361830 * u"1/GPa",
                 -161.708856 * u"hartree",
+            );
+            atol = 1e-1,
+        )
+        # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L98-L105
+        @test _isapprox(
+            lsqfit(
+                BirchMurnaghan5th(
+                    224.445371 * u"bohr^3",
+                    9.164446 * u"GPa",
+                    3.752432,
+                    -0.371174 * u"1/GPa",
+                    0.179508 * u"1/GPa^2",
+                    -161.708856 * u"hartree",
+                )(Energy()),
+                volumes,
+                energies,
             ),
+            BirchMurnaghan5th(
+                224.451813 * u"bohr^3",
+                9.163018 * u"GPa",
+                3.736723,
+                -0.359771 * u"1/GPa",
+                0.293634 * u"1/GPa^2",
+                -161.708856 * u"hartree",
+            );
+            atol = 1,
+        )
+        @test _isapprox(
+            lsqfit(
+                PoirierTarantola3rd(
+                    224.445371 * u"bohr^3",
+                    9.164446 * u"GPa",
+                    3.7,
+                    -161.708856 * u"hartree",
+                )(Energy()),
+                volumes,
+                energies,
+            ),
+            PoirierTarantola3rd(
+                224.509208 * u"bohr^3",
+                9.354298 * u"GPa",
+                3.690448,
+                -161.708865 * u"hartree",
+            );
+            atol = 1e-5,
         )
     end
 end
