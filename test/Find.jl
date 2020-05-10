@@ -1,8 +1,8 @@
 module Find
 
-using Test
-
 using Roots
+using Suppressor: @suppress
+using Test
 using Unitful
 using UnitfulAtomic
 
@@ -74,21 +74,23 @@ using EquationsOfState.Find
             -9.86535084973,
             -9.73155247952,
         ] .* u"eV"
-    isapprox(
-        map(energies) do e
-            findvolume(
-                BirchMurnaghan3rd(
-                    40.98926572528106 * u"angstrom^3",
-                    0.5369258245417454 * u"eV/angstrom^3",
-                    4.178644235500821 * u"1000mm/m",
-                    -10.842803908240892 * u"eV",
-                )(Energy()),
-                e,
-                (eps(), 100) .* u"angstrom^3",
-            )
-        end,
-        results,
-    )
+    @suppress begin
+        isapprox(
+            map(energies) do e
+                findvolume(
+                    BirchMurnaghan3rd(
+                        40.98926572528106 * u"angstrom^3",
+                        0.5369258245417454 * u"eV/angstrom^3",
+                        4.178644235500821 * u"1000mm/m",
+                        -10.842803908240892 * u"eV",
+                    )(Energy()),
+                    e,
+                    (eps(), 100) .* u"angstrom^3",
+                )
+            end,
+            results,
+        )
+    end
 end
 
 @testset "Test `findvolume` with random unit" begin
@@ -97,11 +99,13 @@ end
     volumes = map(pressures) do p
         findvolume(eos(Pressure()), p, (eps(1.0 * u"bohr^3"), eos.v0 * 1.3))
     end
-    @test isapprox(
-        ustrip.(map(eos(Pressure()), volumes) - pressures),
-        zeros(11),
-        atol = 1e-5,
-    )
+    @suppress begin
+        @test isapprox(
+            ustrip.(map(eos(Pressure()), volumes) - pressures),
+            zeros(11),
+            atol = 1e-5,
+        )
+    end
 end # testset
 
 end # module Find
