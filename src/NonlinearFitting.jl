@@ -14,25 +14,28 @@ using ..Collections: PhysicalProperty, EquationOfState
 export lsqfit
 
 """
-    lsqfit(eos(prop), xdata, ydata; debug = false, kwargs...)
+    lsqfit(eos(prop), volumes, ydata; kwargs...)
 
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
+If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same unit as
+`eos.v0`, and `ydata`, if are energies, must have the same unit as `eos.e0`. The
+`eos` parameter `b0` must have the unit of `e0 / v0`, and `b′′0` must have the unit of
+`v0 / e0`, etc. Use with care. Better to use the `Unitful` version.
+
 # Arguments
-- `eos::EquationOfState`: a trial equation of state. If it has units, `xdata` and `ydata` must also have.
+- `eos::EquationOfState`: a trial equation of state. If it has units, `volumes` and `ydata` must also have.
 - `prop::PhysicalProperty`: a `PhysicalProperty` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
-- `xdata::AbstractArray`: an array of volumes (``V``), with(out) units.
-- `ydata::AbstractArray`: an array of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
-- `debug::Bool=false`: if `true`, then an `LsqFit.LsqFitResult` is returned, containing estimated Jacobian, residuals, etc.; if `false`, a fitted `EquationOfState` is returned. The default value is `false`.
-- `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md)
-    and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
+- `volumes`: an array of volumes (``V``), with(out) units.
+- `ydata`: an array of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
+- `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
-function lsqfit(f, xdata, ydata; kwargs...)
+function lsqfit(f, volumes, ydata; kwargs...)
     eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
-    params, xdata, ydata = _preprocess(eos, xdata, ydata)
+    params, volumes, ydata = _preprocess(eos, volumes, ydata)
     model = (x, p) -> map(T(p...)(property), x)
-    fit = curve_fit(model, xdata, ydata, params; kwargs...)
+    fit = curve_fit(model, volumes, ydata, params; kwargs...)
     return _postprocess(T(fit.param...), eos)
 end # function lsqfit
 
