@@ -808,24 +808,23 @@ end
     @testset "with unit" begin
         volumes = data[:, 1] * u"bohr^3"
         energies = data[:, 2] * u"Ry"
-        fitted_eos = lsqfit(
-            BirchMurnaghan3rd(
-                128.319495 * u"bohr^3",
-                15.070313 * u"GPa",
-                3.357205,
-                -7.410318 * u"hartree",
-            )(Energy()),
-            volumes,
-            energies,
-        )
         @test _isapprox(
-            (BirchMurnaghan3rd(
+            BirchMurnaghan3rd(
                 126.495155 * u"bohr^3",
                 14.834320 * u"GPa",
                 3.679199,
                 -7.410112 * u"hartree",
-            )),
-            (fitted_eos);
+            ),
+            lsqfit(
+                BirchMurnaghan3rd(
+                    128.319495 * u"bohr^3",
+                    15.070313 * u"GPa",
+                    3.357205,
+                    -7.410318 * u"hartree",
+                )(Energy()),
+                volumes,
+                energies,
+            );
             atol = 1e-5,
         )
         @test _isapprox(
