@@ -593,6 +593,7 @@ end
             BirchMurnaghan2nd(223.7192539523166, 0.0006268341030294977, -323.4177121144877);
             atol = 1e-3,
         )
+        # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L15-L20
         @test _isapprox(
             lsqfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
             BirchMurnaghan3rd(224.444565, 0.00062506191050572675, 3.740369, -323.417714),
@@ -676,35 +677,24 @@ end
         )
         @test _isapprox(
             lsqfit(
-                BirchMurnaghan3rd(
+                BirchMurnaghan4th(
                     224.445371 * u"bohr^3",
                     9.164446 * u"GPa",
                     3.752432,
+                    -0.371174 * u"1/GPa",
                     -161.708856 * u"hartree",
                 )(Energy()),
                 volumes,
                 energies,
             ),
-            BirchMurnaghan3rd(
-                224.444565 * u"bohr^3",
-                9.194978 * u"GPa",
-                3.740369,
-                -161.708857 * u"hartree",
+            BirchMurnaghan4th(
+                224.457562 * u"bohr^3",
+                9.163736 * u"GPa",
+                3.730992,
+                -0.361830 * u"1/GPa",
+                -161.708856 * u"hartree",
             ),
         )
-        # @test (
-        #     lsqfit(BirchMurnaghan4th(224.445371u"bohr^3", 9.164446u"GPa", 3.752432, -0.371174u"1/GPa", -161.708856u"hartree")(Energy()), volumes, energies) |> fieldvalues |> collect
-        # ) ≈
-        # (
-        #     BirchMurnaghan4th(224.457562u"bohr^3", 9.163736u"GPa", 3.730992, -0.361830u"1/GPa", -161.708856u"hartree") |> fieldvalues |> collect
-        # )
-        # Non-linear fitting: BM4: 4th order Birch-Murnaghan EOS
-        # Parameters (5) start / converged
-        # E0 (Hy)               -161.708856      -161.708856
-        # V0 (bohr^3)            224.445371       224.457562
-        # B0 (GPa)                 9.164446         9.163736
-        # B1p                      3.752432         3.730992
-        # B2p (1/GPa)             -0.371174        -0.361830
     end
 end
 

@@ -851,8 +851,4 @@ function Base.getproperty(eos::EquationOfState, name::Symbol)
     end
 end
 
-Unitful.upreferred(::typeof(dimension(u"J"))) = u"eV"
-Unitful.upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
-Unitful.upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
-
 end
