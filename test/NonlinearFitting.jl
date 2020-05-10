@@ -581,8 +581,8 @@ end
     data = CSV.read("data/w2k-lda-na.dat", comment = "#")
 
     @testset "without unit" begin
-        volumes = data[:, 1]
-        energies = data[:, 2]
+        volumes = data[:, 1]  # unit: bohr^3
+        energies = data[:, 2]  # unit: Rydberg
         @test _isapprox(
             lsqfit(Murnaghan(224, 0.006, 4, -323)(Energy()), volumes, energies),
             Murnaghan(224.501825, 0.00060479524074699499, 3.723835, -323.417686);
@@ -597,18 +597,19 @@ end
             lsqfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
             BirchMurnaghan3rd(224.444565, 0.00062506191050572675, 3.740369, -323.417714),
         )
+        # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L30-L36
         @test _isapprox(
             lsqfit(
-                BirchMurnaghan4th(224, 0.0006, 4, -5460, -323)(Energy()),
+                BirchMurnaghan4th(224, 0.0006, 4, -5460, -323)(Energy()),  # bohr^3, Ry/bohr^3, 1, bohr^3/Ry, Ry
                 volumes,
                 energies,
             ),
             BirchMurnaghan4th(
-                224.45756238103118,
-                0.0006229382380931005,
+                224.45756238103118,  # bohr^3
+                0.0006229382380931005,  # Ry/bohr^3
                 3.730991532958105,
-                -5322.696706065215,
-                -323.4177113158582,
+                -5322.696706065215,  # bohr^3/Ry
+                -323.4177113158582,  # Ry
             );
             rtol = 1e-6,
         )
