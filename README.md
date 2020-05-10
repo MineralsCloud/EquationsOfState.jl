@@ -35,8 +35,8 @@ useful in research. It currently includes:
 
 The formulae are referenced from Ref. 1.
 
-This package also includes linear and nonlinear fitting methods,
-also referenced from Ref. 1.
+This package also includes linear and nonlinear fitting methods, also referenced
+from Ref. 1.
 
 See its
 [documentation](https://mineralscloud.github.io/EquationsOfState.jl/stable/).
@@ -44,9 +44,7 @@ See its
 ## Compatibility
 
 - [Julia version: `v1.0.0` and above](https://julialang.org/downloads/)
-- Dependencies: see `Project.toml`
-  [`deps` field](Project.toml#L7-L14)
-  and
+- Dependencies: see `Project.toml` [`deps` field](Project.toml#L7-L14) and
   [`compat` field](Project.toml#L16-L21)
 - OS: macOS, Linux, and Windows
 
@@ -57,5 +55,4 @@ See its
 
 ## References
 
-1. [A. Otero-De-La-Roza, V. Luaña, _Comput. Phys. Commun._ **182**, 1708–1720
-   (2011).](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
+1. [A. Otero-De-La-Roza, V. Luaña, _Comput. Phys. Commun._ **182**, 1708–1720 (2011).](https://www.sciencedirect.com/science/article/pii/S0010465511001470)
