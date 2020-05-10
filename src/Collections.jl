@@ -660,9 +660,8 @@ function _evaluate(eos::PoirierTarantola2nd, ::Energy, v)
 end
 function _evaluate(eos::PoirierTarantola3rd, ::Energy, v)
     v0, b0, b′0, e0 = fieldvalues(eos)
-    x = cbrt(v / v0)
-    xi = -3 * log(x)
-    return e0 + b0 / 6 * v0 * xi^2 * ((b′0 - 2) * xi + 3)
+    x = log(v0 / v)
+    return e0 + b0 * v0 / 6 * x^2 * ((b′0 - 2) * x + 3)
 end
 function _evaluate(eos::PoirierTarantola4th, ::Energy, v)
     v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
@@ -721,9 +720,9 @@ function _evaluate(eos::PoirierTarantola2nd, ::Pressure, v)
 end
 function _evaluate(eos::PoirierTarantola3rd, ::Pressure, v)
     v0, b0, b′0 = fieldvalues(eos)
-    x = v / v0
-    xi = log(x)
-    return -b0 * xi / 2x * ((b′0 - 2) * xi - 2)
+    x = v0 / v
+    ξ = log(x)
+    return b0 * x * ξ * (1 + (b′0 - 2) / 2 * ξ)
 end
 function _evaluate(eos::PoirierTarantola4th, ::Pressure, v)
     v0, b0, b′0, b′′0 = fieldvalues(eos)
