@@ -5,6 +5,7 @@ a (an) volume (array of volumes).
 """
 module Collections
 
+using AutoHashEquals: @auto_hash_equals
 using IterTools: FieldValues, fieldvalues
 using Unitful: AbstractQuantity, @u_str
 
@@ -177,7 +178,7 @@ julia> Murnaghan(1u"nm^3", 2u"GPa", 3, 3.0u"eV")
 Murnaghan{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 3.0 eV)
 ```
 """
-struct Murnaghan{T} <: EquationOfState{T}
+@auto_hash_equals struct Murnaghan{T} <: EquationOfState{T}
     v0::T
     b0::T
     b′0::T
@@ -215,7 +216,7 @@ julia> BirchMurnaghan2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
 BirchMurnaghan2nd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0 eV)
 ```
 """
-struct BirchMurnaghan2nd{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct BirchMurnaghan2nd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     e0::T
@@ -253,7 +254,7 @@ julia> BirchMurnaghan3rd(1u"nm^3", 2u"GPa", 4.0, 3u"eV")
 BirchMurnaghan3rd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 4.0, 3.0 eV)
 ```
 """
-struct BirchMurnaghan3rd{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct BirchMurnaghan3rd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -293,7 +294,7 @@ julia> BirchMurnaghan4th(1u"nm^3", 2u"GPa", 3.0, 4u"1/GPa", 5u"eV")
 BirchMurnaghan4th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 eV)
 ```
 """
-struct BirchMurnaghan4th{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct BirchMurnaghan4th{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -336,7 +337,7 @@ julia> BirchMurnaghan5th(1u"nm^3", 2u"GPa", 3, 4u"1/GPa", 5u"1/GPa^2", 6.0u"eV")
 BirchMurnaghan5th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 GPa⁻², 6.0 eV)
 ```
 """
-struct BirchMurnaghan5th{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct BirchMurnaghan5th{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -382,7 +383,7 @@ julia> PoirierTarantola2nd(1u"nm^3", 2u"GPa", 3.0u"eV")
 PoirierTarantola2nd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0 eV)
 ```
 """
-struct PoirierTarantola2nd{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct PoirierTarantola2nd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     e0::T
@@ -420,7 +421,7 @@ julia> PoirierTarantola3rd(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
 PoirierTarantola3rd{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 eV)
 ```
 """
-struct PoirierTarantola3rd{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct PoirierTarantola3rd{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -460,7 +461,7 @@ julia> PoirierTarantola4th(1u"nm^3", 2u"GPa", 3, 4u"1/GPa", 5.0u"eV")
 PoirierTarantola4th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 eV)
 ```
 """
-struct PoirierTarantola4th{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct PoirierTarantola4th{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -507,7 +508,7 @@ julia> PoirierTarantola5th(1u"nm^3", 2u"GPa", 3, 4u"1/GPa", 5u"1/GPa^2", 6.0u"eV
 PoirierTarantola5th{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 GPa⁻¹, 5.0 GPa⁻², 6.0 eV)
 ```
 """
-struct PoirierTarantola5th{T} <: FiniteStrainEOS{T}
+@auto_hash_equals struct PoirierTarantola5th{T} <: FiniteStrainEOS{T}
     v0::T
     b0::T
     b′0::T
@@ -554,7 +555,7 @@ julia> Vinet(1u"nm^3", 2u"GPa", 3, 4.0u"eV")
 Vinet{Quantity{Float64,D,U} where U where D}(1.0 nm³, 2.0 GPa, 3.0, 4.0 eV)
 ```
 """
-struct Vinet{T} <: EquationOfState{T}
+@auto_hash_equals struct Vinet{T} <: EquationOfState{T}
     v0::T
     b0::T
     b′0::T
@@ -567,7 +568,7 @@ end
 Vinet(v0::Real, b0::Real, b′0::Real) = Vinet(v0, b0, b′0, 0)
 Vinet(v0::AbstractQuantity, b0::AbstractQuantity, b′0) = Vinet(v0, b0, b′0, 0 * u"eV")
 
-struct AntonSchmidt{T} <: EquationOfState{T}
+@auto_hash_equals struct AntonSchmidt{T} <: EquationOfState{T}
     v0::T
     β::T
     n::T
@@ -579,7 +580,7 @@ function AntonSchmidt(v0, β, n, e∞)
 end
 AntonSchmidt(v0::Real, β::Real, n::Real) = AntonSchmidt(v0, β, n, 0)
 
-struct BreenanStacey{T} <: EquationOfState{T}
+@auto_hash_equals struct BreenanStacey{T} <: EquationOfState{T}
     v0::T
     b0::T
     γ0::T
@@ -591,7 +592,7 @@ function BreenanStacey(v0, b0, γ0, e0)
 end
 BreenanStacey(v0::Real, b0::Real, γ0::Real) = BreenanStacey(v0, b0, γ0, 0)
 
-struct Shanker{T} <: EquationOfState{T}
+@auto_hash_equals struct Shanker{T} <: EquationOfState{T}
     v0::T
     b0::T
     b′0::T
@@ -604,7 +605,7 @@ end
 Shanker(v0::Real, b0::Real, b′0::Real) = Shanker(v0, b0, b′0, 0)
 Shanker(v0::AbstractQuantity, b0::AbstractQuantity, b′0) = Shanker(v0, b0, b′0, 0 * u"eV")
 
-struct PolynomialEOS{N,T} <: EquationOfState{T}
+@auto_hash_equals struct PolynomialEOS{N,T} <: EquationOfState{T}
     v0::T
     b0::NTuple{N,T}
     e0::T
@@ -831,8 +832,6 @@ else
         end)
     end  # Julia 1.0-1.2 does not support adding methods to abstract types.
 end
-
-Base.:(==)(x::T, y::T) where {T<:EquationOfState} = all(fieldvalues(x) .== fieldvalues(y))
 
 Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
 Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
