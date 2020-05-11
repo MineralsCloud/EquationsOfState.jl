@@ -7,6 +7,7 @@ module Collections
 
 using AutoHashEquals: @auto_hash_equals
 using IterTools: FieldValues, fieldvalues
+using LinearAlgebra: dot
 using Unitful: AbstractQuantity, @u_str
 
 import Unitful
@@ -696,6 +697,10 @@ function _evaluate(eos::AntonSchmidt, ::Energy, v)
     x, η = v / v0, n + 1
     return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
 end
+function _evaluate(eos::PolynomialEOS{N}, ::Energy, v) where {N}
+    v0, p0, e0 = fieldvalues(eos)
+    return e0 + dot(p0, (v - v0)^n for n in 1:N)  # It cannot be `v0 - v`!
+end # function _evaluate
 # Pressure evaluation
 function _evaluate(eos::Murnaghan, ::Pressure, v)
     v0, b0, b′0 = fieldvalues(eos)
