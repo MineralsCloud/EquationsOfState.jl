@@ -10,28 +10,28 @@ using ..Collections: PolynomialEOS
 
 export linfit
 
-_islocalminimum(f, x, δx) = f(x) < f(x - δx) && f(x) < f(x + δx)
+_islocalminimum(y, x, δx) = y(x) < y(x - δx) && y(x) < y(x + δx)
 
-function _findlocalminima(f, xs)
-    f′ = derivative(f, 1)
+function _findlocalminima(y, xs)
+    y′ = derivative(y, 1)
     δx = minimum(diff(xs)) / 10
     localminima = eltype(xs)[]
-    for x in real(filter(isreal, roots(coeffs(f′))))  # Complex volumes are meaningless
-        if _islocalminimum(f, x, δx)
+    for x in real(filter(isreal, roots(coeffs(y′))))  # Complex volumes are meaningless
+        if _islocalminimum(y, x, δx)
             push!(localminima, x)
         end
     end
     return localminima
 end # function _findlocalminima
 
-function _findglobalminimum(f, localminima)
+function _findglobalminimum(y, localminima)
     # https://stackoverflow.com/a/21367608/3260253
     if isempty(localminima)
         error("no local minima found!")
     else
-        f0, i = findmin(f.(localminima))
+        y0, i = findmin(y.(localminima))
         x0 = localminima[i]
-        return x0, f0
+        return x0, y0
     end
 end # function _findglobalminimum
 
