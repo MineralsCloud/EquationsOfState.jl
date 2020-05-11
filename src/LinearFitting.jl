@@ -39,8 +39,8 @@ function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
     localminima = _findlocalminima(poly, volumes)
     v0, e0 = _findglobalminimum(poly, localminima)
-    bs = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
-    return PolynomialEOS(v0, bs, e0)
+    p0 = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
+    return PolynomialEOS(v0, p0, e0)
 end # function linfit
 
 end

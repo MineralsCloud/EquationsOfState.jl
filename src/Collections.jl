@@ -607,17 +607,19 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bâ€²0) = Shanker(v0, b0, bâ€
 
 @auto_hash_equals struct PolynomialEOS{N,T} <: EquationOfState{T}
     v0::T
-    b0::NTuple{N,T}
+    p0::NTuple{N,T}
     e0::T
 end
-function PolynomialEOS(v0, b0, e0)
-    T = Base.promote_typeof(v0, b0..., e0)
-    return PolynomialEOS{length(b0),T}(
+function PolynomialEOS(v0, p0, e0)
+    T = Base.promote_typeof(v0, p0..., e0)
+    return PolynomialEOS{length(p0),T}(
         convert(T, v0),
-        Tuple(convert(T, x) for x in b0),
+        Tuple(convert(T, x) for x in p0),
         convert(T, e0),
     )
 end
+PolynomialEOS(v0::Real, p0::NTuple{N,Real}) where {N} = PolynomialEOS(v0, p0, 0)
+PolynomialEOS(v0::AbstractQuantity, p0::NTuple{N}) where {N} = PolynomialEOS(v0, p0, 0 * u"eV")
 # =================================== Types ================================== #
 
 # Energy evaluation
