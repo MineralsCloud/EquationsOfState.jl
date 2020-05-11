@@ -27,7 +27,7 @@ end # function _findlocalminima
 function _findglobalminimum(y, localminima)
     # https://stackoverflow.com/a/21367608/3260253
     if isempty(localminima)
-        error("no local minima found!")
+        error("no real local minima found!")  # For some polynomials, could be all complex
     else
         y0, i = findmin(y.(localminima))
         x0 = localminima[i]
