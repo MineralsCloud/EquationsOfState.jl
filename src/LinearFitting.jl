@@ -3,7 +3,8 @@ This module provides some linear fitting methods.
 """
 module LinearFitting
 
-using Polynomials: Polynomial, fit, derivative, roots, coeffs
+using Polynomials: Polynomial, fit, derivative, coeffs
+using PolynomialRoots: roots
 
 using ..Collections: PolynomialEOS
 
@@ -24,6 +25,7 @@ function _findlocalminima(f, xs)
 end # function _findlocalminima
 
 function _findglobalminimum(f, localminima)
+    # https://stackoverflow.com/a/21367608/3260253
     if isempty(localminima)
         error("no local minima found!")
     else
