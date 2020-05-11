@@ -11,9 +11,21 @@ export linfit
 
 _islocalminimum(f, x, δx) = f(x) < f(x - δx) && f(x) < f(x + δx)
 
-function _findglobalminimum(f, localminima, δx)
-    if length(localminima) == 0
-        error("no volume minimizes the energy!")
+function _findlocalminima(f, xs)
+    f′ = derivative(f, 1)
+    δx = minimum(diff(xs)) / 10
+    localminima = eltype(xs)[]
+    for x in real(filter(isreal, roots(coeffs(f′))))  # Complex volumes are meaningless
+        if _islocalminimum(f, x, δx)
+            push!(localminima, x)
+        end
+    end
+    return localminima
+end # function _findlocalminima
+
+function _findglobalminimum(f, localminima)
+    if isempty(localminima)
+        error("no local minima found!")
     else
         f0, i = findmin(f.(localminima))
         x0 = localminima[i]
@@ -23,15 +35,8 @@ end # function _findglobalminimum
 
 function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
-    poly1d = derivative(poly, 1)
-    δx = minimum(diff(volumes)) / 10
-    localminima = eltype(volumes)[]
-    for x in real(filter(isreal, roots(poly1d)))  # Complex volume is meaningless
-        if _islocalminimum(poly, x, δx)
-            push!(localminima, x)
-        end
-    end
-    v0, e0 = _findglobalminimum(poly, localminima, δx)
+    localminima = _findlocalminima(poly, volumes)
+    v0, e0 = _findglobalminimum(poly, localminima)
     bs = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
     return PolynomialEOS(v0, bs, e0)
 end # function linfit
