@@ -7,7 +7,7 @@ module NonlinearFitting
 using ConstructionBase: constructorof
 using IterTools: fieldvalues
 using LsqFit: curve_fit
-using Unitful: AbstractQuantity, upreferred, ustrip, unit
+using Unitful: AbstractQuantity, NoDims, upreferred, ustrip, unit, dimension, @u_str
 
 using ..Collections: PhysicalProperty, EquationOfState
 
@@ -54,7 +54,7 @@ function _preprocess(
 )
     values = fieldvalues(eos.data)
     original_units = unit.(values)  # Keep a record of `eos`'s units
-    f = x -> map(float ∘ ustrip ∘ upreferred, x)  # Convert to preferred units and strip the unit
+    f = x -> map(float ∘ _ustrip, x)  # Convert to preferred units and strip the unit
     return map(f, (values, xdata.data, ydata.data))
 end # function _preprocess
 
@@ -64,8 +64,19 @@ function _postprocess(eos, trial_eos::_Data{<:AbstractQuantity})
     T = constructorof(typeof(trial_eos.data))  # Get the `UnionAll` type
     original_units = unit.(fieldvalues(trial_eos.data))  # Keep a record of `eos`'s units
     return T((
-        x * upreferred(u) |> u for (x, u) in zip(fieldvalues(eos), original_units)
+        x * _upreferred(dimension(u)) |> u for (x, u) in zip(fieldvalues(eos), original_units)
     )...)  # Convert back to original `eos`'s units
 end # function _postprocess
+
+_ustrip(quantity) = _ustrip(_upreferred(dimension(quantity)), quantity)
+_ustrip(unit, quantity) = ustrip(unit, quantity)
+_ustrip(::Int, quantity) = ustrip(quantity)
+
+_upreferred(::typeof(dimension(u"1"))) = 1
+_upreferred(::typeof(dimension(u"J"))) = u"eV"
+_upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
+_upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
+_upreferred(::typeof(dimension(u"1/Pa"))) = u"angstrom^3/eV"
+_upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
 
 end
