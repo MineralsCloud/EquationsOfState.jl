@@ -1,17 +1,48 @@
-"""
-This module provides `lsqfit` methods for fitting an equation of state
-with(out) units.
-"""
-module NonlinearFitting
+module Fitting
 
 using ConstructionBase: constructorof
 using IterTools: fieldvalues
 using LsqFit: curve_fit
+using Polynomials: Polynomial, fit, derivative, coeffs
+using PolynomialRoots: roots
 using Unitful: AbstractQuantity, NoDims, upreferred, ustrip, unit, dimension, @u_str
 
-using ..Collections: PhysicalProperty, EquationOfState
+using ..Collections: PhysicalProperty, EquationOfState, PolynomialEOS
 
-export lsqfit
+export linfit, lsqfit
+
+_islocalminimum(y, x, δx) = y(x) < y(x - δx) && y(x) < y(x + δx)
+
+function _findlocalminima(y, xs)
+    y′ = derivative(y, 1)
+    δx = minimum(diff(xs)) / 10
+    localminima = eltype(xs)[]
+    for x in real(filter(isreal, roots(coeffs(y′))))  # Complex volumes are meaningless
+        if _islocalminimum(y, x, δx)
+            push!(localminima, x)
+        end
+    end
+    return localminima
+end # function _findlocalminima
+
+function _findglobalminimum(y, localminima)
+    # https://stackoverflow.com/a/21367608/3260253
+    if isempty(localminima)
+        error("no real local minima found!")  # For some polynomials, could be all complex
+    else
+        y0, i = findmin(y.(localminima))
+        x0 = localminima[i]
+        return x0, y0
+    end
+end # function _findglobalminimum
+
+function linfit(volumes, energies, deg = 3)
+    poly = fit(volumes, energies, deg)
+    localminima = _findlocalminima(poly, volumes)
+    v0, e0 = _findglobalminimum(poly, localminima)
+    p0 = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
+    return PolynomialEOS(v0, p0, e0)
+end # function linfit
 
 """
     lsqfit(eos(prop), volumes, ydata; kwargs...)
@@ -79,4 +110,4 @@ _upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
 _upreferred(::typeof(dimension(u"1/Pa"))) = u"angstrom^3/eV"
 _upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
 
-end
+end # module Fitting

@@ -7,7 +7,7 @@ using Unitful, UnitfulAtomic
 
 using EquationsOfState.Collections
 using EquationsOfState.Collections: EquationOfState
-using EquationsOfState.NonlinearFitting
+using EquationsOfState.Fitting: lsqfit
 
 # Do not export! Only for internal use!
 _isapprox(a::EquationOfState, b::EquationOfState; kwargs...) =
