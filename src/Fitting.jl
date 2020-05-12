@@ -64,7 +64,7 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 function nonlinfit(f, volumes, ydata; kwargs...)
     eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
-    params, volumes, ydata = _preprocess(_Data(eos), _Data(volumes), _Data(ydata))
+    params, volumes, ydata = _preprocess(_Data(float(eos)), _Data(float(volumes)), _Data(float(ydata)))
     model = (x, p) -> map(T(p...)(property), x)
     fit = curve_fit(model, volumes, ydata, params; kwargs...)
     return _postprocess(T(fit.param...), _Data(eos))
@@ -75,8 +75,7 @@ struct _Data{S,T}
 end
 _Data(data::T) where {T} = _Data{eltype(data),T}(data)
 
-_preprocess(eos::_Data{<:Real}, xdata::_Data{<:Real}, ydata::_Data{<:Real}) =
-    float.(fieldvalues(eos.data)), float(xdata.data), float(ydata.data)
+_preprocess(eos, xdata, ydata) = (eos, xdata, ydata)
 function _preprocess(
     eos::_Data{<:AbstractQuantity},
     xdata::_Data{<:AbstractQuantity},
@@ -84,8 +83,7 @@ function _preprocess(
 )
     values = fieldvalues(eos.data)
     original_units = unit.(values)  # Keep a record of `eos`'s units
-    f = x -> map(float ∘ _ustrip, x)  # Convert to preferred units and strip the unit
-    return map(f, (values, xdata.data, ydata.data))
+    return map(_ustrip, (values, xdata.data, ydata.data))  # Convert to preferred units and strip the unit
 end # function _preprocess
 
 _postprocess(eos, trial_eos::_Data{<:Real}) = eos
@@ -107,5 +105,7 @@ _upreferred(::typeof(dimension(u"m^3"))) = u"angstrom^3"
 _upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
 _upreferred(::typeof(dimension(u"1/Pa"))) = u"angstrom^3/eV"
 _upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
+
+Base.float(eos::EquationOfState) = constructorof(eos)(float.(fieldvalues(eos)))
 
 end # module Fitting
