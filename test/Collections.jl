@@ -174,6 +174,28 @@ end
     #@test typeof(AntonSchmidt(1u"nm^3", 2u"GPa", 3.0))
     #@test typeof(BreenanStacey(1u"nm^3", 2u"GPa", 3))
     #@test typeof(BreenanStacey(1u"nm^3", 2u"GPa", 3.0)
+    @test typeof(PolynomialEOS(1, [1, 2, 3], 4.0)) === PolynomialEOS{3,Float64}
+    @test typeof(PolynomialEOS(1, [1.0, 2, 3, 4], 4)) === PolynomialEOS{4,Float64}
+    @test typeof(PolynomialEOS(1.0, [1, 2, 3, 4])) === PolynomialEOS{4,Float64}
+    @test typeof(PolynomialEOS(
+        1 * u"nm^3",
+        [1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"],
+        4 * u"eV",
+    )) === PolynomialEOS{3,Quantity{Int}}
+    @test typeof(PolynomialEOS(
+        1 * u"nm^3",
+        [1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"],
+        4.0 * u"eV",
+    )) === PolynomialEOS{3,Quantity{Float64}}
 end
+
+@testset "`float` on an EOS" begin
+    @test float(Vinet(1, 2, 3)) == Vinet(1.0, 2.0, 3.0, 0.0)
+    @test float(Vinet(1 * u"nm^3", 2 * u"GPa", 3)) ==
+          Vinet(1.0 * u"nm^3", 2.0 * u"GPa", 3.0)
+    @test float(PolynomialEOS(1, [1, 2, 3])) == PolynomialEOS(1.0, [1.0, 2.0, 3.0])
+    @test float(PolynomialEOS(1 * u"nm^3", [1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"])) ==
+          PolynomialEOS(1.0 * u"nm^3", [1.0 * u"eV/nm^3", 2.0, 3.0 * u"nm^3/eV"])
+end # testset
 
 end # module Collections

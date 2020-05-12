@@ -3,7 +3,7 @@ module LinearFitting
 using Test
 
 using EquationsOfState.Collections: PolynomialEOS
-using EquationsOfState.LinearFitting: linfit
+using EquationsOfState.Fitting: linfit
 
 @testset "Si data from Cormac from pymatgen" begin
     volumes = [
