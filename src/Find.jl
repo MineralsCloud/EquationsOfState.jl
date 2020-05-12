@@ -47,12 +47,12 @@ function findvolume(f, y, x0, method)
 end # function findvolume
 function findvolume(f, y, x0)
     for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
-        @info("Using method \"$T\"...")
+        @info("using method `$T`...")
         try
             # `maximum` and `minimum` also works with `AbstractQuantity`s.
             return findvolume(f, y, (minimum(x0), maximum(x0)), T())
         catch e
-            @info("Method \"$T\" failed because of $e.")
+            @info("method `$T` failed because of $e.")
             continue
         end
     end
@@ -62,11 +62,11 @@ function findvolume(f, y, x0)
         Newton
         subtypes(AbstractSecant)
     ]
-        @info("Using method \"$T\"...")
+        @info("using method `$T`...")
         try
             return findvolume(f, y, (minimum(x0) + maximum(x0)) / 2, T())
         catch e
-            @info("Method \"$T\" failed because of $e.")
+            @info("method `$T` failed because of $e.")
             continue
         end
     end
