@@ -54,8 +54,45 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     root-finding process.
 - `silent`: print or not the intermediate information.
 """
-function findvolume(f, y, x0, method)
-    v0 = find_zero(v -> f(v) - y, x0, method)
+function findvolume(
+    f,
+    y,
+    x0,
+    method::Union{Bisection,BisectionExact,FalsePosition,A42,AlefeldPotraShi},
+)
+    v0 = find_zero(v -> f(v) - y, (minimum(x0), maximum(x0)), method)
+    if v0 < zero(v0)
+        error("the volume found is negative!")
+    else
+        return v0
+    end
+end # function findvolume
+function findvolume(
+    f,
+    y,
+    x0,
+    method::Union{
+        Brent,
+        Halley,
+        Schroder,
+        Newton,
+        Esser,
+        King,
+        KumarSinghAkanksha,
+        Order0,
+        Order16,
+        Order1B,
+        Order2,
+        Order2B,
+        Order5,
+        Order8,
+        Secant,
+        Steffensen,
+        Thukral16,
+        Thukral8,
+    },
+)
+    v0 = find_zero(v -> f(v) - y, (minimum(x0) + maximum(x0)) / 2, method)
     if v0 < zero(v0)
         error("the volume found is negative!")
     else
@@ -63,17 +100,12 @@ function findvolume(f, y, x0, method)
     end
 end # function findvolume
 function findvolume(f, y, x0; silent = false)
-    for T in [Bisection, BisectionExact, FalsePosition, A42, AlefeldPotraShi]
-        silent || @info("using method `$T`...")
-        try
-            # `maximum` and `minimum` also works with `AbstractQuantity`s.
-            return findvolume(f, y, (minimum(x0), maximum(x0)), T())
-        catch e
-            silent || @info("method `$T` failed because of $e.")
-            continue
-        end
-    end
     for T in [
+        Bisection,
+        BisectionExact,
+        FalsePosition,
+        A42,
+        AlefeldPotraShi,
         Brent,
         Halley,
         Schroder,
@@ -95,7 +127,8 @@ function findvolume(f, y, x0; silent = false)
     ]
         silent || @info("using method `$T`...")
         try
-            return findvolume(f, y, (minimum(x0) + maximum(x0)) / 2, T())
+            # `maximum` and `minimum` also works with `AbstractQuantity`s.
+            return findvolume(f, y, x0, T())
         catch e
             silent || @info("method `$T` failed because of $e.")
             continue
