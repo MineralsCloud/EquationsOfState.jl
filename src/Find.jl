@@ -61,14 +61,14 @@ function findvolume(f, y, x0, method)
         return v0
     end
 end # function findvolume
-function findvolume(f, y, x0)
+function findvolume(f, y, x0; silent = false)
     for T in [Bisection, BisectionExact, FalsePosition, A42, AlefeldPotraShi]
-        @info("using method `$T`...")
+        silent || @info("using method `$T`...")
         try
             # `maximum` and `minimum` also works with `AbstractQuantity`s.
             return findvolume(f, y, (minimum(x0), maximum(x0)), T())
         catch e
-            @info("method `$T` failed because of $e.")
+            silent || @info("method `$T` failed because of $e.")
             continue
         end
     end
@@ -92,11 +92,11 @@ function findvolume(f, y, x0)
         Thukral16,
         Thukral8,
     ]
-        @info("using method `$T`...")
+        silent || @info("using method `$T`...")
         try
             return findvolume(f, y, (minimum(x0) + maximum(x0)) / 2, T())
         catch e
-            @info("method `$T` failed because of $e.")
+            silent || @info("method `$T` failed because of $e.")
             continue
         end
     end
