@@ -37,7 +37,7 @@ export findvolume
 
 """
     findvolume(eos(prop), y, x0, method)
-    findvolume(eos(prop), y, x0::Union{AbstractVector,Tuple})
+    findvolume(eos(prop), y, x0::Union{AbstractVector,Tuple}; silent = false)
 
 Find a volume which leads to the given pressure, energy, or bulk modulus based on an `eos`.
 
@@ -52,6 +52,7 @@ Find a volume which leads to the given pressure, energy, or bulk modulus based o
     [Roots.jl](https://github.com/JuliaMath/Roots.jl). And the `x0` parameter must be
     an array or a tuple, of which only the maximum and minimum values will be used in the
     root-finding process.
+- `silent`: print or not the intermediate information.
 """
 function findvolume(f, y, x0, method)
     v0 = find_zero(v -> f(v) - y, x0, method)
