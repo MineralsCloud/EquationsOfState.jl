@@ -64,7 +64,8 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 function nonlinfit(f, volumes, ydata; kwargs...)
     eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
-    params, volumes, ydata = _preprocess(_Data(float(eos)), _Data(float(volumes)), _Data(float(ydata)))
+    params, volumes, ydata =
+        _preprocess(_Data(float(eos)), _Data(float(volumes)), _Data(float(ydata)))
     model = (x, p) -> map(T(p...)(property), x)
     fit = curve_fit(model, volumes, ydata, params; kwargs...)
     return _postprocess(T(fit.param...), _Data(eos))
@@ -91,7 +92,8 @@ function _postprocess(eos, trial_eos::_Data{<:AbstractQuantity})
     T = constructorof(typeof(trial_eos.data))  # Get the `UnionAll` type
     original_units = unit.(fieldvalues(trial_eos.data))  # Keep a record of `eos`'s units
     return T((
-        x * _upreferred(dimension(u)) |> u for (x, u) in zip(fieldvalues(eos), original_units)
+        x * _upreferred(dimension(u)) |> u for
+        (x, u) in zip(fieldvalues(eos), original_units)
     )...)  # Convert back to original `eos`'s units
 end # function _postprocess
 
@@ -106,6 +108,7 @@ _upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
 _upreferred(::typeof(dimension(u"1/Pa"))) = u"angstrom^3/eV"
 _upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
 
-Base.float(eos::EquationOfState) = constructorof(eos)(float.(fieldvalues(eos)))
+Base.float(eos::EquationOfState) =
+    constructorof(typeof(eos))(map(float, fieldvalues(eos))...)
 
 end # module Fitting
