@@ -7,7 +7,7 @@ using Unitful, UnitfulAtomic
 
 using EquationsOfState.Collections
 using EquationsOfState.Collections: EquationOfState
-using EquationsOfState.Fitting: lsqfit
+using EquationsOfState.Fitting: nonlinfit
 
 # Do not export! Only for internal use!
 _isapprox(a::EquationOfState, b::EquationOfState; kwargs...) =
@@ -21,17 +21,17 @@ _isapprox(a::EquationOfState, b::EquationOfState; kwargs...) =
         big(-40.31992619868024),
     )
     @test _isapprox(
-        lsqfit(BirchMurnaghan3rd(1, 2, 3.0, 0)(Energy()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        nonlinfit(BirchMurnaghan3rd(1, 2, 3.0, 0)(Energy()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(BirchMurnaghan3rd(1, 2, 3, 0)(Energy()), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
+        nonlinfit(BirchMurnaghan3rd(1, 2, 3, 0)(Energy()), [1, 2, 3, 4, 5.0], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3.0, 0)(Energy()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7.0],
@@ -40,12 +40,12 @@ _isapprox(a::EquationOfState, b::EquationOfState; kwargs...) =
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(BirchMurnaghan3rd(1, 2, 3, 0)(Energy()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        nonlinfit(BirchMurnaghan3rd(1, 2, 3, 0)(Energy()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(big(1), 2, big(3), 0)(Energy()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -54,7 +54,7 @@ _isapprox(a::EquationOfState, b::EquationOfState; kwargs...) =
         atol = 1e-4,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(big(1), 2, 3, 0)(Energy()),
             BigFloat[1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -63,7 +63,7 @@ _isapprox(a::EquationOfState, b::EquationOfState; kwargs...) =
         atol = 1e-4,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(big(1.0), 2, 3, 0)(Energy()),
             [1, 2, 3, 4, 5],
             BigInt[5, 6, 9, 8, 7],
@@ -77,7 +77,7 @@ end
     result =
         BirchMurnaghan3rd(1.1024687826597717, 29.30861698140365, 12.689089871112746, 0.0)
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3.0, 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -86,7 +86,7 @@ end
         atol = 1e-6,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3, 0)(Pressure()),
             [1, 2, 3, 4, 5.0],
             [5, 6, 9, 8, 7],
@@ -95,7 +95,7 @@ end
         atol = 1e-6,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3.0, 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7.0],
@@ -104,12 +104,12 @@ end
         atol = 1e-6,
     )
     @test _isapprox(
-        lsqfit(BirchMurnaghan3rd(1, 2, 3, 0)(Pressure()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
+        nonlinfit(BirchMurnaghan3rd(1, 2, 3, 0)(Pressure()), [1, 2, 3, 4, 5], [5, 6, 9, 8, 7]),
         result;
         atol = 1e-6,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, big(3), 0)(Pressure()),
             [1, 2, 3, 4, 5],
             BigInt[5, 6, 9, 8, 7],
@@ -118,7 +118,7 @@ end
         atol = 1e-6,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, big(3.0), 0)(Pressure()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -127,7 +127,7 @@ end
         atol = 1e-6,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, big(3), 0)(Pressure()),
             [big(1), 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -140,7 +140,7 @@ end
 @testset "Test fitting bulk modulus with different element types" begin
     result = BirchMurnaghan3rd(7.218928431312577, 5.007900469653902, 4.06037725509478, 0.0)
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3.0, 0)(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -149,7 +149,7 @@ end
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3, 0)(BulkModulus()),
             [1, 2, 3, 4, 5.0],
             [5, 6, 9, 8, 7],
@@ -158,7 +158,7 @@ end
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3.0, 0)(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7.0],
@@ -167,7 +167,7 @@ end
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3, 0)(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -176,7 +176,7 @@ end
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulus()),
             [1, 2, 3, 4, 5],
             [5, 6, 9, 8, 7],
@@ -185,7 +185,7 @@ end
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulus()),
             [1, 2, 3, big(4.0), 5],
             [big(5), 6, 9, 8, 7.0],
@@ -194,7 +194,7 @@ end
         atol = 1e-5,
     )
     @test _isapprox(
-        lsqfit(
+        nonlinfit(
             BirchMurnaghan3rd(1, 2, 3, big(0))(BulkModulus()),
             [1, 2, 3, 4, 5],
             [big(5), 6, 9, 8, 7.0],
@@ -268,7 +268,7 @@ end
         -9.73155247952,
     ]
     @test _isapprox(
-        lsqfit(BirchMurnaghan3rd(40, 0.5, 4, 0)(Energy()), volumes, energies),
+        nonlinfit(BirchMurnaghan3rd(40, 0.5, 4, 0)(Energy()), volumes, energies),
         BirchMurnaghan3rd(
             40.98926572528106,
             0.5369258245417454,
@@ -277,7 +277,7 @@ end
         ),
     )
     @test _isapprox(
-        lsqfit(Murnaghan(41, 0.5, 4, 0)(Energy()), volumes, energies),
+        nonlinfit(Murnaghan(41, 0.5, 4, 0)(Energy()), volumes, energies),
         Murnaghan(
             41.13757930387086,
             0.5144967693786603,
@@ -286,7 +286,7 @@ end
         ),
     )
     @test _isapprox(
-        lsqfit(PoirierTarantola3rd(41, 0.5, 4, 0)(Energy()), volumes, energies),
+        nonlinfit(PoirierTarantola3rd(41, 0.5, 4, 0)(Energy()), volumes, energies),
         PoirierTarantola3rd(
             40.86770643373908,
             0.5667729960804602,
@@ -295,7 +295,7 @@ end
         ),
     )
     @test _isapprox(
-        lsqfit(Vinet(41, 0.5, 4, 0)(Energy()), volumes, energies),
+        nonlinfit(Vinet(41, 0.5, 4, 0)(Energy()), volumes, energies),
         Vinet(
             40.916875663779784,
             0.5493839425156859,
@@ -384,7 +384,7 @@ end
         -1.592547954,
         -1.594410995,
     ]
-    fitted_eos = lsqfit(Vinet(23, 0.5, 4, -2)(Energy()), mp153_volumes, mp153_energies)
+    fitted_eos = nonlinfit(Vinet(23, 0.5, 4, -2)(Energy()), mp153_volumes, mp153_energies)
     @test _isapprox(
         fitted_eos,
         Vinet(
@@ -471,7 +471,7 @@ end
         -5.058639193,
         -5.118654229,
     ]
-    fitted_eos = lsqfit(Vinet(20, 0.5, 4, -5)(Energy()), mp149_volumes, mp149_energies)
+    fitted_eos = nonlinfit(Vinet(20, 0.5, 4, -5)(Energy()), mp149_volumes, mp149_energies)
     @test _isapprox(
         fitted_eos,
         Vinet(
@@ -558,7 +558,7 @@ end
         -7.892053535,
         -7.897414664,
     ]
-    fitted_eos = lsqfit(Vinet(17, 0.5, 4, -7)(Energy()), mp72_volumes, mp72_energies)
+    fitted_eos = nonlinfit(Vinet(17, 0.5, 4, -7)(Energy()), mp72_volumes, mp72_energies)
     @test _isapprox(
         fitted_eos,
         Vinet(
@@ -585,24 +585,24 @@ end
         energies = data[:, 2]  # unit: Rydberg
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L117-L122
         @test _isapprox(
-            lsqfit(Murnaghan(224, 0.006, 4, -323)(Energy()), volumes, energies),
+            nonlinfit(Murnaghan(224, 0.006, 4, -323)(Energy()), volumes, energies),
             Murnaghan(224.501825, 0.00060479524074699499, 3.723835, -323.417686);
             atol = 1e-5,
         )
         # No reference data, I run on my computer.
         @test _isapprox(
-            lsqfit(BirchMurnaghan2nd(224, 0.0006, -323)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan2nd(224, 0.0006, -323)(Energy()), volumes, energies),
             BirchMurnaghan2nd(223.7192539523166, 0.0006268341030294977, -323.4177121144877);
             atol = 1e-3,
         )
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L15-L20
         @test _isapprox(
-            lsqfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
             BirchMurnaghan3rd(224.444565, 0.00062506191050572675, 3.740369, -323.417714),
         )
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L30-L36
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan4th(224, 0.0006, 4, -5460, -323)(Energy()),  # bohr^3, Ry/bohr^3, 1, bohr^3/Ry, Ry
                 volumes,
                 energies,
@@ -618,7 +618,7 @@ end
         )
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L98-L105
         # @test _isapprox(
-        #     lsqfit(
+        #     nonlinfit(
         #         BirchMurnaghan5th(224.445371, 0.0006, 4, -5500, 3.884535907971559e7, -323)(Energy()),
         #         volumes,
         #         energies,
@@ -635,7 +635,7 @@ end
         # )  # FIXME: result is wrong
         # # No reference data, I run on my computer.
         # @test _isapprox(
-        #     lsqfit(Vinet(224, 0.0006, 4, -323)(Energy()), volumes, energies),
+        #     nonlinfit(Vinet(224, 0.0006, 4, -323)(Energy()), volumes, energies),
         #     Vinet(
         #         224.45278665796354,
         #         0.0006313500637481759,
@@ -645,13 +645,13 @@ end
         # )
         # # FIXME: The result is rather wrong
         # @test _isapprox(
-        #     lsqfit(PoirierTarantola3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
+        #     nonlinfit(PoirierTarantola3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
         #     PoirierTarantola3rd(224.509208, 0.000635892264159838, 3.690448, -323.41773);
         #     atol = 1e-5,
         # )
         # # FIXME: This cannot go through
         # @test _isapprox(
-        #     lsqfit(
+        #     nonlinfit(
         #         PoirierTarantola4th(220, 0.0006, 3.7, -5500, -323)(Energy()),
         #         volumes,
         #         energies,
@@ -666,7 +666,7 @@ end
         # )
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L98-L105
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 PoirierTarantola5th(224.445371, 0.0006, 3.8, -5500, 6e7, -323)(Energy()),
                 volumes,
                 energies,
@@ -688,7 +688,7 @@ end
         energies = data[:, 2] .* u"Ry"
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L117-L122
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 Murnaghan(
                     224.445371 * u"bohr^3",
                     9.164446 * u"GPa",
@@ -708,7 +708,7 @@ end
         )
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L15-L20
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan3rd(
                     224.445371 * u"bohr^3",
                     9.164446 * u"GPa",
@@ -726,7 +726,7 @@ end
             ),
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan4th(
                     224.445371 * u"bohr^3",
                     9.164446 * u"GPa",
@@ -748,7 +748,7 @@ end
         )
         # See https://github.com/aoterodelaroza/asturfit/blob/0909b1468e44d691b0c7a44a5b583d170dd248ff/test/test03.out#L98-L105
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan5th(
                     224.445371 * u"bohr^3",
                     9.164446 * u"GPa",
@@ -771,7 +771,7 @@ end
             atol = 1,
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 PoirierTarantola3rd(
                     224.445371 * u"bohr^3",
                     9.164446 * u"GPa",
@@ -799,7 +799,7 @@ end
         volumes = data[:, 1]  # unit: bohr^3
         energies = data[:, 2]  # unit: Rydberg
         @test _isapprox(
-            lsqfit(Murnaghan(224, 0.0006, 4, -323)(Energy()), volumes, energies),
+            nonlinfit(Murnaghan(224, 0.0006, 4, -323)(Energy()), volumes, energies),
             Murnaghan(
                 435.05782299050884,
                 0.00028297159355249787,
@@ -809,7 +809,7 @@ end
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan2nd(224, 0.0006, -323)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan2nd(224, 0.0006, -323)(Energy()), volumes, energies),
             BirchMurnaghan2nd(
                 430.10027687726716,
                 0.000302451215462375,
@@ -818,7 +818,7 @@ end
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan3rd(224, 0.0006, 4, -323)(Energy()), volumes, energies),
             BirchMurnaghan3rd(
                 432.67139080209046,
                 0.00030508544859901674,
@@ -828,7 +828,7 @@ end
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan4th(432, 0.0003, 3.8, -11773, -1201)(Energy()),
                 volumes,
                 energies,
@@ -843,7 +843,7 @@ end
             rtol = 1e-5,
         )
         @test _isapprox(
-            lsqfit(Vinet(432, 0.0003, 3.8, -1201)(Energy()), volumes, energies),
+            nonlinfit(Vinet(432, 0.0003, 3.8, -1201)(Energy()), volumes, energies),
             Vinet(
                 432.04609865398015,
                 0.0003137631070690569,
@@ -857,7 +857,7 @@ end
     @testset "with units" begin
         volumes = data[:, 1] .* u"bohr^3"
         energies = data[:, 2] .* u"Ry"
-        fitted_eos = lsqfit(
+        fitted_eos = nonlinfit(
             BirchMurnaghan3rd(224 * u"bohr^3", 0.0006 * u"Ry/bohr^3", 4, -323 * u"Ry")(Energy()),
             volumes,
             energies,
@@ -872,7 +872,7 @@ end
             ),
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan3rd(224 * u"bohr^3", 10 * u"GPa", 3.75, -161 * u"hartree")(Energy()),
                 volumes,
                 energies,
@@ -900,7 +900,7 @@ end
                 3.679199,
                 -7.410112 * u"hartree",
             ),
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan3rd(
                     128.319495 * u"bohr^3",
                     15.070313 * u"GPa",
@@ -920,7 +920,7 @@ end
                 -0.218486 * u"1/GPa",
                 -7.410326 * u"hartree",
             ),
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan4th(
                     128.319495 * u"bohr^3",
                     15.070313 * u"GPa",
@@ -943,7 +943,7 @@ end # testset
         volumes = data[:, 1]  # unit: bohr^3
         energies = data[:, 2]  # unit: Rydberg
         @test _isapprox(
-            lsqfit(Murnaghan(110, 0.01, 4, -34)(Energy()), volumes, energies),
+            nonlinfit(Murnaghan(110, 0.01, 4, -34)(Energy()), volumes, energies),
             Murnaghan(
                 124.88539638285143,
                 0.012047999390789954,
@@ -953,12 +953,12 @@ end # testset
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan2nd(124, 0.012, -34)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan2nd(124, 0.012, -34)(Energy()), volumes, energies),
             BirchMurnaghan2nd(124.60346122403192, 0.0119478059177848, -34.344520503316495);
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan3rd(110, 0.01, 4, -34)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan3rd(110, 0.01, 4, -34)(Energy()), volumes, energies),
             BirchMurnaghan3rd(
                 124.82366127014902,
                 0.011559181270548115,
@@ -968,7 +968,7 @@ end # testset
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan4th(124, 0.01, 4, -5300, -34)(Energy()),
                 volumes,
                 energies,
@@ -983,7 +983,7 @@ end # testset
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(Vinet(124, 0.01, 4, -34)(Energy()), volumes, energies),
+            nonlinfit(Vinet(124, 0.01, 4, -34)(Energy()), volumes, energies),
             Vinet(
                 124.78343088049905,
                 0.011244915521226076,
@@ -997,7 +997,7 @@ end # testset
     @testset "with units" begin
         volumes = data[:, 1] .* u"angstrom^3"
         energies = data[:, 2] .* u"Ry"
-        fitted_eos = lsqfit(
+        fitted_eos = nonlinfit(
             BirchMurnaghan3rd(
                 110 * u"angstrom^3",
                 0.01 * u"Ry/angstrom^3",
@@ -1017,7 +1017,7 @@ end # testset
             ),
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan3rd(124 * u"angstrom^3", 20 * u"GPa", 4, -17 * u"hartree")(Energy()),
                 volumes,
                 energies,
@@ -1039,7 +1039,7 @@ end
         volumes = data[:, 1]  # unit: bohr^3
         energies = data[:, 2]  # unit: Rydberg
         @test _isapprox(
-            lsqfit(Murnaghan(132, 0.01, 3.68, -14)(Energy()), volumes, energies),
+            nonlinfit(Murnaghan(132, 0.01, 3.68, -14)(Energy()), volumes, energies),
             Murnaghan(
                 132.9174710492377,
                 0.000997071972650323,
@@ -1049,12 +1049,12 @@ end
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan2nd(132, 0.01, -14)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan2nd(132, 0.01, -14)(Energy()), volumes, energies),
             BirchMurnaghan2nd(130.7191505712864, 0.000706623449967504, -14.817402887854884);
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan3rd(128, 0.03, 4, -14)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan3rd(128, 0.03, 4, -14)(Energy()), volumes, energies),
             BirchMurnaghan3rd(
                 126.49515516259525,
                 0.0010084167615290376,
@@ -1064,7 +1064,7 @@ end
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(BirchMurnaghan4th(128, 0.03, 4, -320, -14)(Energy()), volumes, energies),
+            nonlinfit(BirchMurnaghan4th(128, 0.03, 4, -320, -14)(Energy()), volumes, energies),
             BirchMurnaghan4th(
                 127.67097934611786,
                 0.001041910691949355,
@@ -1075,7 +1075,7 @@ end
             atol = 1e-3,
         )
         @test _isapprox(
-            lsqfit(Vinet(128, 0.03, 4, -14)(Energy()), volumes, energies),
+            nonlinfit(Vinet(128, 0.03, 4, -14)(Energy()), volumes, energies),
             Vinet(
                 124.71725873851614,
                 0.001064866793589798,
@@ -1089,7 +1089,7 @@ end
     @testset "with units" begin
         volumes = data[:, 1] .* u"bohr^3"
         energies = data[:, 2] .* u"Ry"
-        fitted_eos = lsqfit(
+        fitted_eos = nonlinfit(
             BirchMurnaghan3rd(128 * u"bohr^3", 0.03 * u"Ry/bohr^3", 4, -14 * u"Ry")(Energy()),
             volumes,
             energies,
@@ -1104,7 +1104,7 @@ end
             ),
         )
         @test _isapprox(
-            lsqfit(
+            nonlinfit(
                 BirchMurnaghan3rd(128 * u"bohr^3", 44 * u"GPa", 4, -14 * u"hartree")(Energy()),
                 volumes,
                 energies,

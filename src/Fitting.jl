@@ -9,7 +9,7 @@ using Unitful: AbstractQuantity, NoDims, upreferred, ustrip, unit, dimension, @u
 
 using ..Collections: PhysicalProperty, EquationOfState, PolynomialEOS
 
-export linfit, lsqfit
+export linfit, nonlinfit
 
 _islocalminimum(y, x, δx) = y(x) < y(x - δx) && y(x) < y(x + δx)
 
@@ -45,7 +45,7 @@ function linfit(volumes, energies, deg = 3)
 end # function linfit
 
 """
-    lsqfit(eos(prop), volumes, ydata; kwargs...)
+    nonlinfit(eos(prop), volumes, ydata; kwargs...)
 
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
@@ -61,14 +61,14 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 - `ydata`: an array of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
 - `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
-function lsqfit(f, volumes, ydata; kwargs...)
+function nonlinfit(f, volumes, ydata; kwargs...)
     eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
     params, volumes, ydata = _preprocess(eos, volumes, ydata)
     model = (x, p) -> map(T(p...)(property), x)
     fit = curve_fit(model, volumes, ydata, params; kwargs...)
     return _postprocess(T(fit.param...), eos)
-end # function lsqfit
+end # function nonlinfit
 
 struct _Data{S,T}
     data::T

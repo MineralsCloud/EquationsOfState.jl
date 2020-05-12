@@ -29,7 +29,7 @@ and types.
 ```@contents
 Pages = [
     "api/Collections.md",
-    "api/NonlinearFitting.md",
+    "api/Fitting.md",
     "api/Find.md",
     "portability.md",
     "interoperability.md",

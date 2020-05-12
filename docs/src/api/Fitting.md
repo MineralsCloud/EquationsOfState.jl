@@ -1,7 +1,7 @@
 # Nonlinear fitting
 
 ```@meta
-CurrentModule = EquationsOfState.NonlinearFitting
+CurrentModule = EquationsOfState.Fitting
 ```
 
 From Ref. 1,
@@ -27,11 +27,11 @@ for more information.
 
 ## Usage
 
-We provide API `lsqfit` currently.
+We provide API `nonlinfit` currently.
 
 ```julia
 using EquationsOfState.Collections
-using EquationsOfState.NonlinearFitting
+using EquationsOfState.Fitting
 
 volumes = [
     25.987454833,
@@ -94,16 +94,16 @@ energies = [
     -9.73155247952,
 ];
 
-julia> lsqfit(BirchMurnaghan3rd(40, 0.5, 4, 0)(Energy()), volumes, energies)
+julia> nonlinfit(BirchMurnaghan3rd(40, 0.5, 4, 0)(Energy()), volumes, energies)
 BirchMurnaghan3rd{Float64}(40.989265727925826, 0.5369258245608038, 4.1786442319302015, -10.842803908298968)
 
-julia> lsqfit(Murnaghan(41, 0.5, 4, 0)(Energy()), volumes, energies)
+julia> nonlinfit(Murnaghan(41, 0.5, 4, 0)(Energy()), volumes, energies)
 Murnaghan{Float64}(41.13757924894751, 0.5144967655882123, 3.912386317519504, -10.836794511015869)
 
-julia> lsqfit(PoirierTarantola3rd(41, 0.5, 4, 0)(Energy()), volumes, energies)
+julia> nonlinfit(PoirierTarantola3rd(41, 0.5, 4, 0)(Energy()), volumes, energies)
 PoirierTarantola3rd{Float64}(40.86770643567383, 0.5667729960008705, 4.331688934942696, -10.851486685029547)
 
-julia> lsqfit(Vinet(41, 0.5, 4, 0)(Energy()), volumes, energies)
+julia> nonlinfit(Vinet(41, 0.5, 4, 0)(Energy()), volumes, energies)
 Vinet{Float64}(40.91687567368755, 0.5493839427734198, 4.30519294991197, -10.846160810968053)
 ```
 
@@ -112,7 +112,7 @@ Then 4 different equations of state will be fitted.
 ## Public interfaces
 
 ```@autodocs
-Modules = [NonlinearFitting]
+Modules = [Fitting]
 Order   = [:type, :function]
 ```
 
