@@ -40,8 +40,7 @@ function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
     localminima = _findlocalminima(poly, volumes)
     v0, e0 = _findglobalminimum(poly, localminima)
-    p0 = Tuple(derivative(poly, n)(v0) / factorial(n) for n in 1:deg)
-    return PolynomialEOS(v0, p0, e0)
+    return PolynomialEOS(v0, [derivative(poly, n)(v0) / factorial(n) for n in 1:deg], e0)
 end # function linfit
 
 """
@@ -104,5 +103,7 @@ _upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
 
 Base.float(eos::EquationOfState) =
     constructorof(typeof(eos))(map(float, fieldvalues(eos))...)
+Base.float(eos::PolynomialEOS) =
+    constructorof(typeof(eos))(float(eos.v0), float.(eos.p0), float(eos.e0))
 
 end # module Fitting

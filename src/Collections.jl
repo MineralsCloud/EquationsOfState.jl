@@ -612,16 +612,17 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bâ€²0) = Shanker(v0, b0, bâ€
     p0::SVector{N,T}
     e0::T
 end
-function PolynomialEOS(v0, p0, e0)
+function PolynomialEOS(v0, p0::AbstractVector, e0)
     T = Base.promote_typeof(v0, p0..., e0)
     return PolynomialEOS{length(p0),T}(
         convert(T, v0),
-        Tuple(convert(T, x) for x in p0),
+        [convert(T, x) for x in p0],
         convert(T, e0),
     )
 end
-PolynomialEOS(v0::Real, p0::SVector{N,<:Real}) where {N} = PolynomialEOS(v0, p0, 0)
-PolynomialEOS(v0::AbstractQuantity, p0::SVector) = PolynomialEOS(v0, p0, 0 * u"eV")
+PolynomialEOS(v0::Real, p0::AbstractVector{<:Real}) = PolynomialEOS(v0, p0, 0)
+PolynomialEOS(v0::AbstractQuantity, p0::AbstractVector{<:AbstractQuantity}) =
+    PolynomialEOS(v0, p0, 0 * u"eV")
 # =================================== Types ================================== #
 
 # Energy evaluation

@@ -179,12 +179,12 @@ end
     @test typeof(PolynomialEOS(1.0, [1, 2, 3, 4])) === PolynomialEOS{4,Float64}
     @test typeof(PolynomialEOS(
         1 * u"nm^3",
-        (1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"),
+        [1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"],
         4 * u"eV",
     )) === PolynomialEOS{3,Quantity{Int}}
     @test typeof(PolynomialEOS(
         1 * u"nm^3",
-        (1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"),
+        [1 * u"eV/nm^3", 2, 3 * u"nm^3/eV"],
         4.0 * u"eV",
     )) === PolynomialEOS{3,Quantity{Float64}}
 end
