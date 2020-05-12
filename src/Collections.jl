@@ -827,13 +827,16 @@ else
         :BirchMurnaghan2nd,
         :BirchMurnaghan3rd,
         :BirchMurnaghan4th,
+        :BirchMurnaghan5th,
         :PoirierTarantola2nd,
         :PoirierTarantola3rd,
         :PoirierTarantola4th,
+        :PoirierTarantola5th,
         :Vinet,
         :AntonSchmidt,
         :BreenanStacey,
         :Shanker,
+        :PolynomialEOS,
     )
         eval(quote
             (eos::$T)(property::PhysicalProperty) = v -> _evaluate(eos, property, v)
