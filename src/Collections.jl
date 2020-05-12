@@ -8,6 +8,7 @@ module Collections
 using AutoHashEquals: @auto_hash_equals
 using IterTools: FieldValues, fieldvalues
 using LinearAlgebra: dot
+using StaticArrays: SVector
 using Unitful: AbstractQuantity, @u_str
 
 import Unitful
@@ -608,7 +609,7 @@ Shanker(v0::AbstractQuantity, b0::AbstractQuantity, bâ€²0) = Shanker(v0, b0, bâ€
 
 @auto_hash_equals struct PolynomialEOS{N,T} <: EquationOfState{T}
     v0::T
-    p0::NTuple{N,T}
+    p0::SVector{N,T}
     e0::T
 end
 function PolynomialEOS(v0, p0, e0)
@@ -619,8 +620,8 @@ function PolynomialEOS(v0, p0, e0)
         convert(T, e0),
     )
 end
-PolynomialEOS(v0::Real, p0::NTuple{N,Real}) where {N} = PolynomialEOS(v0, p0, 0)
-PolynomialEOS(v0::AbstractQuantity, p0::NTuple{N}) where {N} = PolynomialEOS(v0, p0, 0 * u"eV")
+PolynomialEOS(v0::Real, p0::SVector{N,<:Real}) where {N} = PolynomialEOS(v0, p0, 0)
+PolynomialEOS(v0::AbstractQuantity, p0::SVector) = PolynomialEOS(v0, p0, 0 * u"eV")
 # =================================== Types ================================== #
 
 # Energy evaluation
