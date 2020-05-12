@@ -4,13 +4,29 @@ pressure, energy, or bulk modulus with(out) units.
 """
 module Find
 
-using InteractiveUtils: subtypes
 using Roots:
     find_zero,
-    AbstractHalleyLikeMethod,
-    AbstractAlefeldPotraShi,
-    AbstractBisection,
-    AbstractSecant,
+    Halley,
+    Schroder,
+    Bisection,
+    BisectionExact,
+    FalsePosition,
+    A42,
+    AlefeldPotraShi,
+    Esser,
+    King,
+    KumarSinghAkanksha,
+    Order0,
+    Order16,
+    Order1B,
+    Order2,
+    Order2B,
+    Order5,
+    Order8,
+    Secant,
+    Steffensen,
+    Thukral16,
+    Thukral8,
     Brent,
     Newton
 using Unitful: AbstractQuantity, ustrip
@@ -46,7 +62,7 @@ function findvolume(f, y, x0, method)
     end
 end # function findvolume
 function findvolume(f, y, x0)
-    for T in [subtypes(AbstractBisection); subtypes(AbstractAlefeldPotraShi)]
+    for T in [Bisection, BisectionExact, FalsePosition, A42, AlefeldPotraShi]
         @info("using method `$T`...")
         try
             # `maximum` and `minimum` also works with `AbstractQuantity`s.
@@ -57,10 +73,24 @@ function findvolume(f, y, x0)
         end
     end
     for T in [
-        Brent
-        subtypes(AbstractHalleyLikeMethod)
-        Newton
-        subtypes(AbstractSecant)
+        Brent,
+        Halley,
+        Schroder,
+        Newton,
+        Esser,
+        King,
+        KumarSinghAkanksha,
+        Order0,
+        Order16,
+        Order1B,
+        Order2,
+        Order2B,
+        Order5,
+        Order8,
+        Secant,
+        Steffensen,
+        Thukral16,
+        Thukral8,
     ]
         @info("using method `$T`...")
         try
