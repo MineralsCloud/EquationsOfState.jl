@@ -64,33 +64,27 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 function nonlinfit(f, volumes, ydata; kwargs...)
     eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
-    params, volumes, ydata =
-        _preprocess(_Data(float(eos)), _Data(float(volumes)), _Data(float(ydata)))
+    params, volumes, ydata = _preprocess(float(eos), float(volumes), float(ydata))
     model = (x, p) -> map(T(p...)(property), x)
     fit = curve_fit(model, volumes, ydata, params; kwargs...)
-    return _postprocess(T(fit.param...), _Data(eos))
+    return _postprocess(T(fit.param...), eos)
 end # function nonlinfit
 
-struct _Data{S,T}
-    data::T
-end
-_Data(data::T) where {T} = _Data{eltype(data),T}(data)
-
-_preprocess(eos, xdata, ydata) = (eos, xdata, ydata)
+_preprocess(eos, xdata, ydata) = (collect(fieldvalues(eos)), xdata, ydata)
 function _preprocess(
-    eos::_Data{<:AbstractQuantity},
-    xdata::_Data{<:AbstractQuantity},
-    ydata::_Data{<:AbstractQuantity},
+    eos::EquationOfState{<:AbstractQuantity},
+    xdata::AbstractArray{<:AbstractQuantity},
+    ydata::AbstractArray{<:AbstractQuantity},
 )
-    values = fieldvalues(eos.data)
+    values = fieldvalues(eos)
     original_units = unit.(values)  # Keep a record of `eos`'s units
-    return map(_ustrip, (values, xdata.data, ydata.data))  # Convert to preferred units and strip the unit
+    return _ustrip.(values), _ustrip.(xdata), _ustrip.(ydata)  # Convert to preferred then and strip the unit
 end # function _preprocess
 
-_postprocess(eos, trial_eos::_Data{<:Real}) = eos
-function _postprocess(eos, trial_eos::_Data{<:AbstractQuantity})
-    T = constructorof(typeof(trial_eos.data))  # Get the `UnionAll` type
-    original_units = unit.(fieldvalues(trial_eos.data))  # Keep a record of `eos`'s units
+_postprocess(eos, args...) = eos
+function _postprocess(eos, trial_eos::EquationOfState{<:AbstractQuantity})
+    T = constructorof(typeof(trial_eos))  # Get the `UnionAll` type
+    original_units = unit.(fieldvalues(trial_eos))  # Keep a record of `eos`'s units
     return T((
         x * _upreferred(dimension(u)) |> u for
         (x, u) in zip(fieldvalues(eos), original_units)
