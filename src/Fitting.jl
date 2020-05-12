@@ -64,10 +64,10 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 function nonlinfit(f, volumes, ydata; kwargs...)
     eos, property = fieldvalues(f)
     T = constructorof(typeof(eos))  # Get the `UnionAll` type
-    params, volumes, ydata = _preprocess(eos, volumes, ydata)
+    params, volumes, ydata = _preprocess(_Data(eos), _Data(volumes), _Data(ydata))
     model = (x, p) -> map(T(p...)(property), x)
     fit = curve_fit(model, volumes, ydata, params; kwargs...)
-    return _postprocess(T(fit.param...), eos)
+    return _postprocess(T(fit.param...), _Data(eos))
 end # function nonlinfit
 
 struct _Data{S,T}
@@ -75,7 +75,6 @@ struct _Data{S,T}
 end
 _Data(data::T) where {T} = _Data{eltype(data),T}(data)
 
-_preprocess(eos, xdata, ydata) = _preprocess(_Data(eos), _Data(xdata), _Data(ydata))  # Holy trait
 _preprocess(eos::_Data{<:Real}, xdata::_Data{<:Real}, ydata::_Data{<:Real}) =
     float.(fieldvalues(eos.data)), float(xdata.data), float(ydata.data)
 function _preprocess(
@@ -89,7 +88,6 @@ function _preprocess(
     return map(f, (values, xdata.data, ydata.data))
 end # function _preprocess
 
-_postprocess(eos, trial_eos) = _postprocess(eos, _Data(trial_eos))  # Holy trait
 _postprocess(eos, trial_eos::_Data{<:Real}) = eos
 function _postprocess(eos, trial_eos::_Data{<:AbstractQuantity})
     T = constructorof(typeof(trial_eos.data))  # Get the `UnionAll` type
