@@ -19,8 +19,8 @@ function _findlocalminima(y)
     return [x for x in pool if _islocalminimum(y, x)]
 end # function _findlocalminima
 
-_findglobalminimum(y) = _findglobalminimum(y, _findlocalminima(y))
-function _findglobalminimum(y, localminima)
+_findminimum(y) = _findminimum(y, _findlocalminima(y))
+function _findminimum(y, localminima)  # Find the minimal in the minima
     # https://stackoverflow.com/a/21367608/3260253
     if isempty(localminima)
         error("no real local minima found!")  # For some polynomials, could be all complex
@@ -29,11 +29,11 @@ function _findglobalminimum(y, localminima)
         x0 = localminima[i]
         return x0, y0
     end
-end # function _findglobalminimum
+end # function _findminimum
 
 function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
-    v0, e0 = _findglobalminimum(poly)
+    v0, e0 = _findminimum(poly)
     return PolynomialEOS(v0, [derivative(poly, n)(v0) / factorial(n) for n in 1:deg], e0)
 end # function linfit
 
