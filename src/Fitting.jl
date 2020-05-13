@@ -7,7 +7,7 @@ using Polynomials: Polynomial, fit, derivative, coeffs
 using PolynomialRoots: roots
 using Unitful: AbstractQuantity, NoDims, upreferred, ustrip, unit, dimension, @u_str
 
-using ..Collections: PhysicalProperty, EquationOfState, PolynomialEOS
+using ..Collections: EquationStyle, EquationOfState, PolynomialEOS
 
 export linfit, nonlinfit
 
@@ -38,7 +38,7 @@ function linfit(volumes, energies, deg = 3)
 end # function linfit
 
 """
-    nonlinfit(eos(prop), volumes, ydata; kwargs...)
+    nonlinfit(f, volumes, ydata; kwargs...)
 
 Fit an equation of state using least-squares fitting method (with the Levenberg-Marquardt algorithm).
 
@@ -49,16 +49,16 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 
 # Arguments
 - `eos::EquationOfState`: a trial equation of state. If it has units, `volumes` and `ydata` must also have.
-- `prop::PhysicalProperty`: a `PhysicalProperty` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
+- `prop::EquationStyle`: a `EquationStyle` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
 - `volumes`: an array of volumes (``V``), with(out) units.
 - `ydata`: an array of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
 - `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
-function nonlinfit(f, volumes, ydata; kwargs...)
-    eos, property = fieldvalues(f)
-    T = constructorof(typeof(eos))  # Get the `UnionAll` type
-    params, volumes, ydata = _preprocess(float(eos), float(volumes), float(ydata))
-    model = (x, p) -> map(T(p...)(property), x)
+function nonlinfit(f::EquationStyle, xs, ys; kwargs...)
+    eos = f.eos
+    S, T = map(constructorof ∘ typeof, (f, eos))  # Get the `UnionAll` type
+    params, volumes, ydata = _preprocess(float(eos), float(xs), float(ys))
+    @. model(x, p) = S(T(p...))(x)
     fit = curve_fit(model, volumes, ydata, params; kwargs...)
     return _postprocess(T(fit.param...), eos)
 end # function nonlinfit
