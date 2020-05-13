@@ -7,7 +7,7 @@ using Polynomials: Polynomial, fit, derivative, coeffs
 using PolynomialRoots: roots
 using Unitful: AbstractQuantity, NoDims, upreferred, ustrip, unit, dimension, @u_str
 
-using ..Collections: EquationStyle, EquationOfState, PolynomialEOS
+using ..Collections: EquationOfState, EOSParameters, PolynomialEOS
 
 export linfit, nonlinfit
 
@@ -48,34 +48,33 @@ If `eos`, `volumes` and `ydata` are all unitless, `volumes` must have the same u
 `v0 / e0`, etc. Use with care. Better to use the `Unitful` version.
 
 # Arguments
-- `eos::EquationOfState`: a trial equation of state. If it has units, `volumes` and `ydata` must also have.
-- `prop::EquationStyle`: a `EquationStyle` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
+- `eos::EOSParameters`: a trial equation of state. If it has units, `volumes` and `ydata` must also have.
+- `prop::EquationOfState`: an `EquationOfState` instance. If `Energy`, fit ``E(V)``; if `Pressure`, fit ``P(V)``; if `BulkModulus`, fit ``B(V)``.
 - `volumes`: an array of volumes (``V``), with(out) units.
 - `ydata`: an array of energies (``E``), pressures (``P``), or bulk moduli (``B``), with(out) units. It must be consistent with `prop`.
 - `kwargs`: the rest keyword arguments are the same as that of `LsqFit.curve_fit`. See its [documentation](https://github.com/JuliaNLSolvers/LsqFit.jl/blob/master/README.md) and [tutorial](https://julianlsolvers.github.io/LsqFit.jl/latest/tutorial/).
 """
-function nonlinfit(f::EquationStyle, xs, ys; kwargs...)
-    eos = f.eos
-    S, T = map(constructorof ∘ typeof, (f, eos))  # Get the `UnionAll` type
-    params, volumes, ydata = _preprocess(float(eos), float(xs), float(ys))
+function nonlinfit(eos::EquationOfState, xs, ys; kwargs...)
+    S, T = map(constructorof ∘ typeof, (eos, eos.params))  # Get the `UnionAll` type
+    params, xs, ys = _preprocess(float(eos.params), float(xs), float(ys))
     @. model(x, p) = S(T(p...))(x)
-    fit = curve_fit(model, volumes, ydata, params; kwargs...)
-    return _postprocess(T(fit.param...), eos)
+    fit = curve_fit(model, xs, ys, params; kwargs...)
+    return _postprocess(T(fit.param...), params)
 end # function nonlinfit
 
-_preprocess(eos, xdata, ydata) = (collect(fieldvalues(eos)), xdata, ydata)
+_preprocess(params, xs, ys) = (collect(fieldvalues(params)), xs, ys)
 function _preprocess(
-    eos::EquationOfState{<:AbstractQuantity},
-    xdata::AbstractArray{<:AbstractQuantity},
-    ydata::AbstractArray{<:AbstractQuantity},
+    params::EOSParameters{<:AbstractQuantity},
+    xs::AbstractArray{<:AbstractQuantity},
+    ys::AbstractArray{<:AbstractQuantity},
 )
-    values = fieldvalues(eos)
+    values = fieldvalues(params)
     original_units = unit.(values)  # Keep a record of `eos`'s units
-    return _ustrip.(values), _ustrip.(xdata), _ustrip.(ydata)  # Convert to preferred then and strip the unit
+    return _ustrip.(values), _ustrip.(xs), _ustrip.(ys)  # Convert to preferred then and strip the unit
 end # function _preprocess
 
 _postprocess(eos, args...) = eos
-function _postprocess(eos, trial_eos::EquationOfState{<:AbstractQuantity})
+function _postprocess(eos, trial_eos::EOSParameters{<:AbstractQuantity})
     T = constructorof(typeof(trial_eos))  # Get the `UnionAll` type
     original_units = unit.(fieldvalues(trial_eos))  # Keep a record of `eos`'s units
     return T((
@@ -95,7 +94,7 @@ _upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
 _upreferred(::typeof(dimension(u"1/Pa"))) = u"angstrom^3/eV"
 _upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
 
-Base.float(eos::EquationOfState) =
+Base.float(eos::EOSParameters) =
     constructorof(typeof(eos))(map(float, fieldvalues(eos))...)
 Base.float(eos::PolynomialEOS) =
     constructorof(typeof(eos))(float(eos.v0), float.(eos.p0), float(eos.e0))
