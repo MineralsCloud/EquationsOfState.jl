@@ -1,9 +1,17 @@
 module LinearFitting
 
+using Polynomials: Polynomial
 using Test
 
 using EquationsOfState.Collections: PolynomialEOS
-using EquationsOfState.Fitting: linfit
+using EquationsOfState.Fitting: linfit, _findminimum
+
+@testset "Test finding global minimum" begin
+    @test collect(_findminimum(Polynomial([0, -7, 3, 0, 2]))) ≈
+          [0.7031437899802673, -2.949888113314682]
+    @test collect(_findminimum(Polynomial([2, -√3, 5 * √2]))) ≈ [0.1224744871391589, 1.8939339828220179]
+    @test_throws ErrorException _findminimum(Polynomial([2, √3, -5 * √2]))
+end # testset
 
 @testset "Si data from Cormac from pymatgen" begin
     volumes = [
