@@ -11,21 +11,16 @@ using ..Collections: PhysicalProperty, EquationOfState, PolynomialEOS
 
 export linfit, nonlinfit
 
-_islocalminimum(y, x, δx) = y(x) < y(x - δx) && y(x) < y(x + δx)
+_islocalminimum(y, x) = derivative(y, 2)(x) > 0  # If 2nd derivative at `x > 0`, `x` is a local minimum.
 
-function _findlocalminima(y, xs)
+function _findlocalminima(y)
     y′ = derivative(y, 1)
-    δx = minimum(diff(xs)) / 10
-    localminima = eltype(xs)[]
-    for x in real(filter(isreal, roots(coeffs(y′))))  # Complex volumes are meaningless
-        if _islocalminimum(y, x, δx)
-            push!(localminima, x)
-        end
-    end
-    return localminima
+    pool = real(filter(isreal, roots(coeffs(y′))))  # Complex volumes are meaningless
+    return [x for x in pool if _islocalminimum(y, x)]
 end # function _findlocalminima
 
-function _findglobalminimum(y, localminima)
+_findminimum(y) = _findminimum(y, _findlocalminima(y))
+function _findminimum(y, localminima)  # Find the minimal in the minima
     # https://stackoverflow.com/a/21367608/3260253
     if isempty(localminima)
         error("no real local minima found!")  # For some polynomials, could be all complex
@@ -34,12 +29,11 @@ function _findglobalminimum(y, localminima)
         x0 = localminima[i]
         return x0, y0
     end
-end # function _findglobalminimum
+end # function _findminimum
 
 function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
-    localminima = _findlocalminima(poly, volumes)
-    v0, e0 = _findglobalminimum(poly, localminima)
+    v0, e0 = _findminimum(poly)
     return PolynomialEOS(v0, [derivative(poly, n)(v0) / factorial(n) for n in 1:deg], e0)
 end # function linfit
 
