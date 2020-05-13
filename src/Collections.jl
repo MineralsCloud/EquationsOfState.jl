@@ -818,20 +818,10 @@ function (f::BulkModulusStyle{<:Shanker})(v)
     x = v / v0
     y = 1 - x
     t = b′0 - 8 / 3
-    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * pressureof(f.eos)(v)
+    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * PressureStyle(f.eos)(v)
 end
 
 Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
 Base.eltype(::Type{<:EquationOfState{T}}) where {T} = T
-
-function Base.getproperty(eos::EquationOfState, name::Symbol)
-    if name ∈ (:bp0, :bd0)
-        return getfield(eos, :b′0)
-    elseif name ∈ (:bpp0, :bdd0)
-        return getfield(eos, :b′′0)
-    else
-        return getfield(eos, name)
-    end
-end
 
 end
