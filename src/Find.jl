@@ -31,8 +31,6 @@ using Roots:
     Newton
 using Unitful: AbstractQuantity, ustrip
 
-using ..Collections: PhysicalProperty
-
 export findvolume
 
 """
