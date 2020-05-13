@@ -76,12 +76,12 @@ using EquationsOfState.Find
     isapprox(
         map(energies) do e
             findvolume(
-                BirchMurnaghan3rd(
+                EnergyEquation(BirchMurnaghan3rd(
                     40.98926572528106 * u"angstrom^3",
                     0.5369258245417454 * u"eV/angstrom^3",
                     4.178644235500821,
                     -10.842803908240892 * u"eV",
-                )(Energy()),
+                )),
                 e,
                 (eps(), 100) .* u"angstrom^3";
                 silent = true,
@@ -95,12 +95,9 @@ end
     pressures = collect(0:20:200) .* u"GPa"
     eos = BirchMurnaghan3rd(167 * u"angstrom^3", 2600 * u"kbar", 4.0)
     volumes = map(pressures) do p
-        findvolume(eos(Pressure()), p, (eps(1.0 * u"bohr^3"), eos.v0 * 1.3); silent = true)
+        findvolume(PressureEquation(eos), p, (eps(1.0 * u"bohr^3"), eos.v0 * 1.3); silent = true)
     end
-    @test isapprox(
-        map(eos(Pressure()), volumes),
-        pressures,
-    )
+    @test isapprox(map(PressureEquation(eos), volumes), pressures)
 end # testset
 
 end # module Find

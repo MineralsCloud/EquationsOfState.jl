@@ -40,7 +40,7 @@ export findvolume
 Find a volume which leads to the given pressure, energy, or bulk modulus based on an `eos`.
 
 # Arguments
-- `eos::EquationOfState`: an equation of state. If it has units, `y` and `x0` must also have.
+- `eos::EOSParameters`: an equation of state. If it has units, `y` and `x0` must also have.
 - `prop::PhysicalProperty`: a `PhysicalProperty` instance.
 - `y`: a pressure, energy, or bulk modulus.
 - `x0`: can be either a range of volumes (`Vector`, `Tuple`, etc.) or just a single volume.
