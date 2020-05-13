@@ -13,10 +13,7 @@ using Unitful: AbstractQuantity, @u_str
 
 import Unitful
 
-export Energy,
-    Pressure,
-    BulkModulus,
-    Murnaghan,
+export Murnaghan,
     BirchMurnaghan2nd,
     BirchMurnaghan3rd,
     BirchMurnaghan4th,
@@ -29,16 +26,16 @@ export Energy,
     AntonSchmidt,
     BreenanStacey,
     Shanker,
-    PolynomialEOS
+    PolynomialEOS,
+    EnergyStyle,
+    PressureStyle,
+    BulkModulusStyle
 
-# ============================================================================ #
-#                                     Types                                    #
-# ============================================================================ #
-abstract type PhysicalProperty end
+abstract type EquationStyle{T} end
 """
-    Energy()
-    (::EquationOfState)(::Energy)(v)
-    (::EquationOfState)(::Energy)
+    EnergyStyle()
+    (::EquationOfState)(::EnergyStyle)(v)
+    (::EquationOfState)(::EnergyStyle)
 
 Return the energy of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
@@ -47,7 +44,7 @@ Return a [function-like object](https://docs.julialang.org/en/v1/manual/methods/
 
 # Examples
 ```jldoctest
-julia> f = Vinet(1, 2, 3)(Energy());
+julia> f = Vinet(1, 2, 3)(EnergyStyle());
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -69,7 +66,7 @@ In most cases, the Julia [`do` block syntax](http://docs.julialang.org/en/v1/bas
 is preferred:
 ```jldoctest
 julia> map(1:1:10) do v
-           Vinet(1, 2, 3)(Energy())(v)
+           Vinet(1, 2, 3)(EnergyStyle())(v)
        end
 10-element Array{Float64,1}:
  0.0
@@ -84,18 +81,20 @@ julia> map(1:1:10) do v
  1.7203642945516917
 ```
 """
-struct Energy <: PhysicalProperty end
+struct EnergyStyle{T} <: EquationStyle{T}
+    eos::T
+end
 """
-    Pressure()
-    (::EquationOfState)(::Pressure)(v)
-    (::EquationOfState)(::Pressure)
+    PressureStyle()
+    (::EquationOfState)(::PressureStyle)(v)
+    (::EquationOfState)(::PressureStyle)
 
 Return the pressure of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 
 # Examples
 ```jldoctest
-julia> f = Vinet(1, 2, 3)(Pressure());
+julia> f = Vinet(1, 2, 3)(PressureStyle());
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -111,18 +110,20 @@ julia> map(f, 1:1:10)
  -0.04674768462396211
 ```
 """
-struct Pressure <: PhysicalProperty end
+struct PressureStyle{T} <: EquationStyle{T}
+    eos::T
+end
 """
-    BulkModulus()
-    (::EquationOfState)(::BulkModulus)(v)
-    (::EquationOfState)(::BulkModulus)
+    BulkModulusStyle()
+    (::EquationOfState)(::BulkModulusStyle)(v)
+    (::EquationOfState)(::BulkModulusStyle)
 
 Return the bulk modulus of an `EquationOfState` on volume `v`. If `eos` has units,
 `v` must also has.
 
 # Examples
 ```jldoctest
-julia> f = BirchMurnaghan3rd(1, 2, 3)(BulkModulus());
+julia> f = BirchMurnaghan3rd(1, 2, 3)(BulkModulusStyle());
 
 julia> map(f, 1:1:10)
 10-element Array{Float64,1}:
@@ -138,7 +139,9 @@ julia> map(f, 1:1:10)
  0.03808959181078831
 ```
 """
-struct BulkModulus <: PhysicalProperty end
+struct BulkModulusStyle{T} <: EquationStyle{T}
+    eos::T
+end
 
 """
     EquationOfState{T}
@@ -623,32 +626,31 @@ end
 PolynomialEOS(v0::Real, p0::AbstractVector{<:Real}) = PolynomialEOS(v0, p0, 0)
 PolynomialEOS(v0::AbstractQuantity, p0::AbstractVector{<:AbstractQuantity}) =
     PolynomialEOS(v0, p0, 0 * u"eV")
-# =================================== Types ================================== #
 
-# Energy evaluation
-function _evaluate(eos::Murnaghan, ::Energy, v)
-    v0, b0, b′0, e0 = fieldvalues(eos)
+# EnergyStyle evaluation
+function (f::EnergyStyle{<:Murnaghan})(v)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
     x, y = b′0 - 1, (v0 / v)^b′0
     return e0 + b0 / b′0 * v * (y / x + 1) - v0 * b0 / x
 end
-function _evaluate(eos::BirchMurnaghan2nd, ::Energy, v)
-    v0, b0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:BirchMurnaghan2nd})(v)
+    v0, b0, e0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return e0 + 9 / 2 * b0 * v0 * f^2
 end
-function _evaluate(eos::BirchMurnaghan3rd, ::Energy, v)
-    v0, b0, b′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:BirchMurnaghan3rd})(v)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
     x = cbrt(v0 / v)
     y = x^2 - 1
     return e0 + 9 / 16 * b0 * v0 * y^2 * (6 - 4 * x^2 + b′0 * y)
 end
-function _evaluate(eos::BirchMurnaghan4th, ::Energy, v)
-    v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:BirchMurnaghan4th})(v)
+    v0, b0, b′0, b′′0, e0 = fieldvalues(f.eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
     return e0 + 3 / 8 * v0 * b0 * f^2 * ((9h - 63b′0 + 143) * f^2 + 12f * (b′0 - 4) + 12)
 end
-function _evaluate(eos::BirchMurnaghan5th, ::Energy, v)
-    v0, b0, b′0, b′′0, b′′′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:BirchMurnaghan5th})(v)
+    v0, b0, b′0, b′′0, b′′′0, e0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     c2 = 9 / 2 * b0 * v0
     c3 = c2 * (b′0 - 4)
@@ -660,24 +662,24 @@ function _evaluate(eos::BirchMurnaghan5th, ::Energy, v)
         ) / (180 * c2^2) + b′′′0 * c2^3 / (45 * v0^2)
     return e0 + f^2 * (f * (f * (f * c5 + c4) + c3) + c2)
 end
-function _evaluate(eos::PoirierTarantola2nd, ::Energy, v)
-    v0, b0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:PoirierTarantola2nd})(v)
+    v0, b0, e0 = fieldvalues(f.eos)
     return e0 + b0 / 2 * v0 * cbrt(log(v / v0))^2
 end
-function _evaluate(eos::PoirierTarantola3rd, ::Energy, v)
-    v0, b0, b′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:PoirierTarantola3rd})(v)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
     x = log(v0 / v)
     return e0 + b0 * v0 / 6 * x^2 * ((b′0 - 2) * x + 3)
 end
-function _evaluate(eos::PoirierTarantola4th, ::Energy, v)
-    v0, b0, b′0, b′′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:PoirierTarantola4th})(v)
+    v0, b0, b′0, b′′0, e0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * b′′0 + b′0^2
     return e0 + b0 / 24v0 * xi^2 * ((h + 3b′0 + 3) * xi^2 + 4 * (b′0 + 2) * xi + 12)
 end
-function _evaluate(eos::PoirierTarantola5th, ::Energy, v)
-    v0, b0, b′0, b′′0, b′′′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:PoirierTarantola5th})(v)
+    v0, b0, b′0, b′′0, b′′′0, e0 = fieldvalues(f.eos)
     f = log(v / v0) / 3
     c = 9 / 2 * b0 * v0
     d = c * (2 - b′0)
@@ -689,75 +691,75 @@ function _evaluate(eos::PoirierTarantola5th, ::Energy, v)
         ) / (180 * (c * v0)^2)
     return e0 + f^2 * (f * (f * (f * g + ee) + d) + c)
 end
-function _evaluate(eos::Vinet, ::Energy, v)
-    v0, b0, b′0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:Vinet})(v)
+    v0, b0, b′0, e0 = fieldvalues(f.eos)
     x, y = 1 - cbrt(v / v0), 3 / 2 * (b′0 - 1)
     return e0 + 9b0 * v0 / y^2 * (1 + (x * y - 1) * exp(x * y))
 end
-function _evaluate(eos::AntonSchmidt, ::Energy, v)
-    v0, β, n, e∞ = fieldvalues(eos)
+function (f::EnergyStyle{<:AntonSchmidt})(v)
+    v0, β, n, e∞ = fieldvalues(f.eos)
     x, η = v / v0, n + 1
     return e∞ + β * v0 / η * x^η * (log(x) - 1 / η)
 end
-function _evaluate(eos::PolynomialEOS{N}, ::Energy, v) where {N}
-    v0, p0, e0 = fieldvalues(eos)
+function (f::EnergyStyle{<:PolynomialEOS{N}})(v) where {N}
+    v0, p0, e0 = fieldvalues(f.eos)
     return e0 + dot(p0, (v - v0)^n for n in 1:N)  # It cannot be `v0 - v`!
 end # function _evaluate
-# Pressure evaluation
-function _evaluate(eos::Murnaghan, ::Pressure, v)
-    v0, b0, b′0 = fieldvalues(eos)
+# PressureStyle evaluation
+function (f::PressureStyle{<:Murnaghan})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     return b0 / b′0 * ((v0 / v)^b′0 - 1)
 end
-function _evaluate(eos::BirchMurnaghan2nd, ::Pressure, v)
-    v0, b0 = fieldvalues(eos)
+function (f::PressureStyle{<:BirchMurnaghan2nd})(v)
+    v0, b0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return 3b0 * f * (1 + 2f)^(5 / 2)
 end
-function _evaluate(eos::BirchMurnaghan3rd, ::Pressure, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::PressureStyle{<:BirchMurnaghan3rd})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = cbrt(v0 / v)
     return 3 / 2 * b0 * (x^7 - x^5) * (1 + 3 / 4 * (b′0 - 4) * (x^2 - 1))
 end
-function _evaluate(eos::BirchMurnaghan4th, ::Pressure, v)
-    v0, b0, b′0, b′′0 = fieldvalues(eos)
+function (f::PressureStyle{<:BirchMurnaghan4th})(v)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((9h - 63b′0 + 143) * f^2 + 9f * (b′0 - 4) + 6)
 end
-function _evaluate(eos::PoirierTarantola2nd, ::Pressure, v)
-    v0, b0 = fieldvalues(eos)
+function (f::PressureStyle{<:PoirierTarantola2nd})(v)
+    v0, b0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     return -b0 / x * log(x)
 end
-function _evaluate(eos::PoirierTarantola3rd, ::Pressure, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::PressureStyle{<:PoirierTarantola3rd})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v0 / v
     ξ = log(x)
     return b0 * x * ξ * (1 + (b′0 - 2) / 2 * ξ)
 end
-function _evaluate(eos::PoirierTarantola4th, ::Pressure, v)
-    v0, b0, b′0, b′′0 = fieldvalues(eos)
+function (f::PressureStyle{<:PoirierTarantola4th})(v)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * b′′0 + b′0^2
     return -b0 * xi / 6 / x * ((h + 3b′0 + 3) * xi^2 + 3xi * (b′0 + 6) + 6)
 end
-function _evaluate(eos::Vinet, ::Pressure, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::PressureStyle{<:Vinet})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x, y = cbrt(v / v0), 3 // 2 * (b′0 - 1)
     return 3b0 / x^2 * (1 - x) * exp(y * (1 - x))
 end
-function _evaluate(eos::AntonSchmidt, ::Pressure, v)
-    v0, β, n = fieldvalues(eos)
+function (f::PressureStyle{<:AntonSchmidt})(v)
+    v0, β, n = fieldvalues(f.eos)
     x = v / v0
     return -β * x^n * log(x)
 end
-function _evaluate(eos::BreenanStacey, ::Pressure, v)
-    v0, b0, γ0 = fieldvalues(eos)
+function (f::PressureStyle{<:BreenanStacey})(v)
+    v0, b0, γ0 = fieldvalues(f.eos)
     x = v0 / v
     return b0 / 2 / γ0 * x^(4 / 3) * (exp(2γ0 * (1 - x)) - 1)
 end
-function _evaluate(eos::Shanker, ::Pressure, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::PressureStyle{<:Shanker})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     y = 1 - x
     t = b′0 - 8 / 3
@@ -765,84 +767,58 @@ function _evaluate(eos::Shanker, ::Pressure, v)
            ((1 - 1 / t + 2 / t^2) * exp(t * y - 1) + y * (1 + y - 2 / t) * exp(t * y))
 end
 # Bulk modulus evaluation
-function _evaluate(eos::BirchMurnaghan2nd, ::BulkModulus, v)
-    v0, b0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:BirchMurnaghan2nd})(v)
+    v0, b0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 * (7f + 1) * (2f + 1)^(5 / 2)
 end
-function _evaluate(eos::BirchMurnaghan3rd, ::BulkModulus, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:BirchMurnaghan3rd})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     f = (cbrt(v0 / v)^2 - 1) / 2
     return b0 / 2 * (2f + 1)^(5 / 2) * ((27 * f^2 + 6f) * (b′0 - 4) - 4f + 2)
 end
-function _evaluate(eos::BirchMurnaghan4th, ::BulkModulus, v)
-    v0, b0, b′0, b′′0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:BirchMurnaghan4th})(v)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
     f, h = (cbrt(v0 / v)^2 - 1) / 2, b0 * b′′0 + b′0^2
     return b0 / 6 *
            (2f + 1)^(5 / 2) *
            ((99h - 693b′0 + 1573) * f^3 + (27h - 108b′0 + 105) * f^2 + 6f * (3b′0 - 5) + 6)
 end
-function _evaluate(eos::PoirierTarantola2nd, ::BulkModulus, v)
-    v0, b0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:PoirierTarantola2nd})(v)
+    v0, b0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     return b0 / x * (1 - log(x))
 end
-function _evaluate(eos::PoirierTarantola3rd, ::BulkModulus, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:PoirierTarantola3rd})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     xi = log(x)
     return -b0 / 2x * (((b′0 - 2) * xi + 2 - 2b′0) * xi + 2)
 end
-function _evaluate(eos::PoirierTarantola4th, ::BulkModulus, v)
-    v0, b0, b′0, b′′0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:PoirierTarantola4th})(v)
+    v0, b0, b′0, b′′0 = fieldvalues(f.eos)
     x = cbrt(v / v0)
     xi = log(x)
     h = b0 * b′′0 + b′0^2
     return -b0 / (6x) *
            ((h + 3b′0 + 3) * xi^3 - 3 * xi^2 * (h + 2b′0 + 1) - 6xi * (b′0 + 1) - 6)
 end
-function _evaluate(eos::Vinet, ::BulkModulus, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:Vinet})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x, xi = cbrt(v / v0), 3 / 2 * (b′0 - 1)
     return -b0 / (2 * x^2) * (3x * (x - 1) * (b′0 - 1) + 2 * (x - 2)) * exp(-xi * (x - 1))
 end
-function _evaluate(eos::AntonSchmidt, ::BulkModulus, v)
-    v0, β, n = fieldvalues(eos)
+function (f::BulkModulusStyle{<:AntonSchmidt})(v)
+    v0, β, n = fieldvalues(f.eos)
     x = v / v0
     return β * x^n * (1 + n * log(x))
 end
-function _evaluate(eos::Shanker, ::BulkModulus, v)
-    v0, b0, b′0 = fieldvalues(eos)
+function (f::BulkModulusStyle{<:Shanker})(v)
+    v0, b0, b′0 = fieldvalues(f.eos)
     x = v / v0
     y = 1 - x
     t = b′0 - 8 / 3
-    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * eos(Pressure())(v)
-end
-
-# Miscellaneous
-if VERSION >= v"1.3"
-    (eos::EquationOfState)(property::PhysicalProperty) = v -> _evaluate(eos, property, v)
-else
-    for T in (
-        :Murnaghan,
-        :BirchMurnaghan2nd,
-        :BirchMurnaghan3rd,
-        :BirchMurnaghan4th,
-        :BirchMurnaghan5th,
-        :PoirierTarantola2nd,
-        :PoirierTarantola3rd,
-        :PoirierTarantola4th,
-        :PoirierTarantola5th,
-        :Vinet,
-        :AntonSchmidt,
-        :BreenanStacey,
-        :Shanker,
-        :PolynomialEOS,
-    )
-        eval(quote
-            (eos::$T)(property::PhysicalProperty) = v -> _evaluate(eos, property, v)
-        end)
-    end  # Julia 1.0-1.2 does not support adding methods to abstract types.
+    return b0 / cbrt(x) * (1 + y + y^2) * exp(t * y) + 4 / 3 * pressureof(f.eos)(v)
 end
 
 Base.eltype(::FieldValues{<:EquationOfState{T}}) where {T} = T
