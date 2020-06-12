@@ -822,7 +822,8 @@ function (f::BulkModulusEquation{<:Shanker})(v)
 end
 
 Base.eltype(::FieldValues{<:EOSParameters{T}}) where {T} = T
-Base.eltype(::Type{<:EOSParameters{T}}) where {T} = T
+# See https://docs.julialang.org/en/latest/manual/methods/#Extracting-the-type-parameter-from-a-super-type-1
+Base.eltype(::Type{<:EOSParameters{T}}) where {T} = T  # Use triangular dispatch
 
 function Base.show(io::IO, eos::EOSParameters)  # Ref: https://github.com/mauro3/Parameters.jl/blob/3c1d72b/src/Parameters.jl#L542-L549
     if get(io, :compact, false)
