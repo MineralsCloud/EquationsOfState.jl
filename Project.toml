@@ -21,6 +21,7 @@ IterTools = "1.2, 1.3"
 LsqFit = "0.8, 0.9, 0.10, 0.11"
 Polynomials = "0.8, 1.0"
 Roots = "0.8, 1.0"
+StaticArrays = "0.12"
 Unitful = "0.18, 1.0"
 julia = "1"
 
