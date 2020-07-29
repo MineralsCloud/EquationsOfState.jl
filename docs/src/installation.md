@@ -56,7 +56,7 @@ platform to explain the following steps:
 3. Run
 
    ```julia
-   julia> using EquationsOfState.Collections, EquationsOfState.Find, EquationsOfState.NonlinearFitting, Unitful, UnitfulAtomic
+   julia> using EquationsOfState.Collections, EquationsOfState.Find, EquationsOfState.Fitting, Unitful, UnitfulAtomic
    ```
 
    and have fun!
