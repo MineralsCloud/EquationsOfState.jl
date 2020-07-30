@@ -95,7 +95,12 @@ end
     pressures = collect(0:20:200) .* u"GPa"
     eos = BirchMurnaghan3rd(167 * u"angstrom^3", 2600 * u"kbar", 4.0)
     volumes = map(pressures) do p
-        findvolume(PressureEquation(eos), p, (eps(1.0 * u"bohr^3"), eos.v0 * 1.3); silent = true)
+        findvolume(
+            PressureEquation(eos),
+            p,
+            (eps(1.0 * u"bohr^3"), eos.v0 * 1.3);
+            silent = true,
+        )
     end
     @test isapprox(map(PressureEquation(eos), volumes), pressures)
 end # testset
