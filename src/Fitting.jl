@@ -34,7 +34,7 @@ end # function _findminimum
 function linfit(volumes, energies, deg = 3)
     poly = fit(volumes, energies, deg)
     v0, e0 = _findminimum(poly)
-    return PolynomialEOS(v0, [derivative(poly, n)(v0) / factorial(n) for n in 1:deg], e0)
+    return PolynomialEOS(v0, [derivative(poly, n)(v0) / factorial(n) for n = 1:deg], e0)
 end # function linfit
 
 """
@@ -94,8 +94,7 @@ _upreferred(::typeof(dimension(u"Pa"))) = u"eV/angstrom^3"
 _upreferred(::typeof(dimension(u"1/Pa"))) = u"angstrom^3/eV"
 _upreferred(::typeof(dimension(u"1/Pa^2"))) = u"angstrom^6/eV^2"
 
-Base.float(eos::EOSParameters) =
-    constructorof(typeof(eos))(map(float, fieldvalues(eos))...)
+Base.float(eos::EOSParameters) = constructorof(typeof(eos))(map(float, fieldvalues(eos))...)
 Base.float(eos::PolynomialEOS) =
     constructorof(typeof(eos))(float(eos.v0), float.(eos.p0), float(eos.e0))
 
