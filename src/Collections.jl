@@ -703,7 +703,7 @@ function (f::EnergyEquation{<:AntonSchmidt})(v)
 end
 function (f::EnergyEquation{<:PolynomialEOS{N}})(v) where {N}
     v0, p0, e0 = fieldvalues(f.params)
-    return e0 + dot(p0, (v - v0)^n for n in 1:N)  # It cannot be `v0 - v`!
+    return e0 + dot(p0, (v - v0)^n for n = 1:N)  # It cannot be `v0 - v`!
 end # function _evaluate
 # PressureEquation evaluation
 function (f::PressureEquation{<:Murnaghan})(v)
