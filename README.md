@@ -2,6 +2,8 @@
   <img src="./docs/src/assets/logo.png" height="200"><br>
 </div>
 
+# To be deprecated: This package will be replaced by [`EquationsOfStateOfSolids.jl`](https://github.com/MineralsCloud/EquationsOfStateOfSolids.jl)!
+
 # EquationsOfState.jl
 
 [![Build Status](https://github.com/MineralsCloud/EquationsOfState.jl/workflows/CI/badge.svg)](https://github.com/MineralsCloud/EquationsOfState.jl/actions)
