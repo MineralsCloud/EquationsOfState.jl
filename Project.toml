@@ -1,7 +1,7 @@
 name = "EquationsOfState"
 uuid = "0438fec6-b81c-52d9-9651-d286848f50a8"
 authors = ["Qi Zhang <singularitti@outlook.com>"]
-version = "3.0.2"
+version = "4.0.0"
 
 [compat]
 julia = "1"
