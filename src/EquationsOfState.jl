@@ -1,7 +1,5 @@
 module EquationsOfState
 
-include("Collections.jl")
-include("Fitting.jl")
-include("Find.jl")
+# Write your package code here.
 
-end # module
+end
