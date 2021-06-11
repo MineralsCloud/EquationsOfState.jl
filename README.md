@@ -8,7 +8,9 @@
 [![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
 [![Coverage](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
 
-Note: starting from version `v4.0.0`, we will move all the past functionalities to package
+Note: starting from version `v4.0.0`, we will move all the past functionalities
+to package
 [`EquationsOfStateOfSolids.jl`](https://github.com/MineralsCloud/EquationsOfStateOfSolids.jl).
-This package is only served as a "base" package or a high-level package for similar packages.
-To use the previous functionalities, please use `EquationsOfStateOfSolids.jl`.
+This package is only served as a "base" package or a high-level package for
+similar packages. To use the previous functionalities, please use
+`EquationsOfStateOfSolids.jl`.
