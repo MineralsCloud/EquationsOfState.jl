@@ -1,5 +1,8 @@
 module EquationsOfState
 
-# Write your package code here.
+abstract type EquationOfStateOfSolidsParameters{T} end
+const Parameters = EquationOfStateOfSolidsParameters
+
+abstract type EquationOfState{T<:Parameters} end
 
 end
