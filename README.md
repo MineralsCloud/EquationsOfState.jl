@@ -8,6 +8,7 @@
 [![Build Status](https://cloud.drone.io/api/badges/MineralsCloud/EquationsOfState.jl/status.svg)](https://cloud.drone.io/MineralsCloud/EquationsOfState.jl)
 [![Build Status](https://api.cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl.svg)](https://cirrus-ci.com/github/MineralsCloud/EquationsOfState.jl)
 [![Coverage](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/MineralsCloud/EquationsOfState.jl)
+[![Open in Visual Studio Code](https://open.vscode.dev/badges/open-in-vscode.svg)](https://open.vscode.dev/organization/repository)
 
 Note: starting from version `v4.0.0`, we will move all the past functionalities to package
 [`EquationsOfStateOfSolids.jl`](https://github.com/MineralsCloud/EquationsOfStateOfSolids.jl).
